@@ -1,10 +1,8 @@
 // @flow
 
 import React from "react";
-import { type Node } from "react";
 import dom from "react-dom";
-
-export const App: () => Node = () => <div>hello world</div>;
+import { App } from "./app";
 
 if (!module.parent) {
   const appElement = document.getElementById("app");
