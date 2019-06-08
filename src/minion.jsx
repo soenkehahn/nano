@@ -3,9 +3,12 @@
 import React from "react";
 
 export const Minion = () => (
-  <polygon
-    points="50,0 100,100 0,100"
-    style={{ fill: lightBlue, "stroke-width": 1 }}
+  <circle
+    cx="50"
+    cy="50"
+    r="50"
+    style={{ fill: lightBlue }}
+    onClick={() => console.error("jes")}
   />
 );
 

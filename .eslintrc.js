@@ -10,7 +10,8 @@ module.exports = {
   },
   plugins: ["react", "flowtype"],
   rules: {
-    "no-undef": "off"
+    "no-undef": "off",
+    "no-console": "off"
   },
   settings: { react: { version: "detect" } }
 };
