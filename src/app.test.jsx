@@ -1,7 +1,8 @@
 // @flow
 
 import { shallow } from "enzyme";
-import { App } from "./app.jsx";
+import { App } from "./app";
+import { Minion } from "./minion";
 import React from "react";
 import { configure } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
@@ -9,8 +10,13 @@ import Adapter from "enzyme-adapter-react-16";
 configure({ adapter: new Adapter() });
 
 describe("App", () => {
-  it("displays hello world", () => {
+  it("shows minion in svg context", () => {
     const app = shallow(<App />);
-    expect(app.text()).toEqual("hello world");
+    expect(
+      app
+        .find("svg")
+        .find(Minion)
+        .exists()
+    ).toEqual(true);
   });
 });
