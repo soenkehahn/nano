@@ -1,8 +1,8 @@
 // @flow
 
+import { App } from "./app";
 import React from "react";
 import dom from "react-dom";
-import { App } from "./app";
 
 if (!module.parent) {
   const appElement = document.getElementById("app");

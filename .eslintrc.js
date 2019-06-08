@@ -8,10 +8,11 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module"
   },
-  plugins: ["react", "flowtype"],
+  plugins: ["react", "flowtype", "sort-imports-es6-autofix"],
   rules: {
     "no-undef": "off",
-    "no-console": "off"
+    "no-console": "off",
+    "sort-imports-es6-autofix/sort-imports-es6": "error"
   },
   settings: { react: { version: "detect" } }
 };
