@@ -7,4 +7,4 @@ test:
   jest
 
 lint:
-  eslint src/*.jsx
+  eslint src/*.jsx src/*.js
