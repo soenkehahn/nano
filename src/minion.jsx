@@ -19,7 +19,7 @@ export class Minion {
 }
 
 export const MinionRender = (position: Position) => (
-  <circle cx={position.x} cy={position.y} r="50" style={{ fill: lightBlue }} />
+  <circle cx={position.x} cy={position.y} r="10" style={{ fill: lightBlue }} />
 );
 
 const lightBlue = "#8888ff";

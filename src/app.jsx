@@ -44,6 +44,7 @@ export class App extends React.Component<{}, Scene> {
         width="500"
         onClick={this.handleClick}
       >
+        <rect width="100%" height="100%" fill="#eee" />
         {this.state.minion.draw()}
       </svg>
     );
