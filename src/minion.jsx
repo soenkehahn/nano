@@ -1,20 +1,52 @@
 // @flow
 
+import { type Config } from "./scene";
+import {
+  type Position,
+  add,
+  difference,
+  distance,
+  scale,
+  unit
+} from "./vector";
 import React from "react";
 
-type Position = { x: number, y: number };
-
 export class Minion {
-  x: number = 0;
-  y: number = 0;
+  velocity: number;
 
-  setPosition(position: Position) {
-    this.x = position.x;
-    this.y = position.y;
+  target: Position = {
+    x: 0,
+    y: 0
+  };
+
+  position: Position = {
+    x: 0,
+    y: 0
+  };
+
+  constructor(config: Config) {
+    this.velocity = config.velocity;
   }
 
+  setTarget = (target: Position): void => {
+    this.target = target;
+  };
+
+  step = (timeDelta: number): void => {
+    const distanceLeft = distance(this.target, this.position);
+    const stepDistance = this.velocity * timeDelta;
+    if (stepDistance < distanceLeft) {
+      this.position = add(
+        this.position,
+        scale(unit(difference(this.position, this.target)), stepDistance)
+      );
+    } else {
+      this.position = this.target;
+    }
+  };
+
   draw() {
-    return <MinionRender x={this.x} y={this.y} />;
+    return <MinionRender x={this.position.x} y={this.position.y} />;
   }
 }
 
