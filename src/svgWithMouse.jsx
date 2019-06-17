@@ -7,6 +7,7 @@ import React from "react";
 export class SvgWithMouse extends React.Component<{|
   width: string,
   height: string,
+  viewBox: string,
   onClick: Vector => void,
   children: React$Node
 |}> {
@@ -36,6 +37,7 @@ export class SvgWithMouse extends React.Component<{|
         onClick={this.handleClick}
         width={this.props.width}
         height={this.props.height}
+        viewBox={this.props.viewBox}
       >
         {this.props.children}
       </svg>

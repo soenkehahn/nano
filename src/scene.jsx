@@ -37,9 +37,10 @@ export const mkSceneRender = (config: Config, scene: Steppable) => {
         <SvgWithMouse
           height="500"
           width="500"
+          viewBox="-250 -250 500 500"
           onClick={this.state.scene.onClick}
         >
-          <rect width="100%" height="100%" fill="#eee" />
+          <rect x={-250} y={-250} width="100%" height="100%" fill="#eee" />
           {this.state.scene.draw()}
         </SvgWithMouse>
       );

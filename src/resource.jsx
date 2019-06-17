@@ -6,7 +6,7 @@ import { type Steppable } from "./scene";
 
 export class Resource {
   draw = (): React$Element<*> => {
-    return <ResourceRender x={100} y={300} />;
+    return <ResourceRender x={100} y={100} />;
   };
 }
 
