@@ -49,6 +49,7 @@ export class Minion {
     for (let i = 0; i < scene.resources.length; i++) {
       if (collides(this, scene.resources[i])) {
         scene.resources.splice(i, 1);
+        scene.inventory++;
       }
     }
   };

@@ -2,7 +2,7 @@
 
 import "@babel/polyfill";
 import * as jsdomExtensions from "./jsdomExtensions/svg";
-import { type Config, Scene, Steppable, mkSceneRender } from "./scene";
+import { type Config, IScene, Inventory, Scene, mkSceneRender } from "./scene";
 import { MinionRender, type RenderProps } from "./minion";
 import { ReactWrapper } from "enzyme";
 import { ResourceRender } from "./resource";
@@ -61,7 +61,7 @@ describe("SceneRender", () => {
 
     it("allows to set the minion coordinates with a mouse click", async () => {
       mockSvgJsdomExtensions(sceneRender.find("svg"), { x: 0, y: 0 });
-      sceneRender.simulate("click", { clientX: 10, clientY: 10 });
+      sceneRender.find("svg").simulate("click", { clientX: 10, clientY: 10 });
       sceneRender.setProps({ timeDelta: 100 });
       expect(sceneRender.find(MinionRender).props()).toMatchObject({
         x: 10,
@@ -71,7 +71,7 @@ describe("SceneRender", () => {
 
     it("takes the offset of the svg pane into account", () => {
       mockSvgJsdomExtensions(sceneRender.find("svg"), { x: 2, y: 1 });
-      sceneRender.simulate("click", { clientX: 10, clientY: 10 });
+      sceneRender.find("svg").simulate("click", { clientX: 10, clientY: 10 });
       sceneRender.setProps({ timeDelta: 100 });
       expect(sceneRender.find(MinionRender).props()).toMatchObject({
         x: 8,
@@ -81,7 +81,7 @@ describe("SceneRender", () => {
 
     it("minions need time to move around", () => {
       mockSvgJsdomExtensions(sceneRender.find("svg"), { x: 0, y: 0 });
-      sceneRender.simulate("click", { clientX: 1, clientY: 0 });
+      sceneRender.find("svg").simulate("click", { clientX: 1, clientY: 0 });
       sceneRender.setProps({ timeDelta: 0.5 });
       expect(sceneRender.find(MinionRender).props()).toMatchObject({
         x: 0.5,
@@ -102,7 +102,8 @@ describe("SceneRender", () => {
       timeDeltas = [];
     });
 
-    class MockScene implements Steppable {
+    class MockScene implements IScene {
+      inventory = 0;
       step = (timeDelta: number) => {
         timeDeltas.push(timeDelta);
       };
@@ -176,7 +177,7 @@ describe("Scene", () => {
       });
 
       it("depletes resources when colliding (same position) with a minion", () => {
-        wrapper.simulate("click", {
+        wrapper.find("svg").simulate("click", {
           clientX: resourceProps.x,
           clientY: resourceProps.y
         });
@@ -185,7 +186,7 @@ describe("Scene", () => {
       });
 
       it("depletes a resource when colliding slightly with a minion", () => {
-        wrapper.simulate("click", {
+        wrapper.find("svg").simulate("click", {
           clientX:
             resourceProps.x - (resourceProps.size + minionProps.size) + 0.1,
           clientY: resourceProps.y
@@ -195,13 +196,26 @@ describe("Scene", () => {
       });
 
       it("doesn't deplete a resource when near a minion", () => {
-        wrapper.simulate("click", {
+        wrapper.find("svg").simulate("click", {
           clientX:
             resourceProps.x - (resourceProps.size + minionProps.size) - 0.1,
           clientY: resourceProps.y
         });
         wrapper.setProps({ timeDelta: 1 });
         expect(wrapper.find(ResourceRender).exists()).toEqual(true);
+      });
+
+      it("initializes an empty inventory", () => {
+        expect(wrapper.find(Inventory).text()).toEqual("resource: 0");
+      });
+
+      it("increases the inventory resource counter", () => {
+        wrapper.find("svg").simulate("click", {
+          clientX: resourceProps.x,
+          clientY: resourceProps.y
+        });
+        wrapper.setProps({ timeDelta: 1 });
+        expect(wrapper.find(Inventory).text()).toEqual("resource: 1");
       });
     });
   });

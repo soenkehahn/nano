@@ -15,9 +15,9 @@ export type Config = {|
 
 type Props = {| time: number, timeDelta: number |};
 
-type State = {| scene: Steppable, timeDeltaRemainder: number |};
+type State = {| scene: IScene, timeDeltaRemainder: number |};
 
-export const mkSceneRender = (config: Config, scene: Steppable) => {
+export const mkSceneRender = (config: Config, scene: IScene) => {
   class SceneRender extends React.Component<Props, State> {
     constructor() {
       super();
@@ -44,22 +44,31 @@ export const mkSceneRender = (config: Config, scene: Steppable) => {
         config.dimensions.lower
       } ${width} ${height}`;
       return (
-        <SvgWithMouse
-          width={width}
-          height={height}
-          viewBox={viewBox}
-          onClick={this.state.scene.onClick}
-        >
-          <rect x={-250} y={-250} width="100%" height="100%" fill="#eee" />
-          {this.state.scene.draw()}
-        </SvgWithMouse>
+        <div>
+          <SvgWithMouse
+            width={width}
+            height={height}
+            viewBox={viewBox}
+            onClick={this.state.scene.onClick}
+          >
+            <rect x={-250} y={-250} width="100%" height="100%" fill="#eee" />
+            {this.state.scene.draw()}
+          </SvgWithMouse>
+          <Inventory resource={this.state.scene.inventory} />
+        </div>
       );
     };
   }
   return SceneRender;
 };
 
-export interface Steppable {
+export const Inventory = ({ resource }: {| resource: number |}) => (
+  <div>resource: {resource}</div>
+);
+
+export interface IScene {
+  inventory: number;
+
   step(timeDelta: number): void;
 
   onClick(target: Vector): void;
@@ -67,9 +76,10 @@ export interface Steppable {
   draw(): React$Element<*>;
 }
 
-export class Scene implements Steppable {
+export class Scene implements IScene {
   minion: Minion;
   resources: Array<Resource>;
+  inventory: number = 0;
 
   constructor(config: Config) {
     this.minion = new Minion(config);
