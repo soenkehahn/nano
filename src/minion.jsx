@@ -1,25 +1,18 @@
 // @flow
 
 import { type Config } from "./scene";
-import {
-  type Position,
-  add,
-  difference,
-  distance,
-  scale,
-  unit
-} from "./vector";
+import { type Vector, add, difference, distance, scale, unit } from "./vector";
 import React from "react";
 
 export class Minion {
   velocity: number;
 
-  target: Position = {
+  target: Vector = {
     x: 0,
     y: 0
   };
 
-  position: Position = {
+  position: Vector = {
     x: 0,
     y: 0
   };
@@ -28,7 +21,7 @@ export class Minion {
     this.velocity = config.velocity;
   }
 
-  onClick = (target: Position): void => {
+  onClick = (target: Vector): void => {
     this.target = target;
   };
 
@@ -50,7 +43,7 @@ export class Minion {
   }
 }
 
-export const MinionRender = (position: Position) => (
+export const MinionRender = (position: Vector) => (
   <circle cx={position.x} cy={position.y} r="10" style={{ fill: lightBlue }} />
 );
 

@@ -1,13 +1,13 @@
 // @flow
 
 import * as jsdomExtensions from "./jsdomExtensions/svg";
-import { type Position } from "./vector";
+import { type Vector } from "./vector";
 import React from "react";
 
 export class SvgWithMouse extends React.Component<{|
   width: string,
   height: string,
-  onClick: Position => void,
+  onClick: Vector => void,
   children: React$Node
 |}> {
   svgRef: null | jsdomExtensions.SvgElement = null;

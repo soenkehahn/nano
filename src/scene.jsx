@@ -1,8 +1,8 @@
 // @flow
 
 import { Minion } from "./minion";
-import { type Position } from "./vector";
 import { SvgWithMouse } from "./svgWithMouse";
+import { type Vector } from "./vector";
 import React from "react";
 
 export type Config = {| stepTimeDelta: number, velocity: number |};
@@ -50,7 +50,7 @@ export const mkSceneRender = (config: Config, scene: Steppable) => {
 interface Steppable {
   step(timeDelta: number): void;
 
-  onClick(target: Position): void;
+  onClick(target: Vector): void;
 
   draw(): React$Node;
 }
