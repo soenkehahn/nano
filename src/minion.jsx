@@ -11,7 +11,6 @@ import {
   unit
 } from "./vector";
 import React from "react";
-import { isEqual } from "lodash";
 
 export class Minion {
   velocity: number;
@@ -47,8 +46,10 @@ export class Minion {
   };
 
   depleteResource = (scene: Scene): void => {
-    if (scene.resource && collides(this, scene.resource)) {
-      scene.resource = null;
+    for (let i = 0; i < scene.resources.length; i++) {
+      if (collides(this, scene.resources[i])) {
+        scene.resources.splice(i, 1);
+      }
     }
   };
 

@@ -2,11 +2,10 @@
 
 import "@babel/polyfill";
 import * as jsdomExtensions from "./jsdomExtensions/svg";
+import { type Config, Scene, Steppable, mkSceneRender } from "./scene";
 import { MinionRender, type RenderProps } from "./minion";
 import { ReactWrapper } from "enzyme";
-import { type Vector } from "./vector";
 import { ResourceRender } from "./resource";
-import { Scene, Steppable, mkSceneRender } from "./scene";
 import { mount } from "enzyme";
 import React from "react";
 
@@ -32,10 +31,14 @@ function mockSvgJsdomExtensions(
   }
 }
 
-let config;
+let config: Config;
 
 beforeEach(() => {
-  config = { stepTimeDelta: 0.5, velocity: 1 };
+  config = {
+    dimensions: { lower: -100, upper: 100 },
+    stepTimeDelta: 0.5,
+    velocity: 1
+  };
 });
 
 describe("SceneRender", () => {
@@ -145,57 +148,61 @@ describe("SceneRender", () => {
   });
 });
 
-function mountWrapper(config) {
-  const SceneRender = mkSceneRender(config, new Scene(config));
-  const wrapper = mount(<SceneRender time={0} timeDelta={0} />);
-  mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
-  return wrapper;
-}
-
 describe("Scene", () => {
   describe("resource", () => {
+    let scene;
     let wrapper;
     let minionProps: RenderProps;
     let resourceProps: RenderProps;
 
     beforeEach(() => {
       config.velocity = 99999999999999;
-      wrapper = mountWrapper(config);
-      minionProps = wrapper.find(MinionRender).props();
-      resourceProps = wrapper.find(ResourceRender).props();
+      scene = new Scene(config);
+      const SceneRender = mkSceneRender(config, scene);
+      wrapper = mount(<SceneRender time={0} timeDelta={0} />);
+      mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
     });
 
-    it("shows a resource", () => {
-      expect(wrapper.find(ResourceRender).exists()).toEqual(true);
+    it("shows multiple resources", () => {
+      expect(wrapper.find(ResourceRender).length).toEqual(10);
     });
 
-    it("depletes a resource when colliding (same position) with a minion", () => {
-      wrapper.simulate("click", {
-        clientX: resourceProps.x,
-        clientY: resourceProps.y
+    describe("when only one resource exists", () => {
+      beforeEach(() => {
+        scene.resources = [scene.resources[0]];
+        wrapper.setProps({ timeDelta: 1 });
+        minionProps = wrapper.find(MinionRender).props();
+        resourceProps = wrapper.find(ResourceRender).props();
       });
-      wrapper.setProps({ timeDelta: 1 });
-      expect(wrapper.find(ResourceRender).exists()).toEqual(false);
-    });
 
-    it("depletes a resource when colliding slightly with a minion", () => {
-      wrapper.simulate("click", {
-        clientX:
-          resourceProps.x - (resourceProps.size + minionProps.size) + 0.1,
-        clientY: resourceProps.y
+      it("depletes resources when colliding (same position) with a minion", () => {
+        wrapper.simulate("click", {
+          clientX: resourceProps.x,
+          clientY: resourceProps.y
+        });
+        wrapper.setProps({ timeDelta: 1 });
+        expect(wrapper.find(ResourceRender).exists()).toEqual(false);
       });
-      wrapper.setProps({ timeDelta: 1 });
-      expect(wrapper.find(ResourceRender).exists()).toEqual(false);
-    });
 
-    it("doesn't deplete a resource when near a minion", () => {
-      wrapper.simulate("click", {
-        clientX:
-          resourceProps.x - (resourceProps.size + minionProps.size) - 0.1,
-        clientY: resourceProps.y
+      it("depletes a resource when colliding slightly with a minion", () => {
+        wrapper.simulate("click", {
+          clientX:
+            resourceProps.x - (resourceProps.size + minionProps.size) + 0.1,
+          clientY: resourceProps.y
+        });
+        wrapper.setProps({ timeDelta: 1 });
+        expect(wrapper.find(ResourceRender).exists()).toEqual(false);
       });
-      wrapper.setProps({ timeDelta: 1 });
-      expect(wrapper.find(ResourceRender).exists()).toEqual(true);
+
+      it("doesn't deplete a resource when near a minion", () => {
+        wrapper.simulate("click", {
+          clientX:
+            resourceProps.x - (resourceProps.size + minionProps.size) - 0.1,
+          clientY: resourceProps.y
+        });
+        wrapper.setProps({ timeDelta: 1 });
+        expect(wrapper.find(ResourceRender).exists()).toEqual(true);
+      });
     });
   });
 });

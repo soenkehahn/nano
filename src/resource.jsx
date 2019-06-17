@@ -1,16 +1,22 @@
 // @flow
 
-import { type Vector } from "./vector";
 import { type RenderProps } from "./minion";
+import { type Vector } from "./vector";
 import React from "react";
 
 export class Resource {
-  position: Vector = { x: 100, y: 100 };
+  id: number;
+
+  position: Vector = { x: 0, y: 0 };
 
   size: number = 10;
 
+  constructor(id: number) {
+    this.id = id;
+  }
+
   draw = (): React$Element<*> => {
-    return <ResourceRender {...this.position} size={this.size} />;
+    return <ResourceRender key={this.id} {...this.position} size={this.size} />;
   };
 }
 

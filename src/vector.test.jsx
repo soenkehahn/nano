@@ -2,9 +2,10 @@
 
 import {
   add,
+  collides,
   difference,
   distance,
-  collides,
+  random,
   scale,
   unit,
   vectorLength
@@ -71,5 +72,23 @@ describe("collides", () => {
     const a = { position: { x: 2, y: 5 }, size: 2 };
     const b = { position: { x: 6.9, y: 5 }, size: 3 };
     expect(collides(a, b)).toEqual(true);
+  });
+});
+
+describe("random", () => {
+  const lower = -10;
+  const upper = 10;
+
+  it("returns different vectors", () => {
+    expect(random(lower, upper)).not.toEqual(random(lower, upper));
+  });
+
+  it("returns a random vector in the given bounds", () => {
+    for (let i = 0; i < 100; i++) {
+      const v = random(lower, upper);
+      expect(
+        v.x >= lower && v.x <= upper && v.y >= lower && v.y <= upper
+      ).toEqual(true);
+    }
   });
 });

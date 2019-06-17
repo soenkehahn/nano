@@ -6,7 +6,11 @@ import { animated } from "./animated";
 import React from "react";
 import dom from "react-dom";
 
-const config: Config = { stepTimeDelta: 3, velocity: 0.3 };
+const config: Config = {
+  dimensions: { lower: -250, upper: 250 },
+  stepTimeDelta: 3,
+  velocity: 0.3
+};
 
 if (!module.parent) {
   const appElement = document.getElementById("app");

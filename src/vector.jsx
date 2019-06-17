@@ -34,3 +34,8 @@ export function collides(
 ): boolean {
   return distance(a.position, b.position) < a.size + b.size;
 }
+
+export const random = (lower: number, upper: number): Vector => ({
+  x: Math.random() * (upper - lower) + lower,
+  y: Math.random() * (upper - lower) + lower
+});

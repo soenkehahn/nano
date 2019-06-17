@@ -1,12 +1,17 @@
 // @flow
 
+import * as vector from "./vector";
 import { Minion } from "./minion";
 import { Resource } from "./resource";
 import { SvgWithMouse } from "./svgWithMouse";
-import { type Vector } from "./vector";
+import { type Vector, collides } from "./vector";
 import React from "react";
 
-export type Config = {| stepTimeDelta: number, velocity: number |};
+export type Config = {|
+  dimensions: { lower: number, upper: number },
+  stepTimeDelta: number,
+  velocity: number
+|};
 
 type Props = {| time: number, timeDelta: number |};
 
@@ -33,11 +38,16 @@ export const mkSceneRender = (config: Config, scene: Steppable) => {
     };
 
     render = () => {
+      const width = `${config.dimensions.upper - config.dimensions.lower}`;
+      const height = width;
+      const viewBox = `${config.dimensions.lower} ${
+        config.dimensions.lower
+      } ${width} ${height}`;
       return (
         <SvgWithMouse
-          height="500"
-          width="500"
-          viewBox="-250 -250 500 500"
+          width={width}
+          height={height}
+          viewBox={viewBox}
           onClick={this.state.scene.onClick}
         >
           <rect x={-250} y={-250} width="100%" height="100%" fill="#eee" />
@@ -59,11 +69,21 @@ export interface Steppable {
 
 export class Scene implements Steppable {
   minion: Minion;
-  resource: null | Resource;
+  resources: Array<Resource>;
 
   constructor(config: Config) {
     this.minion = new Minion(config);
-    this.resource = new Resource();
+    this.resources = [];
+    for (let i = 0; i < 10; i++) {
+      const resource = new Resource(i);
+      while (collides(this.minion, resource)) {
+        resource.position = vector.random(
+          config.dimensions.lower,
+          config.dimensions.upper
+        );
+      }
+      this.resources.push(resource);
+    }
   }
 
   step = (timeDelta: number): void => {
@@ -77,7 +97,7 @@ export class Scene implements Steppable {
   draw = (): React$Element<*> => {
     return (
       <g>
-        {this.resource && this.resource.draw()}
+        {this.resources.map(x => x.draw())}
         {this.minion.draw()}
       </g>
     );
