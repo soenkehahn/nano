@@ -1,8 +1,7 @@
 // @flow
 
-import React from "react";
 import { type Vector } from "./vector";
-import { type Steppable } from "./scene";
+import React from "react";
 
 export class Resource {
   draw = (): React$Element<*> => {

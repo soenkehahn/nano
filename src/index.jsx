@@ -1,7 +1,7 @@
 // @flow
 
 import "regenerator-runtime/runtime";
-import { type Config, mkSceneRender, Scene } from "./scene";
+import { type Config, Scene, mkSceneRender } from "./scene";
 import { animated } from "./animated";
 import React from "react";
 import dom from "react-dom";
