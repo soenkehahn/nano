@@ -9,7 +9,7 @@ import dom from "react-dom";
 const config: Config = {
   dimensions: { lower: -250, upper: 250 },
   stepTimeDelta: 3,
-  velocity: 0.3
+  velocity: 0.03
 };
 
 const slowDown = null;
