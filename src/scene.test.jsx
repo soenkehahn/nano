@@ -4,7 +4,8 @@ import "@babel/polyfill";
 import * as jsdomExtensions from "./jsdomExtensions/svg";
 import { MinionRender } from "./minion";
 import { ReactWrapper } from "enzyme";
-import { mkScene, mkSceneRender } from "./scene";
+import { ResourceRender } from "./resource";
+import { Scene, Steppable, mkSceneRender } from "./scene";
 import { mount } from "enzyme";
 import React from "react";
 
@@ -41,8 +42,8 @@ describe("SceneRender", () => {
     let sceneRender;
 
     beforeEach(() => {
-      const Scene = mkSceneRender(config, mkScene(config));
-      sceneRender = mount(<Scene time={0} timeDelta={0} />);
+      const SceneRender = mkSceneRender(config, new Scene(config));
+      sceneRender = mount(<SceneRender time={0} timeDelta={0} />);
     });
 
     it("shows minion in svg context", () => {
@@ -81,14 +82,14 @@ describe("SceneRender", () => {
     });
   });
 
-  describe("with mocked Scene", () => {
+  describe("step function logic", () => {
     let timeDeltas;
 
     beforeEach(() => {
       timeDeltas = [];
     });
 
-    class MockScene {
+    class MockScene implements Steppable {
       step = (timeDelta: number) => {
         timeDeltas.push(timeDelta);
       };
@@ -130,6 +131,16 @@ describe("SceneRender", () => {
       expect(timeDeltas.length).toEqual(8);
       sceneRender.setProps({ timeDelta: 1 });
       expect(timeDeltas.length).toEqual(10);
+    });
+  });
+});
+
+describe("Scene", () => {
+  describe("resource", () => {
+    it("shows a resource", () => {
+      const scene = new Scene(config);
+      const wrapper = mount(<svg>{scene.draw()}</svg>);
+      expect(wrapper.find(ResourceRender).exists()).toEqual(true);
     });
   });
 });

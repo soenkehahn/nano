@@ -1,7 +1,7 @@
 // @flow
 
 import "regenerator-runtime/runtime";
-import { type Config, mkScene, mkSceneRender } from "./scene";
+import { type Config, mkSceneRender, Scene } from "./scene";
 import { animated } from "./animated";
 import React from "react";
 import dom from "react-dom";
@@ -13,6 +13,6 @@ if (!module.parent) {
   if (!appElement) {
     throw new Error("cannot find element 'app'");
   }
-  const Scene = animated(mkSceneRender(config, mkScene(config)));
-  dom.render(<Scene />, appElement);
+  const SceneRender = animated(mkSceneRender(config, new Scene(config)));
+  dom.render(<SceneRender />, appElement);
 }

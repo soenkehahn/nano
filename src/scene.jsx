@@ -1,6 +1,7 @@
 // @flow
 
 import { Minion } from "./minion";
+import { Resource } from "./resource";
 import { SvgWithMouse } from "./svgWithMouse";
 import { type Vector } from "./vector";
 import React from "react";
@@ -47,14 +48,37 @@ export const mkSceneRender = (config: Config, scene: Steppable) => {
   return SceneRender;
 };
 
-interface Steppable {
+export interface Steppable {
   step(timeDelta: number): void;
 
   onClick(target: Vector): void;
 
-  draw(): React$Node;
+  draw(): React$Element<*>;
 }
 
-export function mkScene(config: Config): Steppable {
-  return new Minion(config);
+export class Scene implements Steppable {
+  minion: Minion;
+  resource: Resource;
+
+  constructor(config: Config) {
+    this.minion = new Minion(config);
+    this.resource = new Resource();
+  }
+
+  step = (timeDelta: number): void => {
+    this.minion.step(timeDelta);
+  };
+
+  onClick = (target: Vector): void => {
+    this.minion.onClick(target);
+  };
+
+  draw = (): React$Element<*> => {
+    return (
+      <g>
+        {this.resource.draw()}
+        {this.minion.draw()}
+      </g>
+    );
+  };
 }
