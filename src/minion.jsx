@@ -28,7 +28,7 @@ export class Minion {
     this.velocity = config.velocity;
   }
 
-  setTarget = (target: Position): void => {
+  onClick = (target: Position): void => {
     this.target = target;
   };
 

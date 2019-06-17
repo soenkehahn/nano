@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from "react";
-import { useState, useEffect } from "react";
 
 export function animated(
   Component: React.AbstractComponent<{| time: number, timeDelta: number |}>

@@ -2,8 +2,8 @@
 
 import { animated } from "./animated";
 import { mount } from "enzyme";
-import React, { type Node, createElement } from "react";
-import { act } from "react-dom/test-utils";
+import { wait } from "./utils";
+import React, { createElement } from "react";
 
 let propsList;
 let wrapper;
@@ -41,12 +41,6 @@ it("passes in the timeDelta to the last rendering", async () => {
     );
   }
 });
-
-function wait(seconds: number): Promise<void> {
-  return new Promise(resolve => {
-    setTimeout(resolve, seconds * 1000);
-  });
-}
 
 async function waitUntil(
   predicate: () => boolean,
