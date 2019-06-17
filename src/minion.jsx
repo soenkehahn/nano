@@ -1,8 +1,17 @@
 // @flow
 
-import { type Config } from "./scene";
-import { type Vector, add, difference, distance, scale, unit } from "./vector";
+import { type Config, Scene } from "./scene";
+import {
+  type Vector,
+  add,
+  collides,
+  difference,
+  distance,
+  scale,
+  unit
+} from "./vector";
 import React from "react";
+import { isEqual } from "lodash";
 
 export class Minion {
   velocity: number;
@@ -10,6 +19,8 @@ export class Minion {
   target: Vector;
 
   position: Vector;
+
+  size: number = 10;
 
   constructor(config: Config) {
     this.position = { x: 0, y: 0 };
@@ -21,7 +32,7 @@ export class Minion {
     this.target = target;
   };
 
-  step = (timeDelta: number): void => {
+  step = (timeDelta: number, scene: Scene): void => {
     const distanceLeft = distance(this.target, this.position);
     const stepDistance = this.velocity * timeDelta;
     if (stepDistance < distanceLeft) {
@@ -32,15 +43,31 @@ export class Minion {
     } else {
       this.position = this.target;
     }
+    this.depleteResource(scene);
   };
 
-  draw() {
-    return <MinionRender x={this.position.x} y={this.position.y} />;
-  }
+  depleteResource = (scene: Scene): void => {
+    if (scene.resource && collides(this, scene.resource)) {
+      scene.resource = null;
+    }
+  };
+
+  draw = (): React$Element<*> => {
+    return (
+      <MinionRender x={this.position.x} y={this.position.y} size={this.size} />
+    );
+  };
 }
 
-export const MinionRender = (position: Vector) => (
-  <circle cx={position.x} cy={position.y} r="10" style={{ fill: lightBlue }} />
+export type RenderProps = Vector & { size: number };
+
+export const MinionRender = (props: RenderProps) => (
+  <circle
+    cx={props.x}
+    cy={props.y}
+    r={props.size}
+    style={{ fill: lightBlue }}
+  />
 );
 
 const lightBlue = "#8888ff";

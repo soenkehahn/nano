@@ -59,7 +59,7 @@ export interface Steppable {
 
 export class Scene implements Steppable {
   minion: Minion;
-  resource: Resource;
+  resource: null | Resource;
 
   constructor(config: Config) {
     this.minion = new Minion(config);
@@ -67,7 +67,7 @@ export class Scene implements Steppable {
   }
 
   step = (timeDelta: number): void => {
-    this.minion.step(timeDelta);
+    this.minion.step(timeDelta, this);
   };
 
   onClick = (target: Vector): void => {
@@ -77,7 +77,7 @@ export class Scene implements Steppable {
   draw = (): React$Element<*> => {
     return (
       <g>
-        {this.resource.draw()}
+        {this.resource && this.resource.draw()}
         {this.minion.draw()}
       </g>
     );

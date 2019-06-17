@@ -27,3 +27,10 @@ export function unit(v: Vector): Vector {
   const factor = 1 / length;
   return { x: v.x * factor, y: v.y * factor };
 }
+
+export function collides(
+  a: { position: Vector, size: number },
+  b: { position: Vector, size: number }
+): boolean {
+  return distance(a.position, b.position) < a.size + b.size;
+}

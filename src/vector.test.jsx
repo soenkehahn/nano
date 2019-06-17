@@ -1,6 +1,14 @@
 // @flow
 
-import { add, difference, distance, scale, unit, vectorLength } from "./vector";
+import {
+  add,
+  difference,
+  distance,
+  collides,
+  scale,
+  unit,
+  vectorLength
+} from "./vector";
 
 describe("add", () => {
   it("returns the addition between two points", () => {
@@ -43,5 +51,25 @@ describe("unit", () => {
     const result = unit({ x: 3, y: 4 });
     expect(result.x).toBeCloseTo(3 / 5);
     expect(result.y).toBeCloseTo(4 / 5);
+  });
+});
+
+describe("collides", () => {
+  it("detects collisions when positions are equal", () => {
+    const a = { position: { x: 2, y: 5 }, size: 2 };
+    const b = { position: { x: 2, y: 5 }, size: 3 };
+    expect(collides(a, b)).toEqual(true);
+  });
+
+  it("returns false when positions are too far apart", () => {
+    const a = { position: { x: 2, y: 5 }, size: 2 };
+    const b = { position: { x: 7.1, y: 5 }, size: 3 };
+    expect(collides(a, b)).toEqual(false);
+  });
+
+  it("detects collisions when objects overlap slightly", () => {
+    const a = { position: { x: 2, y: 5 }, size: 2 };
+    const b = { position: { x: 6.9, y: 5 }, size: 3 };
+    expect(collides(a, b)).toEqual(true);
   });
 });
