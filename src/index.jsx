@@ -12,11 +12,16 @@ const config: Config = {
   velocity: 0.3
 };
 
+const slowDown = null;
+
 if (!module.parent) {
   const appElement = document.getElementById("app");
   if (!appElement) {
     throw new Error("cannot find element 'app'");
   }
-  const SceneRender = animated(mkSceneRender(config, new Scene(config)));
+  const SceneRender = animated(
+    slowDown,
+    mkSceneRender(config, new Scene(config))
+  );
   dom.render(<SceneRender />, appElement);
 }
