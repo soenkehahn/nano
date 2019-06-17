@@ -7,17 +7,13 @@ import React from "react";
 export class Minion {
   velocity: number;
 
-  target: Vector = {
-    x: 0,
-    y: 0
-  };
+  target: Vector;
 
-  position: Vector = {
-    x: 0,
-    y: 0
-  };
+  position: Vector;
 
   constructor(config: Config) {
+    this.position = { x: 0, y: 0 };
+    this.target = this.position;
     this.velocity = config.velocity;
   }
 
