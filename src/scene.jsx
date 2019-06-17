@@ -15,9 +15,9 @@ export type Config = {|
 
 type Props = {| time: number, timeDelta: number |};
 
-type State = {| scene: IScene, timeDeltaRemainder: number |};
+type State = {| scene: Scene, timeDeltaRemainder: number |};
 
-export const mkSceneRender = (config: Config, scene: IScene) => {
+export const mkSceneRender = (config: Config, scene: Scene) => {
   class SceneRender extends React.Component<Props, State> {
     constructor() {
       super();
@@ -54,7 +54,9 @@ export const mkSceneRender = (config: Config, scene: IScene) => {
             <rect x={-250} y={-250} width="100%" height="100%" fill="#eee" />
             {this.state.scene.draw()}
           </SvgWithMouse>
-          <Inventory resource={this.state.scene.inventory} />
+          <div id="inventory">resource: {this.state.scene.inventory}</div>
+          {this.state.scene.activeCommand()}
+          commands: {this.state.scene.goButton()}
         </div>
       );
     };
@@ -62,21 +64,7 @@ export const mkSceneRender = (config: Config, scene: IScene) => {
   return SceneRender;
 };
 
-export const Inventory = ({ resource }: {| resource: number |}) => (
-  <div>resource: {resource}</div>
-);
-
-export interface IScene {
-  inventory: number;
-
-  step(timeDelta: number): void;
-
-  onClick(target: Vector): void;
-
-  draw(): React$Element<*>;
-}
-
-export class Scene implements IScene {
+export class Scene {
   minion: Minion;
   resources: Array<Resource>;
   inventory: number = 0;
@@ -99,6 +87,14 @@ export class Scene implements IScene {
   step = (timeDelta: number): void => {
     this.minion.step(timeDelta, this);
   };
+
+  activeCommand = (): null | React$Element<*> => (
+    <div id="activeCommand">
+      active command: {this.minion.activeCommand() || "none"}
+    </div>
+  );
+
+  goButton = (): null | React$Element<*> => this.minion.goButton();
 
   onClick = (target: Vector): void => {
     this.minion.onClick(target);

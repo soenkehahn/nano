@@ -21,6 +21,8 @@ export class Minion {
 
   size: number = 10;
 
+  _state: "idle" | "goCoordinates" | "go" = "idle";
+
   constructor(config: Config) {
     this.position = { x: 0, y: 0 };
     this.target = this.position;
@@ -28,21 +30,45 @@ export class Minion {
   }
 
   onClick = (target: Vector): void => {
-    this.target = target;
+    if (this._state === "goCoordinates") {
+      this.target = target;
+      this._state = "go";
+    }
   };
 
   step = (timeDelta: number, scene: Scene): void => {
-    const distanceLeft = distance(this.target, this.position);
-    const stepDistance = this.velocity * timeDelta;
-    if (stepDistance < distanceLeft) {
-      this.position = add(
-        this.position,
-        scale(unit(difference(this.position, this.target)), stepDistance)
-      );
-    } else {
-      this.position = this.target;
-    }
+    this.handleMovement(timeDelta);
     this.depleteResource(scene);
+  };
+
+  activeCommand = (): ?string => (this._state === "go" ? "go" : null);
+
+  goButton = (): null | React$Element<*> =>
+    this._state === "idle" ? (
+      <button
+        id="go"
+        onClick={() => {
+          this._state = "goCoordinates";
+        }}
+      >
+        go
+      </button>
+    ) : null;
+
+  handleMovement = (timeDelta: number): void => {
+    if (this._state === "go") {
+      const distanceLeft = distance(this.target, this.position);
+      const stepDistance = this.velocity * timeDelta;
+      if (stepDistance < distanceLeft) {
+        this.position = add(
+          this.position,
+          scale(unit(difference(this.position, this.target)), stepDistance)
+        );
+      } else {
+        this.position = this.target;
+        this._state = "idle";
+      }
+    }
   };
 
   depleteResource = (scene: Scene): void => {

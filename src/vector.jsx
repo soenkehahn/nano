@@ -2,6 +2,16 @@
 
 export type Vector = { x: number, y: number };
 
+export function equals(a: Vector, b: Vector): boolean {
+  if (a.x !== b.x) {
+    return false;
+  }
+  if (a.y !== b.y) {
+    return false;
+  }
+  return true;
+}
+
 export function add(a: Vector, b: Vector): Vector {
   return { x: a.x + b.x, y: a.y + b.y };
 }

@@ -5,6 +5,7 @@ import {
   collides,
   difference,
   distance,
+  equals,
   random,
   scale,
   unit,
@@ -90,5 +91,17 @@ describe("random", () => {
         v.x >= lower && v.x <= upper && v.y >= lower && v.y <= upper
       ).toEqual(true);
     }
+  });
+});
+
+describe("equals", () => {
+  it("returns true for equal vectors", () => {
+    expect(equals({ x: 1, y: 2 }, { x: 1, y: 2 })).toEqual(true);
+  });
+
+  it("returns false for unequal vectors", () => {
+    expect(equals({ x: 1, y: 2 }, { x: 3, y: 4 })).toEqual(false);
+    expect(equals({ x: 1, y: 2 }, { x: 3, y: 2 })).toEqual(false);
+    expect(equals({ x: 1, y: 2 }, { x: 1, y: 3 })).toEqual(false);
   });
 });

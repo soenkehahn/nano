@@ -2,7 +2,7 @@
 
 import "@babel/polyfill";
 import * as jsdomExtensions from "./jsdomExtensions/svg";
-import { type Config, IScene, Inventory, Scene, mkSceneRender } from "./scene";
+import { type Config, Scene, mkSceneRender } from "./scene";
 import { MinionRender, type RenderProps } from "./minion";
 import { ReactWrapper } from "enzyme";
 import { ResourceRender } from "./resource";
@@ -42,59 +42,6 @@ beforeEach(() => {
 });
 
 describe("SceneRender", () => {
-  describe("with Scene", () => {
-    let sceneRender;
-
-    beforeEach(() => {
-      const SceneRender = mkSceneRender(config, new Scene(config));
-      sceneRender = mount(<SceneRender time={0} timeDelta={0} />);
-    });
-
-    it("shows minion in svg context", () => {
-      expect(
-        sceneRender
-          .find("svg")
-          .find(MinionRender)
-          .exists()
-      ).toEqual(true);
-    });
-
-    it("allows to set the minion coordinates with a mouse click", async () => {
-      mockSvgJsdomExtensions(sceneRender.find("svg"), { x: 0, y: 0 });
-      sceneRender.find("svg").simulate("click", { clientX: 10, clientY: 10 });
-      sceneRender.setProps({ timeDelta: 100 });
-      expect(sceneRender.find(MinionRender).props()).toMatchObject({
-        x: 10,
-        y: 10
-      });
-    });
-
-    it("takes the offset of the svg pane into account", () => {
-      mockSvgJsdomExtensions(sceneRender.find("svg"), { x: 2, y: 1 });
-      sceneRender.find("svg").simulate("click", { clientX: 10, clientY: 10 });
-      sceneRender.setProps({ timeDelta: 100 });
-      expect(sceneRender.find(MinionRender).props()).toMatchObject({
-        x: 8,
-        y: 9
-      });
-    });
-
-    it("minions need time to move around", () => {
-      mockSvgJsdomExtensions(sceneRender.find("svg"), { x: 0, y: 0 });
-      sceneRender.find("svg").simulate("click", { clientX: 1, clientY: 0 });
-      sceneRender.setProps({ timeDelta: 0.5 });
-      expect(sceneRender.find(MinionRender).props()).toMatchObject({
-        x: 0.5,
-        y: 0
-      });
-    });
-
-    it("calls step functions on fixed timeDeltas multiple times", () => {
-      mockSvgJsdomExtensions(sceneRender.find("svg"), { x: 0, y: 0 });
-      sceneRender.setProps({ timeDelta: 1 });
-    });
-  });
-
   describe("step function logic", () => {
     let timeDeltas;
 
@@ -102,28 +49,27 @@ describe("SceneRender", () => {
       timeDeltas = [];
     });
 
-    class MockScene implements IScene {
-      inventory = 0;
-      step = (timeDelta: number) => {
+    function mkMockScene(): Scene {
+      const scene = new Scene(config);
+      scene.step = (timeDelta: number) => {
         timeDeltas.push(timeDelta);
       };
-      onClick = () => {};
-      draw = () => <div />;
+      return scene;
     }
 
     it("calls the step function as often as needed to reach the timeDelta", () => {
       config.stepTimeDelta = 1;
-      const Scene = mkSceneRender(config, new MockScene());
-      const sceneRender = mount(<Scene time={0} timeDelta={0} />);
-      sceneRender.setProps({ timeDelta: 10 });
+      const Scene = mkSceneRender(config, mkMockScene());
+      const wrapper = mount(<Scene time={0} timeDelta={0} />);
+      wrapper.setProps({ timeDelta: 10 });
       expect(timeDeltas.length).toEqual(10);
     });
 
     it("calls the step function with fixed timeDeltas", () => {
       config.stepTimeDelta = 0.5;
-      const Scene = mkSceneRender(config, new MockScene());
-      const sceneRender = mount(<Scene time={0} timeDelta={0} />);
-      sceneRender.setProps({ timeDelta: 5 });
+      const Scene = mkSceneRender(config, mkMockScene());
+      const wrapper = mount(<Scene time={0} timeDelta={0} />);
+      wrapper.setProps({ timeDelta: 5 });
       for (const timeDelta of timeDeltas) {
         expect(timeDelta).toEqual(0.5);
       }
@@ -131,26 +77,139 @@ describe("SceneRender", () => {
 
     it("saves the remainder of the timeDelta for the next round", () => {
       config.stepTimeDelta = 0.6;
-      const Scene = mkSceneRender(config, new MockScene());
-      const sceneRender = mount(<Scene time={0} timeDelta={0} />);
-      sceneRender.setProps({ timeDelta: 1 });
+      const Scene = mkSceneRender(config, mkMockScene());
+      const wrapper = mount(<Scene time={0} timeDelta={0} />);
+      wrapper.setProps({ timeDelta: 1 });
       expect(timeDeltas.length).toEqual(1);
-      sceneRender.setProps({ timeDelta: 1 });
+      wrapper.setProps({ timeDelta: 1 });
       expect(timeDeltas.length).toEqual(3);
-      sceneRender.setProps({ timeDelta: 1 });
+      wrapper.setProps({ timeDelta: 1 });
       expect(timeDeltas.length).toEqual(5);
-      sceneRender.setProps({ timeDelta: 1 });
+      wrapper.setProps({ timeDelta: 1 });
       expect(timeDeltas.length).toEqual(6);
-      sceneRender.setProps({ timeDelta: 1 });
+      wrapper.setProps({ timeDelta: 1 });
       expect(timeDeltas.length).toEqual(8);
-      sceneRender.setProps({ timeDelta: 1 });
+      wrapper.setProps({ timeDelta: 1 });
       expect(timeDeltas.length).toEqual(10);
     });
   });
 });
 
 describe("Scene", () => {
-  describe("resource", () => {
+  describe("interface", () => {
+    let wrapper;
+
+    beforeEach(() => {
+      const SceneRender = mkSceneRender(config, new Scene(config));
+      wrapper = mount(<SceneRender time={0} timeDelta={0} />);
+      mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
+    });
+
+    it("takes the offset of the svg pane into account", () => {
+      mockSvgJsdomExtensions(wrapper.find("svg"), { x: 2, y: 1 });
+      wrapper.find("#go").simulate("click");
+      wrapper.find("svg").simulate("click", { clientX: 10, clientY: 10 });
+      wrapper.setProps({ timeDelta: 100 });
+      expect(wrapper.find(MinionRender).props()).toMatchObject({
+        x: 8,
+        y: 9
+      });
+    });
+
+    it("doesn't show the go button after being pressed", () => {
+      wrapper.find("#go").simulate("click");
+      wrapper.setProps({ timeDelta: 1 });
+      expect(wrapper.find("#go").exists()).toEqual(false);
+    });
+
+    it("shows the go button after minion reaches target", () => {
+      wrapper.find("#go").simulate("click");
+      wrapper.find("svg").simulate("click", { clientX: 10, clientY: 10 });
+      wrapper.setProps({ timeDelta: 100 });
+      expect(wrapper.find("#go").exists()).toEqual(true);
+    });
+
+    describe("active command", () => {
+      it("initially shows no active command", () => {
+        expect(wrapper.find("#activeCommand").text()).toEqual(
+          "active command: none"
+        );
+      });
+
+      it("shows the active command", () => {
+        wrapper.find("#go").simulate("click");
+        wrapper.find("svg").simulate("click", { clientX: 10, clientY: 10 });
+        wrapper.setProps({ timeDelta: 1 });
+        expect(wrapper.find("#activeCommand").text()).toEqual(
+          "active command: go"
+        );
+      });
+    });
+  });
+
+  describe("Minion", () => {
+    let wrapper;
+
+    beforeEach(() => {
+      const SceneRender = mkSceneRender(config, new Scene(config));
+      wrapper = mount(<SceneRender time={0} timeDelta={0} />);
+      mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
+    });
+
+    it("shows minion in svg context", () => {
+      expect(
+        wrapper
+          .find("svg")
+          .find(MinionRender)
+          .exists()
+      ).toEqual(true);
+    });
+
+    it("doesn't allow to set the minion coordinates with a mouse click", async () => {
+      wrapper.find("svg").simulate("click", { clientX: 10, clientY: 10 });
+      wrapper.setProps({ timeDelta: 100 });
+      expect(wrapper.find(MinionRender).props()).toMatchObject({
+        x: 0,
+        y: 0
+      });
+    });
+
+    describe("after pressing 'go'", () => {
+      it("allows to set the minion coordinates with a mouse click", async () => {
+        wrapper.find("#go").simulate("click");
+        wrapper.find("svg").simulate("click", { clientX: 10, clientY: 10 });
+        wrapper.setProps({ timeDelta: 100 });
+        expect(wrapper.find(MinionRender).props()).toMatchObject({
+          x: 10,
+          y: 10
+        });
+      });
+
+      it("doesn't allow to change the minion target while it's underway", async () => {
+        wrapper.find("#go").simulate("click");
+        wrapper.find("svg").simulate("click", { clientX: 10, clientY: 0 });
+        wrapper.setProps({ timeDelta: 1 });
+        wrapper.find("svg").simulate("click", { clientX: 20, clientY: 0 });
+        wrapper.setProps({ timeDelta: 100 });
+        expect(wrapper.find(MinionRender).props()).toMatchObject({
+          x: 10,
+          y: 0
+        });
+      });
+    });
+
+    it("minions need time to move around", () => {
+      wrapper.find("#go").simulate("click");
+      wrapper.find("svg").simulate("click", { clientX: 1, clientY: 0 });
+      wrapper.setProps({ timeDelta: 0.5 });
+      expect(wrapper.find(MinionRender).props()).toMatchObject({
+        x: 0.5,
+        y: 0
+      });
+    });
+  });
+
+  describe("Resource", () => {
     let scene;
     let wrapper;
     let minionProps: RenderProps;
@@ -177,6 +236,7 @@ describe("Scene", () => {
       });
 
       it("depletes resources when colliding (same position) with a minion", () => {
+        wrapper.find("#go").simulate("click");
         wrapper.find("svg").simulate("click", {
           clientX: resourceProps.x,
           clientY: resourceProps.y
@@ -186,6 +246,7 @@ describe("Scene", () => {
       });
 
       it("depletes a resource when colliding slightly with a minion", () => {
+        wrapper.find("#go").simulate("click");
         wrapper.find("svg").simulate("click", {
           clientX:
             resourceProps.x - (resourceProps.size + minionProps.size) + 0.1,
@@ -196,6 +257,7 @@ describe("Scene", () => {
       });
 
       it("doesn't deplete a resource when near a minion", () => {
+        wrapper.find("#go").simulate("click");
         wrapper.find("svg").simulate("click", {
           clientX:
             resourceProps.x - (resourceProps.size + minionProps.size) - 0.1,
@@ -206,16 +268,17 @@ describe("Scene", () => {
       });
 
       it("initializes an empty inventory", () => {
-        expect(wrapper.find(Inventory).text()).toEqual("resource: 0");
+        expect(wrapper.find("#inventory").text()).toEqual("resource: 0");
       });
 
       it("increases the inventory resource counter", () => {
+        wrapper.find("#go").simulate("click");
         wrapper.find("svg").simulate("click", {
           clientX: resourceProps.x,
           clientY: resourceProps.y
         });
         wrapper.setProps({ timeDelta: 1 });
-        expect(wrapper.find(Inventory).text()).toEqual("resource: 1");
+        expect(wrapper.find("#inventory").text()).toEqual("resource: 1");
       });
     });
   });
