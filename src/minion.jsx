@@ -63,7 +63,11 @@ export class Minion {
         go
       </button>
     );
-    if (collides(this, scene.lab) && !scene.canMine) {
+    if (
+      collides(this, scene.lab) &&
+      scene.lab.status.tag === "idle" &&
+      !scene.canMine
+    ) {
       result.push(
         <button
           key="research"

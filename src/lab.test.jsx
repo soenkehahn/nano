@@ -63,6 +63,7 @@ describe("Factory", () => {
     wrapper.find("#researchButton").simulate("click");
     wrapper.setProps({ timeDelta: 3 });
     expect(wrapper.find("#newResearch").exists()).toEqual(false);
+    expect(wrapper.find("#researchButton").exists()).toEqual(false);
     expect(wrapper.find(LabRender).props().completion).toEqual(3 / 5);
     wrapper.setProps({ timeDelta: 3 });
     expect(wrapper.find("#newResearch").text()).toEqual("new research: mining");
