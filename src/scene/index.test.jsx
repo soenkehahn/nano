@@ -1,25 +1,14 @@
 // @flow
 
-import { type Config, Scene, mkSceneRender } from "../scene";
 import { MinionRender, type RenderProps } from "../minion";
 import { ResourceRender } from "../resource";
-import { mockSvgJsdomExtensions } from "../test/utils";
+import { Scene, mkSceneRender } from "../scene";
+import { mockSvgJsdomExtensions, setupTestConfig } from "../test/utils";
 import { mount } from "enzyme";
 import { toClickEvent } from "../vector";
 import React from "react";
 
-let config: Config;
-
-beforeEach(() => {
-  config = {
-    initialSize: { x: 200, y: 200 },
-    zoomVelocity: 1.1,
-    stepTimeDelta: 0.5,
-    velocity: 1,
-    prices: { factory: 3 },
-    researchVelocity: 1,
-  };
-});
+const testConfig = setupTestConfig();
 
 describe("SceneRender", () => {
   describe("step function logic", () => {
@@ -30,7 +19,7 @@ describe("SceneRender", () => {
     });
 
     function mkMockScene(): Scene {
-      const scene = new Scene(config);
+      const scene = new Scene(testConfig());
       scene.step = (timeDelta: number) => {
         timeDeltas.push(timeDelta);
       };
@@ -38,16 +27,16 @@ describe("SceneRender", () => {
     }
 
     it("calls the step function as often as needed to reach the timeDelta", () => {
-      config.stepTimeDelta = 1;
-      const SceneRender = mkSceneRender(config, mkMockScene());
+      testConfig().stepTimeDelta = 1;
+      const SceneRender = mkSceneRender(testConfig(), mkMockScene());
       const wrapper = mount(<SceneRender time={0} timeDelta={0} />);
       wrapper.setProps({ timeDelta: 10 });
       expect(timeDeltas.length).toEqual(10);
     });
 
     it("calls the step function with fixed timeDeltas", () => {
-      config.stepTimeDelta = 0.5;
-      const Scene = mkSceneRender(config, mkMockScene());
+      testConfig().stepTimeDelta = 0.5;
+      const Scene = mkSceneRender(testConfig(), mkMockScene());
       const wrapper = mount(<Scene time={0} timeDelta={0} />);
       wrapper.setProps({ timeDelta: 5 });
       for (const timeDelta of timeDeltas) {
@@ -56,8 +45,8 @@ describe("SceneRender", () => {
     });
 
     it("saves the remainder of the timeDelta for the next round", () => {
-      config.stepTimeDelta = 0.6;
-      const Scene = mkSceneRender(config, mkMockScene());
+      testConfig().stepTimeDelta = 0.6;
+      const Scene = mkSceneRender(testConfig(), mkMockScene());
       const wrapper = mount(<Scene time={0} timeDelta={0} />);
       wrapper.setProps({ timeDelta: 1 });
       expect(timeDeltas.length).toEqual(1);
@@ -81,8 +70,8 @@ describe("Scene", () => {
     let wrapper;
 
     beforeEach(() => {
-      scene = new Scene(config);
-      const SceneRender = mkSceneRender(config, scene);
+      scene = new Scene(testConfig());
+      const SceneRender = mkSceneRender(testConfig(), scene);
       wrapper = mount(<SceneRender time={0} timeDelta={0} />);
       mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
     });
@@ -142,8 +131,8 @@ describe("Scene", () => {
     let wrapper;
 
     beforeEach(() => {
-      scene = new Scene(config);
-      const SceneRender = mkSceneRender(config, scene);
+      scene = new Scene(testConfig());
+      const SceneRender = mkSceneRender(testConfig(), scene);
       wrapper = mount(<SceneRender time={0} timeDelta={0} />);
       mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
     });
@@ -210,9 +199,9 @@ describe("Scene", () => {
     let resourceProps: RenderProps;
 
     beforeEach(() => {
-      config.velocity = 99999999999999;
-      scene = new Scene(config);
-      const SceneRender = mkSceneRender(config, scene);
+      testConfig().velocity = 99999999999999;
+      scene = new Scene(testConfig());
+      const SceneRender = mkSceneRender(testConfig(), scene);
       wrapper = mount(<SceneRender time={0} timeDelta={0} />);
       mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
     });

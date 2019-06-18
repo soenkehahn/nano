@@ -1,8 +1,8 @@
 // @flow
 
-import { type Config, Scene, mkSceneRender } from "./scene";
+import { Scene, mkSceneRender } from "./scene";
 import { SvgWithMouse } from "./svgWithMouse";
-import { mockSvgJsdomExtensions } from "./test/utils";
+import { mockSvgJsdomExtensions, setupTestConfig } from "./test/utils";
 import { mount } from "enzyme";
 import { toClickEvent } from "./vector";
 import React from "react";
@@ -129,17 +129,10 @@ describe("SvgWithMouse", () => {
 
 describe("drag & minion interaction", () => {
   let wrapper;
+  const testConfig = setupTestConfig();
 
   beforeEach(() => {
-    const config: Config = {
-      initialSize: { x: 200, y: 200 },
-      zoomVelocity: 1.1,
-      stepTimeDelta: 0.5,
-      velocity: 1,
-      prices: { factory: 3 },
-      researchVelocity: 1,
-    };
-    const SceneRender = mkSceneRender(config, new Scene(config));
+    const SceneRender = mkSceneRender(testConfig(), new Scene(testConfig()));
     wrapper = mount(<SceneRender time={0} timeDelta={0} />);
     mockSvgJsdomExtensions(wrapper.find("svg"), { x: 100, y: 100 });
   });

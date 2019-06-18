@@ -1,6 +1,7 @@
 // @flow
 
 import * as jsdomExtensions from "../jsdomExtensions/svg";
+import { type Config } from "../scene";
 import { ReactWrapper } from "enzyme";
 
 export function mockSvgJsdomExtensions(
@@ -24,3 +25,18 @@ export function mockSvgJsdomExtensions(
     (svgElement: any)[field] = mockExtensions[field];
   }
 }
+
+export const setupTestConfig = (): (() => Config) => {
+  let config: Config;
+  beforeEach(() => {
+    config = {
+      initialSize: { x: 200, y: 200 },
+      zoomVelocity: 1.1,
+      stepTimeDelta: 0.5,
+      velocity: 1,
+      prices: { factory: 3 },
+      researchVelocity: 1,
+    };
+  });
+  return () => config;
+};

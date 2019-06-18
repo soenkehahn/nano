@@ -1,32 +1,21 @@
 // @flow
 
-import { type Config, Scene, mkSceneRender } from "./scene";
 import { FactoryRender } from "./factory";
-import { mockSvgJsdomExtensions } from "./test/utils";
+import { Scene, mkSceneRender } from "./scene";
+import { mockSvgJsdomExtensions, setupTestConfig } from "./test/utils";
 import { mount } from "enzyme";
 import { toClickEvent } from "./vector";
 import React from "react";
 
-let config: Config;
-
-beforeEach(() => {
-  config = {
-    initialSize: { x: 200, y: 200 },
-    zoomVelocity: 1.1,
-    stepTimeDelta: 0.5,
-    velocity: 1,
-    prices: { factory: 3 },
-    researchVelocity: 1,
-  };
-});
+const testConfig = setupTestConfig();
 
 describe("Factory", () => {
   let scene;
   let wrapper;
 
   beforeEach(() => {
-    scene = new Scene(config);
-    const SceneRender = mkSceneRender(config, scene);
+    scene = new Scene(testConfig());
+    const SceneRender = mkSceneRender(testConfig(), scene);
     wrapper = mount(<SceneRender time={0} timeDelta={0} />);
     mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
   });
