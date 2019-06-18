@@ -40,9 +40,8 @@ export class Minion {
     }
   };
 
-  step = (timeDelta: number, scene: Scene): void => {
+  step = (timeDelta: number): void => {
     this.handleMovement(timeDelta);
-    this.depleteResource(scene);
   };
 
   activeCommand = (): ?string => (this._state === "go" ? "go" : null);
@@ -80,6 +79,23 @@ export class Minion {
         </button>
       );
     }
+    if (scene.canMine) {
+      for (let i = 0; i < scene.resources.length; i++) {
+        if (collides(this, scene.resources[i])) {
+          result.push(
+            <button
+              key={`mine-${i}`}
+              id="mineButton"
+              onClick={() => {
+                this.depleteResource(scene, i);
+              }}
+            >
+              mine
+            </button>
+          );
+        }
+      }
+    }
     if (scene.inventory >= this.config.prices.factory) {
       result.push(
         <button
@@ -113,15 +129,9 @@ export class Minion {
     }
   };
 
-  depleteResource = (scene: Scene): void => {
-    if (scene.canMine) {
-      for (let i = 0; i < scene.resources.length; i++) {
-        if (collides(this, scene.resources[i])) {
-          scene.resources.splice(i, 1);
-          scene.inventory++;
-        }
-      }
-    }
+  depleteResource = (scene: Scene, i: number): void => {
+    scene.resources.splice(i, 1);
+    scene.inventory++;
   };
 
   draw = (): React$Element<*> => {

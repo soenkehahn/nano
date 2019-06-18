@@ -95,7 +95,7 @@ export class Scene {
 
   step = (timeDelta: number): void => {
     this.lab.step(timeDelta);
-    this.minion.step(timeDelta, this);
+    this.minion.step(timeDelta);
   };
 
   activeCommand = (): null | React$Element<*> => (

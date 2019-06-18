@@ -232,6 +232,7 @@ describe("Scene", () => {
         wrapper.find("#goButton").simulate("click");
         wrapper.find("svg").simulate("click", toClickEvent(resourceProps));
         wrapper.setProps({ timeDelta: 1 });
+        expect(wrapper.find("#mineButton").exists()).toEqual(false);
         expect(wrapper.find(ResourceRender).exists()).toEqual(true);
       });
 
@@ -240,9 +241,12 @@ describe("Scene", () => {
           scene.canMine = true;
         });
 
-        it("depletes resources when colliding (same position) with a minion", () => {
+        it("allows to mine a resource when colliding (same position) with a minion", () => {
           wrapper.find("#goButton").simulate("click");
           wrapper.find("svg").simulate("click", toClickEvent(resourceProps));
+          wrapper.setProps({ timeDelta: 1 });
+          expect(wrapper.find(ResourceRender).exists()).toEqual(true);
+          wrapper.find("#mineButton").simulate("click");
           wrapper.setProps({ timeDelta: 1 });
           expect(wrapper.find(ResourceRender).exists()).toEqual(false);
         });
@@ -258,10 +262,12 @@ describe("Scene", () => {
             })
           );
           wrapper.setProps({ timeDelta: 1 });
+          wrapper.find("#mineButton").simulate("click");
+          wrapper.setProps({ timeDelta: 1 });
           expect(wrapper.find(ResourceRender).exists()).toEqual(false);
         });
 
-        it("doesn't deplete a resource when near a minion", () => {
+        it("doesn't allow to mine when near a minion", () => {
           wrapper.find("#goButton").simulate("click");
           wrapper.find("svg").simulate(
             "click",
@@ -272,6 +278,7 @@ describe("Scene", () => {
             })
           );
           wrapper.setProps({ timeDelta: 1 });
+          expect(wrapper.find("#mineButton").exists()).toEqual(false);
           expect(wrapper.find(ResourceRender).exists()).toEqual(true);
         });
 
@@ -282,6 +289,8 @@ describe("Scene", () => {
         it("increases the inventory resource counter", () => {
           wrapper.find("#goButton").simulate("click");
           wrapper.find("svg").simulate("click", toClickEvent(resourceProps));
+          wrapper.setProps({ timeDelta: 1 });
+          wrapper.find("#mineButton").simulate("click");
           wrapper.setProps({ timeDelta: 1 });
           expect(wrapper.find("#inventory").text()).toEqual("resource: 1");
         });
