@@ -13,7 +13,7 @@ if (!module.parent) {
   if (!appElement) {
     throw new Error("cannot find element 'app'");
   }
-  const config = {
+  const config: Config = {
     sceneSize: 500,
     zoomVelocity: 1.15,
     stepTimeDelta: 1000 / 60,

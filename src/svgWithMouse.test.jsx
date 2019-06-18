@@ -1,8 +1,8 @@
 // @flow
 
-import { mount } from "enzyme";
-import { mockSvgJsdomExtensions } from "./test/utils";
 import { SvgWithMouse } from "./svgWithMouse";
+import { mockSvgJsdomExtensions } from "./test/utils";
+import { mount } from "enzyme";
 import React from "react";
 
 describe("SvgWithMouse", () => {
