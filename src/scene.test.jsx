@@ -12,7 +12,8 @@ let config: Config;
 
 beforeEach(() => {
   config = {
-    dimensions: { lower: -100, upper: 100 },
+    sceneSize: 200,
+    zoomVelocity: 1.1,
     stepTimeDelta: 0.5,
     velocity: 1,
     prices: { factory: 3 },

@@ -7,7 +7,8 @@ import React from "react";
 import dom from "react-dom";
 
 const config: Config = {
-  dimensions: { lower: -250, upper: 250 },
+  sceneSize: 500,
+  zoomVelocity: 1.15,
   stepTimeDelta: 1000 / 60,
   velocity: 0.03,
   prices: { factory: 3 },
