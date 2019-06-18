@@ -121,7 +121,7 @@ export const MinionRender = (props: RenderProps) => (
     cx={props.x}
     cy={props.y}
     r={props.size}
-    style={{ fill: lightBlue }}
+    style={{ fill: lightBlue, fillOpacity: 0.9 }}
   />
 );
 
