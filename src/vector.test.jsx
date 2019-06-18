@@ -1,11 +1,13 @@
 // @flow
 
 import {
+  TAU,
   add,
   collides,
   difference,
   distance,
   equals,
+  fromAngle,
   random,
   scale,
   unit,
@@ -53,6 +55,24 @@ describe("unit", () => {
     const result = unit({ x: 3, y: 4 });
     expect(result.x).toBeCloseTo(3 / 5);
     expect(result.y).toBeCloseTo(4 / 5);
+  });
+});
+
+describe("fromAngle", () => {
+  it("returns a unit vector pointing in the given direction", () => {
+    const rightAngle = fromAngle(TAU / 4);
+    expect(rightAngle.x).toBeCloseTo(-1);
+    expect(rightAngle.y).toBeCloseTo(0);
+    expect(fromAngle(TAU / 8)).toEqual({
+      x: -Math.sin(TAU / 8),
+      y: -Math.cos(TAU / 8)
+    });
+  });
+
+  it("angle 0 means up", () => {
+    const result = fromAngle(0);
+    expect(result.x).toBeCloseTo(0);
+    expect(result.y).toBeCloseTo(-1);
   });
 });
 

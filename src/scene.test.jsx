@@ -15,7 +15,8 @@ beforeEach(() => {
     dimensions: { lower: -100, upper: 100 },
     stepTimeDelta: 0.5,
     velocity: 1,
-    prices: { factory: 3 }
+    prices: { factory: 3 },
+    researchVelocity: 1
   };
 });
 

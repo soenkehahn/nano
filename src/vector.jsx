@@ -38,6 +38,12 @@ export function unit(v: Vector): Vector {
   return { x: v.x * factor, y: v.y * factor };
 }
 
+export const TAU = 2 * Math.PI;
+
+export function fromAngle(radians: number): Vector {
+  return { x: -Math.sin(radians), y: -Math.cos(radians) };
+}
+
 export function collides(
   a: { position: Vector, size: number },
   b: { position: Vector, size: number }

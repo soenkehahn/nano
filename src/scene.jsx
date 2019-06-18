@@ -13,7 +13,8 @@ export type Config = {|
   dimensions: { lower: number, upper: number },
   stepTimeDelta: number,
   velocity: number,
-  prices: { factory: number }
+  prices: { factory: number },
+  researchVelocity: number
 |};
 
 type Props = {| time: number, timeDelta: number |};
@@ -54,7 +55,7 @@ export const mkSceneRender = (config: Config, scene: Scene) => {
             viewBox={viewBox}
             onClick={this.state.scene.onClick}
           >
-            <rect x={-250} y={-250} width="100%" height="100%" fill="#eee" />
+            <rect x={-250} y={-250} width="100%" height="100%" fill="black" />
             {this.state.scene.draw()}
           </SvgWithMouse>
           {this.state.scene.interface()}
@@ -75,7 +76,7 @@ export class Scene {
 
   constructor(config: Config) {
     this.minion = new Minion(config);
-    this.lab = new Lab({ x: 50, y: 0 });
+    this.lab = new Lab(config, this, { x: 50, y: 0 });
     this.canMine = false;
     this.resources = [];
     for (let i = 0; i < 10; i++) {
@@ -93,6 +94,7 @@ export class Scene {
   }
 
   step = (timeDelta: number): void => {
+    this.lab.step(timeDelta);
     this.minion.step(timeDelta, this);
   };
 

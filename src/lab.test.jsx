@@ -14,7 +14,8 @@ beforeEach(() => {
     dimensions: { lower: -100, upper: 100 },
     stepTimeDelta: 0.5,
     velocity: 1,
-    prices: { factory: 3 }
+    prices: { factory: 3 },
+    researchVelocity: 1 / 5
   };
 });
 
@@ -40,7 +41,7 @@ describe("Factory", () => {
     expect(wrapper.find("#researchButton").exists()).toEqual(true);
     expect(wrapper.find("#newResearch").exists()).toEqual(false);
     wrapper.find("#researchButton").simulate("click");
-    wrapper.setProps({ timeDelta: 1 });
+    wrapper.setProps({ timeDelta: 10 });
     expect(wrapper.find("#newResearch").text()).toEqual("new research: mining");
   });
 
@@ -49,7 +50,22 @@ describe("Factory", () => {
     wrapper.find("svg").simulate("click", toClickEvent(scene.lab.position));
     wrapper.setProps({ timeDelta: 100 });
     wrapper.find("#researchButton").simulate("click");
-    wrapper.setProps({ timeDelta: 1 });
+    wrapper.setProps({ timeDelta: 10 });
     expect(wrapper.find("#researchButton").exists()).toEqual(false);
+  });
+
+  test("researching takes time", () => {
+    wrapper.find("#goButton").simulate("click");
+    wrapper.find("svg").simulate("click", toClickEvent(scene.lab.position));
+    wrapper.setProps({ timeDelta: 100 });
+    expect(wrapper.find("#researchButton").exists()).toEqual(true);
+    expect(wrapper.find(LabRender).props().completion).toEqual(null);
+    wrapper.find("#researchButton").simulate("click");
+    wrapper.setProps({ timeDelta: 3 });
+    expect(wrapper.find("#newResearch").exists()).toEqual(false);
+    expect(wrapper.find(LabRender).props().completion).toEqual(3 / 5);
+    wrapper.setProps({ timeDelta: 3 });
+    expect(wrapper.find("#newResearch").text()).toEqual("new research: mining");
+    expect(wrapper.find(LabRender).props().completion).toEqual(null);
   });
 });

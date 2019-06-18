@@ -11,7 +11,7 @@ export class Factory {
 
   position: Vector;
 
-  size: number = 14;
+  size: number = 16;
 
   constructor(position: Vector) {
     this.id = counter;
@@ -32,5 +32,5 @@ export class Factory {
 }
 
 export const FactoryRender = (props: RenderProps) => (
-  <circle cx={props.x} cy={props.y} r={props.size} style={{ fill: "black" }} />
+  <circle cx={props.x} cy={props.y} r={props.size} style={{ fill: "green" }} />
 );

@@ -10,7 +10,8 @@ const config: Config = {
   dimensions: { lower: -250, upper: 250 },
   stepTimeDelta: 3,
   velocity: 0.03,
-  prices: { factory: 3 }
+  prices: { factory: 3 },
+  researchVelocity: 0.00001
 };
 
 const slowDown = null;

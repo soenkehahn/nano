@@ -69,7 +69,7 @@ export class Minion {
           key="research"
           id="researchButton"
           onClick={() => {
-            scene.canMine = true;
+            scene.lab.startResearch();
           }}
         >
           research
