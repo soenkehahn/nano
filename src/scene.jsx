@@ -75,7 +75,7 @@ export class Scene {
     this.canMine = false;
     this.resources = [];
     for (let i = 0; i < 10; i++) {
-      const resource = new Resource(i);
+      const resource = new Resource();
       do {
         resource.position = vector.random(
           -config.sceneSize / 2,

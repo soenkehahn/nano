@@ -6,13 +6,13 @@ import React from "react";
 
 export class Resource {
   id: number;
-
+  static idCounter: number = 0;
   position: Vector = { x: 0, y: 0 };
-
   size: number = 10;
 
-  constructor(id: number) {
-    this.id = id;
+  constructor() {
+    this.id = Resource.idCounter;
+    Resource.idCounter++;
   }
 
   draw = (): React$Element<*> => {
