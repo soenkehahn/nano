@@ -6,7 +6,7 @@ import { type Vector } from "../vector";
 import React from "react";
 
 export type Config = {|
-  sceneSize: Vector,
+  initialSize: Vector,
   zoomVelocity: number,
   stepTimeDelta: number,
   velocity: number,
@@ -42,8 +42,8 @@ export const mkSceneRender = (config: Config, scene: Scene) => {
       return (
         <div>
           <SvgWithMouse
-            width={config.sceneSize.x}
-            height={config.sceneSize.y}
+            width={config.initialSize.x}
+            height={config.initialSize.y}
             onClick={this.state.scene.onClick}
             zoomVelocity={config.zoomVelocity}
           >

@@ -25,7 +25,7 @@ export function mkObjects(config: Config, scene: Scene): Objects {
   for (let i = 0; i < 10; i++) {
     const resource = new Resource();
     do {
-      const size = Math.min(config.sceneSize.x, config.sceneSize.y);
+      const size = Math.min(config.initialSize.x, config.initialSize.y);
       resource.position = vector.random(-size / 2, size / 2);
     } while (collides(result.minion, resource));
     result.resources.push(resource);

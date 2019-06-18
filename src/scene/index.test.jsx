@@ -12,7 +12,7 @@ let config: Config;
 
 beforeEach(() => {
   config = {
-    sceneSize: { x: 200, y: 200 },
+    initialSize: { x: 200, y: 200 },
     zoomVelocity: 1.1,
     stepTimeDelta: 0.5,
     velocity: 1,
