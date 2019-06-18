@@ -1,6 +1,7 @@
 // @flow
 
 import { type Config, Scene } from "./scene";
+import { Factory } from "./factory";
 import {
   type Vector,
   add,
@@ -13,6 +14,8 @@ import {
 import React from "react";
 
 export class Minion {
+  config: Config;
+
   velocity: number;
 
   target: Vector;
@@ -24,6 +27,7 @@ export class Minion {
   _state: "idle" | "goCoordinates" | "go" = "idle";
 
   constructor(config: Config) {
+    this.config = config;
     this.position = { x: 0, y: 0 };
     this.target = this.position;
     this.velocity = config.velocity;
@@ -43,17 +47,40 @@ export class Minion {
 
   activeCommand = (): ?string => (this._state === "go" ? "go" : null);
 
-  goButton = (): null | React$Element<*> =>
-    this._state === "idle" ? (
-      <button
-        id="go"
-        onClick={() => {
-          this._state = "goCoordinates";
-        }}
-      >
-        go
-      </button>
-    ) : null;
+  buttons = (scene: Scene): Array<React$Element<*>> => {
+    if (this._state !== "idle") {
+      return [];
+    }
+    const result = [];
+    if (this._state === "idle") {
+      result.push(
+        <button
+          key="go"
+          id="goButton"
+          onClick={() => {
+            this._state = "goCoordinates";
+          }}
+        >
+          go
+        </button>
+      );
+    }
+    if (scene.inventory >= this.config.prices.factory) {
+      result.push(
+        <button
+          key="build"
+          id="buildButton"
+          onClick={() => {
+            scene.factories.push(new Factory(this.position));
+            scene.inventory -= this.config.prices.factory;
+          }}
+        >
+          build
+        </button>
+      );
+    }
+    return result;
+  };
 
   handleMovement = (timeDelta: number): void => {
     if (this._state === "go") {

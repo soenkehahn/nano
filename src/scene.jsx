@@ -1,6 +1,7 @@
 // @flow
 
 import * as vector from "./vector";
+import { Factory } from "./factory";
 import { Minion } from "./minion";
 import { Resource } from "./resource";
 import { SvgWithMouse } from "./svgWithMouse";
@@ -10,7 +11,8 @@ import React from "react";
 export type Config = {|
   dimensions: { lower: number, upper: number },
   stepTimeDelta: number,
-  velocity: number
+  velocity: number,
+  prices: { factory: number }
 |};
 
 type Props = {| time: number, timeDelta: number |};
@@ -56,7 +58,7 @@ export const mkSceneRender = (config: Config, scene: Scene) => {
           </SvgWithMouse>
           <div id="inventory">resource: {this.state.scene.inventory}</div>
           {this.state.scene.activeCommand()}
-          commands: {this.state.scene.goButton()}
+          commands: {this.state.scene.buttons()}
         </div>
       );
     };
@@ -66,12 +68,12 @@ export const mkSceneRender = (config: Config, scene: Scene) => {
 
 export class Scene {
   minion: Minion;
-  resources: Array<Resource>;
+  resources: Array<Resource> = [];
+  factories: Array<Factory> = [];
   inventory: number = 0;
 
   constructor(config: Config) {
     this.minion = new Minion(config);
-    this.resources = [];
     for (let i = 0; i < 10; i++) {
       const resource = new Resource(i);
       while (collides(this.minion, resource)) {
@@ -94,7 +96,7 @@ export class Scene {
     </div>
   );
 
-  goButton = (): null | React$Element<*> => this.minion.goButton();
+  buttons = (): Array<React$Element<*>> => this.minion.buttons(this);
 
   onClick = (target: Vector): void => {
     this.minion.onClick(target);
@@ -104,6 +106,7 @@ export class Scene {
     return (
       <g>
         {this.resources.map(x => x.draw())}
+        {this.factories.map(x => x.draw())}
         {this.minion.draw()}
       </g>
     );
