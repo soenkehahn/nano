@@ -1,17 +1,17 @@
 // @flow
 
+import * as React from "react";
 import { LabRender } from "./lab";
-import { Scene, mkSceneRender } from "./scene";
+import { ReactWrapper, mount } from "enzyme";
+import { Scene, type SceneRenderType, mkSceneRender } from "./scene";
 import { mockSvgJsdomExtensions, setupTestConfig } from "./test/utils";
-import { mount } from "enzyme";
 import { toClickEvent } from "./vector";
-import React from "react";
 
 const testConfig = setupTestConfig();
 
 describe("Factory", () => {
   let scene;
-  let wrapper;
+  let wrapper: ReactWrapper<SceneRenderType>;
 
   beforeEach(() => {
     scene = new Scene(testConfig());

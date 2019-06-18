@@ -15,7 +15,7 @@ export class Resource {
     Resource.idCounter++;
   }
 
-  draw = (): React.Element<*> => {
+  draw = (): React.Element<typeof ResourceRender> => {
     return <ResourceRender key={this.id} {...this.position} size={this.size} />;
   };
 }

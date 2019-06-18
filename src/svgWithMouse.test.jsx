@@ -1,11 +1,11 @@
 // @flow
 
+import * as React from "react";
+import { ReactWrapper, mount } from "enzyme";
 import { Scene, mkSceneRender } from "./scene";
 import { SvgWithMouse } from "./svgWithMouse";
 import { mockSvgJsdomExtensions, setupTestConfig } from "./test/utils";
-import { mount } from "enzyme";
 import { toClickEvent } from "./vector";
-import React from "react";
 
 expect.extend({
   toBeCloseToViewBox(viewBox, expected) {
@@ -26,7 +26,7 @@ expect.extend({
 });
 
 describe("SvgWithMouse", () => {
-  let wrapper;
+  let wrapper: ReactWrapper<typeof SvgWithMouse>;
 
   beforeEach(() => {
     wrapper = mount(

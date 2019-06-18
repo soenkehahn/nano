@@ -48,7 +48,7 @@ export class Minion {
 
   activeCommand = (): ?string => (this._state === "go" ? "go" : null);
 
-  buttons = (scene: Scene): Array<React.Element<*>> => {
+  buttons = (scene: Scene): Array<React.Element<"button">> => {
     if (this._state !== "idle") {
       return [];
     }
@@ -137,7 +137,7 @@ export class Minion {
     scene.inventory++;
   };
 
-  draw = (): React.Element<*> => {
+  draw = (): React.Element<typeof MinionRender> => {
     return (
       <MinionRender x={this.position.x} y={this.position.y} size={this.size} />
     );

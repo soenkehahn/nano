@@ -34,7 +34,7 @@ export class Lab {
     }
   };
 
-  draw = (): React.Element<*> => (
+  draw = (): React.Element<typeof LabRender> => (
     <LabRender
       x={this.position.x}
       y={this.position.y}
@@ -69,7 +69,7 @@ function drawCompletion({
   y,
   size,
   completion,
-}: RenderProps & { completion: ?number }): React.Element<*> {
+}: RenderProps & { completion: ?number }): React.Element<"path"> {
   completion = completion || 0;
   const endpoint = add({ x, y }, scale(fromAngle(-TAU * completion), size));
   return (

@@ -19,7 +19,7 @@ export class Factory {
     this.position = position;
   }
 
-  draw = (): React.Element<*> => {
+  draw = (): React.Element<typeof FactoryRender> => {
     return (
       <FactoryRender
         key={this.id}

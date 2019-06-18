@@ -5,7 +5,7 @@ import { type Config } from "../scene";
 import { ReactWrapper } from "enzyme";
 
 export function mockSvgJsdomExtensions(
-  svgWrapper: ReactWrapper<*>,
+  svgWrapper: ReactWrapper<any>,
   offset: { x: number, y: number },
 ) {
   const svgElement = svgWrapper.instance();

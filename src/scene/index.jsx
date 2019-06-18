@@ -18,7 +18,12 @@ type Props = {| time: number, timeDelta: number |};
 
 type State = {| scene: Scene, timeDeltaRemainder: number |};
 
-export const mkSceneRender = (config: Config, scene: Scene) => {
+export type SceneRenderType = React.ComponentType<Props>;
+
+export const mkSceneRender = (
+  config: Config,
+  scene: Scene,
+): SceneRenderType => {
   class SceneRender extends React.Component<Props, State> {
     constructor() {
       super();
@@ -73,19 +78,20 @@ export class Scene {
     this.objects.minion.step(timeDelta);
   };
 
-  activeCommand = (): null | React.Element<*> => (
+  activeCommand = (): null | React.Element<"div"> => (
     <div id="activeCommand">
       active command: {this.objects.minion.activeCommand() || "none"}
     </div>
   );
 
-  buttons = (): Array<React.Element<*>> => this.objects.minion.buttons(this);
+  buttons = (): Array<React.Element<"button">> =>
+    this.objects.minion.buttons(this);
 
   onClick = (target: Vector): void => {
     this.objects.minion.onClick(target);
   };
 
-  interface = (): React.Element<*> => (
+  interface = (): React.Element<"div"> => (
     <div>
       <div id="inventory">resource: {this.inventory}</div>
       {this.activeCommand()}
@@ -94,7 +100,7 @@ export class Scene {
     </div>
   );
 
-  draw = (): React.Element<*> => {
+  draw = (): React.Element<"g"> => {
     return (
       <g>
         {this.objects.resources.map(x => x.draw())}
