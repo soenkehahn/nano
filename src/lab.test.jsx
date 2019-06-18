@@ -6,7 +6,11 @@ import { toClickEvent } from "./vector";
 
 const testConfig = setupTestConfig();
 
-describe("Factory", () => {
+describe("Lab", () => {
+  beforeEach(() => {
+    testConfig().velocity = 1000;
+  });
+
   const [wrapper, scene] = setupSceneWrapper(testConfig);
 
   it("renders a lab", () => {
@@ -24,7 +28,7 @@ describe("Factory", () => {
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent(scene().objects.lab.position));
-    wrapper().setProps({ timeDelta: 100 });
+    wrapper().setProps({ timeDelta: 1 });
     expect(
       wrapper()
         .find("#researchButton")
@@ -53,7 +57,7 @@ describe("Factory", () => {
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent(scene().objects.lab.position));
-    wrapper().setProps({ timeDelta: 100 });
+    wrapper().setProps({ timeDelta: 1 });
     wrapper()
       .find("#researchButton")
       .simulate("click");
@@ -73,7 +77,7 @@ describe("Factory", () => {
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent(scene().objects.lab.position));
-    wrapper().setProps({ timeDelta: 100 });
+    wrapper().setProps({ timeDelta: 1 });
     expect(
       wrapper()
         .find("#researchButton")

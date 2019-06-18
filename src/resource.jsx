@@ -7,12 +7,13 @@ import { type Vector } from "./vector";
 export class Resource {
   id: number;
   static idCounter: number = 0;
-  position: Vector = { x: 0, y: 0 };
+  position: Vector;
   size: number = 10;
 
-  constructor() {
+  constructor(position: Vector) {
     this.id = Resource.idCounter;
     Resource.idCounter++;
+    this.position = position;
   }
 
   draw = (): React.Element<typeof ResourceRender> => {

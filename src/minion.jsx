@@ -27,9 +27,9 @@ export class Minion {
 
   _state: "idle" | "goCoordinates" | "go" = "idle";
 
-  constructor(config: Config) {
+  constructor(config: Config, position: Vector) {
     this.config = config;
-    this.position = { x: -50, y: 0 };
+    this.position = position;
     this.target = this.position;
     this.velocity = config.velocity;
   }

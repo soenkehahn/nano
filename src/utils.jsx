@@ -5,3 +5,7 @@ export function wait(seconds: number): Promise<void> {
     setTimeout(resolve, seconds * 1000);
   });
 }
+
+export function iife<A>(fun: () => A): A {
+  return fun();
+}
