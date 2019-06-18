@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from "react";
-import { type Objects, mkObjects } from "./objects";
+import { type Objects } from "./objects";
 import { SvgWithMouse } from "../svgWithMouse";
 import { type Vector } from "../vector";
 
@@ -67,10 +67,13 @@ export class Scene {
   inventory: number;
   objects: Objects;
 
-  constructor(config: Config) {
+  constructor(
+    config: Config,
+    objects: (config: Config, scene: Scene) => Objects,
+  ) {
     this.canMine = false;
     this.inventory = 0;
-    this.objects = mkObjects(config, this);
+    this.objects = objects(config, this);
   }
 
   step = (timeDelta: number): void => {

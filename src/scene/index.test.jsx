@@ -7,6 +7,7 @@ import {
   mockSvgJsdomExtensions,
   setupSceneWrapper,
   setupTestConfig,
+  testObjects,
 } from "../test/utils";
 import { mount } from "enzyme";
 import { toClickEvent } from "../vector";
@@ -23,7 +24,7 @@ describe("SceneRender", () => {
     });
 
     function mkMockScene(): Scene {
-      const scene = new Scene(testConfig());
+      const scene = new Scene(testConfig(), testObjects);
       scene.step = (timeDelta: number) => {
         timeDeltas.push(timeDelta);
       };
@@ -258,10 +259,6 @@ describe("Scene", () => {
     });
 
     const [wrapper, scene] = setupSceneWrapper(testConfig);
-
-    it("shows multiple resources", () => {
-      expect(wrapper().find(ResourceRender).length).toBeGreaterThan(5);
-    });
 
     describe("when only one resource exists", () => {
       let minionProps: RenderProps;

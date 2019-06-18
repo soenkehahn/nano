@@ -3,6 +3,7 @@
 import "regenerator-runtime/runtime";
 import { type Config, Scene, mkSceneRender } from "./scene";
 import { animated } from "./animated";
+import { mkObjects } from "./scene/objects";
 import React from "react";
 import dom from "react-dom";
 
@@ -28,7 +29,7 @@ if (!module.parent) {
   }
   const SceneRender = animated(
     slowDown,
-    mkSceneRender(config, new Scene(config)),
+    mkSceneRender(config, new Scene(config, mkObjects)),
   );
   dom.render(<SceneRender />, appElement);
 }

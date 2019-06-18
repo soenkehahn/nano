@@ -16,7 +16,11 @@ export type Objects = {
   factories: Array<Factory>,
 };
 
-export function mkObjects(config: Config, scene: Scene): Objects {
+export function mkObjects(
+  config: Config,
+  scene: Scene,
+  numberOfResources: number = 1000,
+): Objects {
   const scale = vectorLength(config.initialSize) * 20;
 
   const minion = new Minion(config, { x: 0, y: 0 });
@@ -38,7 +42,7 @@ export function mkObjects(config: Config, scene: Scene): Objects {
       findRandom(scale, v => inside(config.initialSize, v)),
     );
     resources.push(closeResource);
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < numberOfResources; i++) {
       const position = findRandom(
         scale,
         v =>

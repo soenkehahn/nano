@@ -1,6 +1,23 @@
 // @flow
 
-import { findRandom, inBiggerVicinity, inside } from "./objects";
+import { Scene } from "./index";
+import { findRandom, inBiggerVicinity, inside, mkObjects } from "./objects";
+
+describe("mkObjects", () => {
+  it("has multiple resources", () => {
+    const config = {
+      initialSize: { x: 200, y: 200 },
+      zoomVelocity: 1.1,
+      stepTimeDelta: 0.5,
+      velocity: 1,
+      prices: { factory: 3 },
+      researchVelocity: 1,
+    };
+    expect(
+      new Scene(config, mkObjects).objects.resources.length,
+    ).toBeGreaterThan(5);
+  });
+});
 
 describe("findRandom", () => {
   it("returns a random position", () => {

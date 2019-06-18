@@ -7,6 +7,7 @@ import {
   type SceneRenderType,
   mkSceneRender,
 } from "../scene";
+import { type Objects, mkObjects } from "../scene/objects";
 import { ReactWrapper, mount } from "enzyme";
 import React from "react";
 
@@ -54,10 +55,14 @@ export const setupSceneWrapper = (
   let wrapper: ReactWrapper<SceneRenderType>;
 
   beforeEach(() => {
-    scene = new Scene(testConfig());
+    scene = new Scene(testConfig(), testObjects);
     const SceneRender = mkSceneRender(testConfig(), scene);
     wrapper = mount(<SceneRender time={0} timeDelta={0} />);
     mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
   });
   return [() => wrapper, () => scene];
 };
+
+export function testObjects(config: Config, scene: Scene): Objects {
+  return mkObjects(config, scene, 1);
+}
