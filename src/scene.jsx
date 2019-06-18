@@ -10,7 +10,7 @@ import { type Vector, collides } from "./vector";
 import React from "react";
 
 export type Config = {|
-  sceneSize: number,
+  sceneSize: Vector,
   zoomVelocity: number,
   stepTimeDelta: number,
   velocity: number,
@@ -46,8 +46,8 @@ export const mkSceneRender = (config: Config, scene: Scene) => {
       return (
         <div>
           <SvgWithMouse
-            width={config.sceneSize}
-            height={config.sceneSize}
+            width={config.sceneSize.x}
+            height={config.sceneSize.y}
             onClick={this.state.scene.onClick}
             zoomVelocity={config.zoomVelocity}
           >
@@ -77,10 +77,8 @@ export class Scene {
     for (let i = 0; i < 10; i++) {
       const resource = new Resource();
       do {
-        resource.position = vector.random(
-          -config.sceneSize / 2,
-          config.sceneSize / 2
-        );
+        const size = Math.min(config.sceneSize.x, config.sceneSize.y);
+        resource.position = vector.random(-size / 2, size / 2);
       } while (collides(this.minion, resource));
       this.resources.push(resource);
     }

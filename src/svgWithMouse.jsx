@@ -107,8 +107,8 @@ export class SvgWithMouse extends React.Component<
       <svg
         ref={svgRef => (this.svgRef = (svgRef: any))}
         onClick={this.handleClick}
-        width={500}
-        height={500}
+        width={this.props.width}
+        height={this.props.height}
         viewBox={viewBox}
         onWheel={this.onWheel}
         onMouseDown={this.onMouseDown}
