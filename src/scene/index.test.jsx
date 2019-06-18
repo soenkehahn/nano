@@ -1,11 +1,11 @@
 // @flow
 
-import { type Config, Scene, mkSceneRender } from "./scene";
-import { MinionRender, type RenderProps } from "./minion";
-import { ResourceRender } from "./resource";
-import { mockSvgJsdomExtensions } from "./test/utils";
+import { type Config, Scene, mkSceneRender } from "../scene";
+import { MinionRender, type RenderProps } from "../minion";
+import { ResourceRender } from "../resource";
+import { mockSvgJsdomExtensions } from "../test/utils";
 import { mount } from "enzyme";
-import { toClickEvent } from "./vector";
+import { toClickEvent } from "../vector";
 import React from "react";
 
 let config: Config;
@@ -158,7 +158,7 @@ describe("Scene", () => {
     });
 
     it("doesn't allow to set the minion coordinates with a mouse click", async () => {
-      scene.minion.position = { x: 0, y: 0 };
+      scene.objects.minion.position = { x: 0, y: 0 };
       wrapper.find("svg").simulate("click", toClickEvent({ x: 10, y: 10 }));
       wrapper.setProps({ timeDelta: 100 });
       expect(wrapper.find(MinionRender).props()).toMatchObject({
@@ -192,7 +192,7 @@ describe("Scene", () => {
     });
 
     it("minions need time to move around", () => {
-      scene.minion.position = { x: 0, y: 0 };
+      scene.objects.minion.position = { x: 0, y: 0 };
       wrapper.find("#goButton").simulate("click");
       wrapper.find("svg").simulate("click", toClickEvent({ x: 1, y: 0 }));
       wrapper.setProps({ timeDelta: 0.5 });
@@ -223,7 +223,7 @@ describe("Scene", () => {
 
     describe("when only one resource exists", () => {
       beforeEach(() => {
-        scene.resources = [scene.resources[0]];
+        scene.objects.resources = [scene.objects.resources[0]];
         wrapper.setProps({ timeDelta: 1 });
         minionProps = wrapper.find(MinionRender).props();
         resourceProps = wrapper.find(ResourceRender).props();

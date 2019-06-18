@@ -1,12 +1,8 @@
 // @flow
 
-import * as vector from "./vector";
-import { Factory } from "./factory";
-import { Lab } from "./lab";
-import { Minion } from "./minion";
-import { Resource } from "./resource";
-import { SvgWithMouse } from "./svgWithMouse";
-import { type Vector, collides } from "./vector";
+import { type Objects, mkObjects } from "./objects";
+import { SvgWithMouse } from "../svgWithMouse";
+import { type Vector } from "../vector";
 import React from "react";
 
 export type Config = {|
@@ -62,45 +58,31 @@ export const mkSceneRender = (config: Config, scene: Scene) => {
 };
 
 export class Scene {
-  minion: Minion;
-  lab: Lab;
   canMine: boolean;
-  resources: Array<Resource>;
-  factories: Array<Factory>;
   inventory: number;
+  objects: Objects;
 
   constructor(config: Config) {
-    this.minion = new Minion(config);
-    this.lab = new Lab(config, this, { x: 50, y: 0 });
     this.canMine = false;
-    this.resources = [];
-    for (let i = 0; i < 10; i++) {
-      const resource = new Resource();
-      do {
-        const size = Math.min(config.sceneSize.x, config.sceneSize.y);
-        resource.position = vector.random(-size / 2, size / 2);
-      } while (collides(this.minion, resource));
-      this.resources.push(resource);
-    }
-    this.factories = [];
     this.inventory = 0;
+    this.objects = mkObjects(config, this);
   }
 
   step = (timeDelta: number): void => {
-    this.lab.step(timeDelta);
-    this.minion.step(timeDelta);
+    this.objects.lab.step(timeDelta);
+    this.objects.minion.step(timeDelta);
   };
 
   activeCommand = (): null | React$Element<*> => (
     <div id="activeCommand">
-      active command: {this.minion.activeCommand() || "none"}
+      active command: {this.objects.minion.activeCommand() || "none"}
     </div>
   );
 
-  buttons = (): Array<React$Element<*>> => this.minion.buttons(this);
+  buttons = (): Array<React$Element<*>> => this.objects.minion.buttons(this);
 
   onClick = (target: Vector): void => {
-    this.minion.onClick(target);
+    this.objects.minion.onClick(target);
   };
 
   interface = (): React$Element<*> => (
@@ -115,10 +97,10 @@ export class Scene {
   draw = (): React$Element<*> => {
     return (
       <g>
-        {this.resources.map(x => x.draw())}
-        {this.factories.map(x => x.draw())}
-        {this.lab.draw()}
-        {this.minion.draw()}
+        {this.objects.resources.map(x => x.draw())}
+        {this.objects.factories.map(x => x.draw())}
+        {this.objects.lab.draw()}
+        {this.objects.minion.draw()}
       </g>
     );
   };

@@ -37,7 +37,9 @@ describe("Factory", () => {
 
   it("allows to research mining", () => {
     wrapper.find("#goButton").simulate("click");
-    wrapper.find("svg").simulate("click", toClickEvent(scene.lab.position));
+    wrapper
+      .find("svg")
+      .simulate("click", toClickEvent(scene.objects.lab.position));
     wrapper.setProps({ timeDelta: 100 });
     expect(wrapper.find("#researchButton").exists()).toEqual(true);
     expect(wrapper.find("#newResearch").exists()).toEqual(false);
@@ -48,7 +50,9 @@ describe("Factory", () => {
 
   it("disallows researching when already researched", () => {
     wrapper.find("#goButton").simulate("click");
-    wrapper.find("svg").simulate("click", toClickEvent(scene.lab.position));
+    wrapper
+      .find("svg")
+      .simulate("click", toClickEvent(scene.objects.lab.position));
     wrapper.setProps({ timeDelta: 100 });
     wrapper.find("#researchButton").simulate("click");
     wrapper.setProps({ timeDelta: 10 });
@@ -57,7 +61,9 @@ describe("Factory", () => {
 
   test("researching takes time", () => {
     wrapper.find("#goButton").simulate("click");
-    wrapper.find("svg").simulate("click", toClickEvent(scene.lab.position));
+    wrapper
+      .find("svg")
+      .simulate("click", toClickEvent(scene.objects.lab.position));
     wrapper.setProps({ timeDelta: 100 });
     expect(wrapper.find("#researchButton").exists()).toEqual(true);
     expect(wrapper.find(LabRender).props().completion).toEqual(null);

@@ -66,8 +66,8 @@ export class Minion {
       </button>,
     );
     if (
-      collides(this, scene.lab) &&
-      scene.lab.status.tag === "idle" &&
+      collides(this, scene.objects.lab) &&
+      scene.objects.lab.status.tag === "idle" &&
       !scene.canMine
     ) {
       result.push(
@@ -75,7 +75,7 @@ export class Minion {
           key="research"
           id="researchButton"
           onClick={() => {
-            scene.lab.startResearch();
+            scene.objects.lab.startResearch();
           }}
         >
           research
@@ -83,8 +83,8 @@ export class Minion {
       );
     }
     if (scene.canMine) {
-      for (let i = 0; i < scene.resources.length; i++) {
-        if (collides(this, scene.resources[i])) {
+      for (let i = 0; i < scene.objects.resources.length; i++) {
+        if (collides(this, scene.objects.resources[i])) {
           result.push(
             <button
               key={`mine-${i}`}
@@ -105,7 +105,7 @@ export class Minion {
           key="build"
           id="buildButton"
           onClick={() => {
-            scene.factories.push(new Factory(this.position));
+            scene.objects.factories.push(new Factory(this.position));
             scene.inventory -= this.config.prices.factory;
           }}
         >
@@ -133,7 +133,7 @@ export class Minion {
   };
 
   depleteResource = (scene: Scene, i: number): void => {
-    scene.resources.splice(i, 1);
+    scene.objects.resources.splice(i, 1);
     scene.inventory++;
   };
 
