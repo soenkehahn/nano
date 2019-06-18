@@ -17,7 +17,7 @@ beforeEach(() => {
     stepTimeDelta: 0.5,
     velocity: 1,
     prices: { factory: 3 },
-    researchVelocity: 1
+    researchVelocity: 1,
   };
 });
 
@@ -94,7 +94,7 @@ describe("Scene", () => {
       wrapper.setProps({ timeDelta: 100 });
       expect(wrapper.find(MinionRender).props()).toMatchObject({
         x: 8,
-        y: 9
+        y: 9,
       });
     });
 
@@ -122,7 +122,7 @@ describe("Scene", () => {
     describe("active command", () => {
       it("initially shows no active command", () => {
         expect(wrapper.find("#activeCommand").text()).toEqual(
-          "active command: none"
+          "active command: none",
         );
       });
 
@@ -131,7 +131,7 @@ describe("Scene", () => {
         wrapper.find("svg").simulate("click", toClickEvent({ x: 10, y: 10 }));
         wrapper.setProps({ timeDelta: 1 });
         expect(wrapper.find("#activeCommand").text()).toEqual(
-          "active command: go"
+          "active command: go",
         );
       });
     });
@@ -153,7 +153,7 @@ describe("Scene", () => {
         wrapper
           .find("svg")
           .find(MinionRender)
-          .exists()
+          .exists(),
       ).toEqual(true);
     });
 
@@ -163,7 +163,7 @@ describe("Scene", () => {
       wrapper.setProps({ timeDelta: 100 });
       expect(wrapper.find(MinionRender).props()).toMatchObject({
         x: 0,
-        y: 0
+        y: 0,
       });
     });
 
@@ -174,7 +174,7 @@ describe("Scene", () => {
         wrapper.setProps({ timeDelta: 100 });
         expect(wrapper.find(MinionRender).props()).toMatchObject({
           x: 10,
-          y: 10
+          y: 10,
         });
       });
 
@@ -186,7 +186,7 @@ describe("Scene", () => {
         wrapper.setProps({ timeDelta: 100 });
         expect(wrapper.find(MinionRender).props()).toMatchObject({
           x: 10,
-          y: 0
+          y: 0,
         });
       });
     });
@@ -198,7 +198,7 @@ describe("Scene", () => {
       wrapper.setProps({ timeDelta: 0.5 });
       expect(wrapper.find(MinionRender).props()).toMatchObject({
         x: 0.5,
-        y: 0
+        y: 0,
       });
     });
   });
@@ -259,8 +259,8 @@ describe("Scene", () => {
             toClickEvent({
               x:
                 resourceProps.x - (resourceProps.size + minionProps.size) + 0.1,
-              y: resourceProps.y
-            })
+              y: resourceProps.y,
+            }),
           );
           wrapper.setProps({ timeDelta: 1 });
           wrapper.find("#mineButton").simulate("click");
@@ -275,8 +275,8 @@ describe("Scene", () => {
             toClickEvent({
               x:
                 resourceProps.x - (resourceProps.size + minionProps.size) - 0.1,
-              y: resourceProps.y
-            })
+              y: resourceProps.y,
+            }),
           );
           wrapper.setProps({ timeDelta: 1 });
           expect(wrapper.find("#mineButton").exists()).toEqual(false);

@@ -5,14 +5,14 @@ import { wait } from "./utils";
 
 export function animated(
   slowDown: null | number,
-  Component: React.AbstractComponent<{| time: number, timeDelta: number |}>
+  Component: React.AbstractComponent<{| time: number, timeDelta: number |}>,
 ): React.AbstractComponent<{||}> {
   class Wrapper extends React.Component<
     {||},
     {|
       time: null | number,
-      timeDelta: null | number
-    |}
+      timeDelta: null | number,
+    |},
   > {
     mounted: boolean = false;
 

@@ -10,7 +10,7 @@ import {
   difference,
   distance,
   scale,
-  unit
+  unit,
 } from "./vector";
 import React from "react";
 
@@ -63,7 +63,7 @@ export class Minion {
         }}
       >
         go
-      </button>
+      </button>,
     );
     if (
       collides(this, scene.lab) &&
@@ -79,7 +79,7 @@ export class Minion {
           }}
         >
           research
-        </button>
+        </button>,
       );
     }
     if (scene.canMine) {
@@ -94,7 +94,7 @@ export class Minion {
               }}
             >
               mine
-            </button>
+            </button>,
           );
         }
       }
@@ -110,7 +110,7 @@ export class Minion {
           }}
         >
           build
-        </button>
+        </button>,
       );
     }
     return result;
@@ -123,7 +123,7 @@ export class Minion {
       if (stepDistance < distanceLeft) {
         this.position = add(
           this.position,
-          scale(unit(difference(this.position, this.target)), stepDistance)
+          scale(unit(difference(this.position, this.target)), stepDistance),
         );
       } else {
         this.position = this.target;

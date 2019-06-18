@@ -15,7 +15,7 @@ export type Config = {|
   stepTimeDelta: number,
   velocity: number,
   prices: { factory: number },
-  researchVelocity: number
+  researchVelocity: number,
 |};
 
 type Props = {| time: number, timeDelta: number |};
@@ -28,7 +28,7 @@ export const mkSceneRender = (config: Config, scene: Scene) => {
       super();
       this.state = {
         scene,
-        timeDeltaRemainder: 0
+        timeDeltaRemainder: 0,
       };
     }
 

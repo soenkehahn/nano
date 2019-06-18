@@ -11,14 +11,14 @@ import {
   random,
   scale,
   unit,
-  vectorLength
+  vectorLength,
 } from "./vector";
 
 describe("add", () => {
   it("returns the addition between two points", () => {
     expect(add({ x: 3, y: 4 }, { x: 5, y: 6 })).toEqual({
       x: 8,
-      y: 10
+      y: 10,
     });
   });
 });
@@ -39,7 +39,7 @@ describe("difference", () => {
   it("returns the difference between two points", () => {
     expect(difference({ x: 10, y: 10 }, { x: 12, y: 7 })).toEqual({
       x: 2,
-      y: -3
+      y: -3,
     });
   });
 });
@@ -65,7 +65,7 @@ describe("fromAngle", () => {
     expect(rightAngle.y).toBeCloseTo(0);
     expect(fromAngle(TAU / 8)).toEqual({
       x: -Math.sin(TAU / 8),
-      y: -Math.cos(TAU / 8)
+      y: -Math.cos(TAU / 8),
     });
   });
 
@@ -108,7 +108,7 @@ describe("random", () => {
     for (let i = 0; i < 100; i++) {
       const v = random(lower, upper);
       expect(
-        v.x >= lower && v.x <= upper && v.y >= lower && v.y <= upper
+        v.x >= lower && v.x <= upper && v.y >= lower && v.y <= upper,
       ).toEqual(true);
     }
   });

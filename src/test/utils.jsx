@@ -5,7 +5,7 @@ import { ReactWrapper } from "enzyme";
 
 export function mockSvgJsdomExtensions(
   svgWrapper: ReactWrapper<*>,
-  offset: { x: number, y: number }
+  offset: { x: number, y: number },
 ) {
   const svgElement = svgWrapper.instance();
   if (!svgElement || svgElement.constructor.name !== "SVGSVGElement") {
@@ -18,7 +18,7 @@ export function mockSvgJsdomExtensions(
       result.y = offset.y;
       return result;
     },
-    createSVGPoint: () => new jsdomExtensions.SvgPoint()
+    createSVGPoint: () => new jsdomExtensions.SvgPoint(),
   };
   for (const field in mockExtensions) {
     (svgElement: any)[field] = mockExtensions[field];

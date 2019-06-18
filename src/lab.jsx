@@ -11,7 +11,7 @@ export class Lab {
   position: Vector;
   size: number = 14;
   status: {| tag: "idle" |} | {| tag: "researching", completion: number |} = {
-    tag: "idle"
+    tag: "idle",
   };
 
   constructor(config: Config, scene: Scene, position: Vector) {
@@ -68,7 +68,7 @@ function drawCompletion({
   x,
   y,
   size,
-  completion
+  completion,
 }: RenderProps & { completion: ?number }): React$Element<*> {
   completion = completion || 0;
   const endpoint = add({ x, y }, scale(fromAngle(-TAU * completion), size));

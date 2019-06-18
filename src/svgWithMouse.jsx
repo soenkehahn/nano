@@ -9,12 +9,12 @@ type Props = {|
   height: number,
   onClick: Vector => void,
   zoomVelocity: number,
-  children: React$Node
+  children: React$Node,
 |};
 
 export class SvgWithMouse extends React.Component<
   Props,
-  {| zoomFactor: number, offset: Vector |}
+  {| zoomFactor: number, offset: Vector |},
 > {
   svgRef: null | jsdomExtensions.SvgElement = null;
   dragging: boolean = false;
@@ -26,14 +26,14 @@ export class SvgWithMouse extends React.Component<
       zoomFactor: 1.0,
       offset: {
         x: -props.width / 2,
-        y: -props.height / 2
-      }
+        y: -props.height / 2,
+      },
     };
   }
 
   transformClickEvent = (
     svgRef: jsdomExtensions.SvgElement,
-    event: SyntheticMouseEvent<HTMLElement>
+    event: SyntheticMouseEvent<HTMLElement>,
   ): jsdomExtensions.SvgPoint => {
     const point = svgRef.createSVGPoint();
     point.x = event.clientX;
@@ -46,13 +46,13 @@ export class SvgWithMouse extends React.Component<
       const svgPoint = this.transformClickEvent(this.svgRef, event);
       this.props.onClick({
         x: svgPoint.x,
-        y: svgPoint.y
+        y: svgPoint.y,
       });
     }
   };
 
   onWheel = (
-    event: SyntheticMouseEvent<HTMLElement> & { deltaY: number }
+    event: SyntheticMouseEvent<HTMLElement> & { deltaY: number },
   ): void => {
     if (this.svgRef !== null) {
       const point = this.transformClickEvent(this.svgRef, event);
@@ -61,8 +61,8 @@ export class SvgWithMouse extends React.Component<
         zoomFactor: this.state.zoomFactor * zoomFactor,
         offset: {
           x: (this.state.offset.x - point.x) * zoomFactor + point.x,
-          y: (this.state.offset.y - point.y) * zoomFactor + point.y
-        }
+          y: (this.state.offset.y - point.y) * zoomFactor + point.y,
+        },
       });
     }
   };
@@ -80,16 +80,16 @@ export class SvgWithMouse extends React.Component<
   onMouseMove = (
     event: SyntheticMouseEvent<HTMLElement> & {
       movementX: number,
-      movementY: number
-    }
+      movementY: number,
+    },
   ) => {
     if (this.dragging) {
       const old = this.state.offset;
       this.setState({
         offset: {
           x: old.x - event.movementX * this.state.zoomFactor,
-          y: old.y - event.movementY * this.state.zoomFactor
-        }
+          y: old.y - event.movementY * this.state.zoomFactor,
+        },
       });
     }
   };
@@ -101,7 +101,7 @@ export class SvgWithMouse extends React.Component<
       this.state.offset.x,
       this.state.offset.y,
       width,
-      height
+      height,
     ].join(" ");
     return (
       <svg

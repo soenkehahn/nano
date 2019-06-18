@@ -20,9 +20,9 @@ expect.extend({
     }
     return {
       pass,
-      message: () => this.utils.diff(result, expected)
+      message: () => this.utils.diff(result, expected),
     };
-  }
+  },
 });
 
 describe("SvgWithMouse", () => {
@@ -37,7 +37,7 @@ describe("SvgWithMouse", () => {
         onClick={() => {}}
       >
         <g />
-      </SvgWithMouse>
+      </SvgWithMouse>,
     );
     mockSvgJsdomExtensions(wrapper.find("svg"), { x: 400, y: 300 });
   });
@@ -50,14 +50,14 @@ describe("SvgWithMouse", () => {
     it("allows to zoom out with a scroll wheel", () => {
       wrapper.simulate("wheel", { clientX: 400, clientY: 300, deltaY: 3 });
       expect(wrapper.find("svg").props().viewBox).toEqual(
-        [-400, -300, 800, 600].map(x => x * 1.1).join(" ")
+        [-400, -300, 800, 600].map(x => x * 1.1).join(" "),
       );
     });
 
     it("allows to zoom in with a scroll wheel", () => {
       wrapper.simulate("wheel", { clientX: 400, clientY: 300, deltaY: -3 });
       expect(wrapper.find("svg").props().viewBox).toEqual(
-        [-400, -300, 800, 600].map(x => x / 1.1).join(" ")
+        [-400, -300, 800, 600].map(x => x / 1.1).join(" "),
       );
     });
 
@@ -68,8 +68,8 @@ describe("SvgWithMouse", () => {
           (-400 - 200) * (1 / 1.1) + 200,
           (-300 - -100) * (1 / 1.1) + -100,
           800 / 1.1,
-          600 / 1.1
-        ].join(" ")
+          600 / 1.1,
+        ].join(" "),
       );
     });
 
@@ -80,8 +80,8 @@ describe("SvgWithMouse", () => {
           (-400 - 200) * (1 * 1.1) + 200,
           (-300 - -100) * (1 * 1.1) + -100,
           800 * 1.1,
-          600 * 1.1
-        ].join(" ")
+          600 * 1.1,
+        ].join(" "),
       );
     });
   });
@@ -121,7 +121,7 @@ describe("SvgWithMouse", () => {
         -440 - 10 * 1.1,
         -330 + 5 * 1.1,
         880,
-        660
+        660,
       ]);
     });
   });
@@ -137,7 +137,7 @@ describe("drag & minion interaction", () => {
       stepTimeDelta: 0.5,
       velocity: 1,
       prices: { factory: 3 },
-      researchVelocity: 1
+      researchVelocity: 1,
     };
     const SceneRender = mkSceneRender(config, new Scene(config));
     wrapper = mount(<SceneRender time={0} timeDelta={0} />);
@@ -154,7 +154,7 @@ describe("drag & minion interaction", () => {
       -100,
       -100,
       200,
-      200
+      200,
     ]);
   });
 
@@ -170,7 +170,7 @@ describe("drag & minion interaction", () => {
       -110,
       -95,
       200,
-      200
+      200,
     ]);
   });
 });

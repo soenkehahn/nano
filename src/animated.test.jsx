@@ -37,14 +37,14 @@ it("passes in a monotonically increasing time as a prop", async () => {
 it("passes in the timeDelta to the last rendering", async () => {
   for (let i = 1; i < propsList.length; i++) {
     expect(propsList[i].timeDelta).toEqual(
-      propsList[i].time - propsList[i - 1].time
+      propsList[i].time - propsList[i - 1].time,
     );
   }
 });
 
 async function waitUntil(
   predicate: () => boolean,
-  seconds = 4.5
+  seconds = 4.5,
 ): Promise<void> {
   if (predicate() || seconds <= 0) {
     return;

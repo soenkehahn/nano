@@ -19,7 +19,7 @@ if (!module.parent) {
     stepTimeDelta: 1000 / 60,
     velocity: 0.03,
     prices: { factory: 3 },
-    researchVelocity: 0.00001
+    researchVelocity: 0.00001,
   };
   const queryParams = new URLSearchParams(window.location.search);
   if (queryParams.get("dev")) {
@@ -28,7 +28,7 @@ if (!module.parent) {
   }
   const SceneRender = animated(
     slowDown,
-    mkSceneRender(config, new Scene(config))
+    mkSceneRender(config, new Scene(config)),
   );
   dom.render(<SceneRender />, appElement);
 }

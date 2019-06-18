@@ -16,7 +16,7 @@ beforeEach(() => {
     stepTimeDelta: 0.5,
     velocity: 1,
     prices: { factory: 3 },
-    researchVelocity: 1
+    researchVelocity: 1,
   };
 });
 
