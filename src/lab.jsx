@@ -1,9 +1,9 @@
 // @flow
 
+import * as React from "react";
 import { type Config, Scene } from "./scene";
 import { type RenderProps } from "./minion";
 import { TAU, type Vector, add, fromAngle, scale } from "./vector";
-import React from "react";
 
 export class Lab {
   config: Config;
@@ -34,7 +34,7 @@ export class Lab {
     }
   };
 
-  draw = (): React$Element<*> => (
+  draw = (): React.Element<*> => (
     <LabRender
       x={this.position.x}
       y={this.position.y}
@@ -69,7 +69,7 @@ function drawCompletion({
   y,
   size,
   completion,
-}: RenderProps & { completion: ?number }): React$Element<*> {
+}: RenderProps & { completion: ?number }): React.Element<*> {
   completion = completion || 0;
   const endpoint = add({ x, y }, scale(fromAngle(-TAU * completion), size));
   return (

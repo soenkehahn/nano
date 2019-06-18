@@ -1,8 +1,8 @@
 // @flow
 
+import * as React from "react";
 import { type RenderProps } from "./minion";
 import { type Vector } from "./vector";
-import React from "react";
 
 let counter = 0;
 
@@ -19,7 +19,7 @@ export class Factory {
     this.position = position;
   }
 
-  draw = (): React$Element<*> => {
+  draw = (): React.Element<*> => {
     return (
       <FactoryRender
         key={this.id}

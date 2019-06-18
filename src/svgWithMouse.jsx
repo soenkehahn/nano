@@ -1,15 +1,15 @@
 // @flow
 
+import * as React from "react";
 import * as jsdomExtensions from "./jsdomExtensions/svg";
 import { type Vector } from "./vector";
-import React from "react";
 
 type Props = {|
   width: number,
   height: number,
   onClick: Vector => void,
   zoomVelocity: number,
-  children: React$Node,
+  children: React.Node,
 |};
 
 export class SvgWithMouse extends React.Component<

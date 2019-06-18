@@ -1,8 +1,8 @@
 // @flow
 
+import * as React from "react";
 import { type RenderProps } from "./minion";
 import { type Vector } from "./vector";
-import React from "react";
 
 export class Resource {
   id: number;
@@ -15,7 +15,7 @@ export class Resource {
     Resource.idCounter++;
   }
 
-  draw = (): React$Element<*> => {
+  draw = (): React.Element<*> => {
     return <ResourceRender key={this.id} {...this.position} size={this.size} />;
   };
 }

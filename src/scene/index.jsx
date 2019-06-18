@@ -1,9 +1,9 @@
 // @flow
 
+import * as React from "react";
 import { type Objects, mkObjects } from "./objects";
 import { SvgWithMouse } from "../svgWithMouse";
 import { type Vector } from "../vector";
-import React from "react";
 
 export type Config = {|
   initialSize: Vector,
@@ -73,19 +73,19 @@ export class Scene {
     this.objects.minion.step(timeDelta);
   };
 
-  activeCommand = (): null | React$Element<*> => (
+  activeCommand = (): null | React.Element<*> => (
     <div id="activeCommand">
       active command: {this.objects.minion.activeCommand() || "none"}
     </div>
   );
 
-  buttons = (): Array<React$Element<*>> => this.objects.minion.buttons(this);
+  buttons = (): Array<React.Element<*>> => this.objects.minion.buttons(this);
 
   onClick = (target: Vector): void => {
     this.objects.minion.onClick(target);
   };
 
-  interface = (): React$Element<*> => (
+  interface = (): React.Element<*> => (
     <div>
       <div id="inventory">resource: {this.inventory}</div>
       {this.activeCommand()}
@@ -94,7 +94,7 @@ export class Scene {
     </div>
   );
 
-  draw = (): React$Element<*> => {
+  draw = (): React.Element<*> => {
     return (
       <g>
         {this.objects.resources.map(x => x.draw())}

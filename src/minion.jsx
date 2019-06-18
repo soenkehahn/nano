@@ -1,5 +1,6 @@
 // @flow
 
+import * as React from "react";
 import { type Config, Scene } from "./scene";
 import { Factory } from "./factory";
 import { SvgWithMouse } from "./svgWithMouse";
@@ -12,7 +13,6 @@ import {
   scale,
   unit,
 } from "./vector";
-import React from "react";
 
 export class Minion {
   config: Config;
@@ -48,7 +48,7 @@ export class Minion {
 
   activeCommand = (): ?string => (this._state === "go" ? "go" : null);
 
-  buttons = (scene: Scene): Array<React$Element<*>> => {
+  buttons = (scene: Scene): Array<React.Element<*>> => {
     if (this._state !== "idle") {
       return [];
     }
@@ -137,7 +137,7 @@ export class Minion {
     scene.inventory++;
   };
 
-  draw = (): React$Element<*> => {
+  draw = (): React.Element<*> => {
     return (
       <MinionRender x={this.position.x} y={this.position.y} size={this.size} />
     );
