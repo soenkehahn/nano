@@ -17,6 +17,8 @@ export class SvgWithMouse extends React.Component<
   {| zoomFactor: number, offset: Vector |}
 > {
   svgRef: null | jsdomExtensions.SvgElement = null;
+  dragging: boolean = false;
+  static draggingEnabled: boolean = true;
 
   constructor(props: Props) {
     super();
@@ -65,6 +67,33 @@ export class SvgWithMouse extends React.Component<
     }
   };
 
+  onMouseDown = () => {
+    if (SvgWithMouse.draggingEnabled) {
+      this.dragging = true;
+    }
+  };
+
+  onMouseUp = () => {
+    this.dragging = false;
+  };
+
+  onMouseMove = (
+    event: SyntheticMouseEvent<HTMLElement> & {
+      movementX: number,
+      movementY: number
+    }
+  ) => {
+    if (this.dragging) {
+      const old = this.state.offset;
+      this.setState({
+        offset: {
+          x: old.x - event.movementX * this.state.zoomFactor,
+          y: old.y - event.movementY * this.state.zoomFactor
+        }
+      });
+    }
+  };
+
   render() {
     const width = this.props.width * this.state.zoomFactor;
     const height = this.props.height * this.state.zoomFactor;
@@ -78,10 +107,13 @@ export class SvgWithMouse extends React.Component<
       <svg
         ref={svgRef => (this.svgRef = (svgRef: any))}
         onClick={this.handleClick}
-        onWheel={this.onWheel}
         width={500}
         height={500}
         viewBox={viewBox}
+        onWheel={this.onWheel}
+        onMouseDown={this.onMouseDown}
+        onMouseUp={this.onMouseUp}
+        onMouseMove={this.onMouseMove}
       >
         <rect
           x={this.state.offset.x}

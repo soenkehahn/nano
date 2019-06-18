@@ -39,8 +39,8 @@ describe("SceneRender", () => {
 
     it("calls the step function as often as needed to reach the timeDelta", () => {
       config.stepTimeDelta = 1;
-      const Scene = mkSceneRender(config, mkMockScene());
-      const wrapper = mount(<Scene time={0} timeDelta={0} />);
+      const SceneRender = mkSceneRender(config, mkMockScene());
+      const wrapper = mount(<SceneRender time={0} timeDelta={0} />);
       wrapper.setProps({ timeDelta: 10 });
       expect(timeDeltas.length).toEqual(10);
     });

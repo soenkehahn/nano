@@ -13,7 +13,7 @@ module.exports = {
     "no-undef": "off",
     "no-console": "off",
     "sort-imports-es6-autofix/sort-imports-es6": "error",
-    "no-unused-vars": "warn"
+    "no-unused-vars": "error"
   },
   settings: { react: { version: "detect" } }
 };

@@ -2,6 +2,7 @@
 
 import { type Config, Scene } from "./scene";
 import { Factory } from "./factory";
+import { SvgWithMouse } from "./svgWithMouse";
 import {
   type Vector,
   add,
@@ -37,6 +38,7 @@ export class Minion {
     if (this._state === "goCoordinates") {
       this.target = target;
       this._state = "go";
+      SvgWithMouse.draggingEnabled = true;
     }
   };
 
@@ -56,6 +58,7 @@ export class Minion {
         key="go"
         id="goButton"
         onClick={() => {
+          SvgWithMouse.draggingEnabled = false;
           this._state = "goCoordinates";
         }}
       >
