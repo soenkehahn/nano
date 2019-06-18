@@ -4,6 +4,7 @@ import { type Config, Scene, mkSceneRender } from "./scene";
 import { FactoryRender } from "./factory";
 import { mockSvgJsdomExtensions } from "./test/utils";
 import { mount } from "enzyme";
+import { toClickEvent } from "./vector";
 import React from "react";
 
 let config: Config;
@@ -46,7 +47,7 @@ describe("Factory", () => {
   it("builds the factory at the location of the minion", () => {
     scene.inventory = 3;
     wrapper.find("#goButton").simulate("click");
-    wrapper.find("svg").simulate("click", { clientX: 10, clientY: 12 });
+    wrapper.find("svg").simulate("click", toClickEvent({ x: 10, y: 12 }));
     wrapper.setProps({ timeDelta: 100 });
     wrapper.find("#buildButton").simulate("click");
     wrapper.setProps({ timeDelta: 100 });

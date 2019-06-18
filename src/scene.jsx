@@ -2,6 +2,7 @@
 
 import * as vector from "./vector";
 import { Factory } from "./factory";
+import { Lab } from "./lab";
 import { Minion } from "./minion";
 import { Resource } from "./resource";
 import { SvgWithMouse } from "./svgWithMouse";
@@ -56,9 +57,7 @@ export const mkSceneRender = (config: Config, scene: Scene) => {
             <rect x={-250} y={-250} width="100%" height="100%" fill="#eee" />
             {this.state.scene.draw()}
           </SvgWithMouse>
-          <div id="inventory">resource: {this.state.scene.inventory}</div>
-          {this.state.scene.activeCommand()}
-          commands: {this.state.scene.buttons()}
+          {this.state.scene.interface()}
         </div>
       );
     };
@@ -68,22 +67,29 @@ export const mkSceneRender = (config: Config, scene: Scene) => {
 
 export class Scene {
   minion: Minion;
-  resources: Array<Resource> = [];
-  factories: Array<Factory> = [];
-  inventory: number = 0;
+  lab: Lab;
+  canMine: boolean;
+  resources: Array<Resource>;
+  factories: Array<Factory>;
+  inventory: number;
 
   constructor(config: Config) {
     this.minion = new Minion(config);
+    this.lab = new Lab({ x: 50, y: 0 });
+    this.canMine = false;
+    this.resources = [];
     for (let i = 0; i < 10; i++) {
       const resource = new Resource(i);
-      while (collides(this.minion, resource)) {
+      do {
         resource.position = vector.random(
           config.dimensions.lower,
           config.dimensions.upper
         );
-      }
+      } while (collides(this.minion, resource));
       this.resources.push(resource);
     }
+    this.factories = [];
+    this.inventory = 0;
   }
 
   step = (timeDelta: number): void => {
@@ -102,11 +108,21 @@ export class Scene {
     this.minion.onClick(target);
   };
 
+  interface = (): React$Element<*> => (
+    <div>
+      <div id="inventory">resource: {this.inventory}</div>
+      {this.activeCommand()}
+      commands: {this.buttons()}
+      {this.canMine ? <div id="newResearch">new research: mining</div> : null}
+    </div>
+  );
+
   draw = (): React$Element<*> => {
     return (
       <g>
         {this.resources.map(x => x.draw())}
         {this.factories.map(x => x.draw())}
+        {this.lab.draw()}
         {this.minion.draw()}
       </g>
     );

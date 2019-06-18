@@ -28,7 +28,7 @@ export class Minion {
 
   constructor(config: Config) {
     this.config = config;
-    this.position = { x: 0, y: 0 };
+    this.position = { x: -50, y: 0 };
     this.target = this.position;
     this.velocity = config.velocity;
   }
@@ -52,16 +52,27 @@ export class Minion {
       return [];
     }
     const result = [];
-    if (this._state === "idle") {
+    result.push(
+      <button
+        key="go"
+        id="goButton"
+        onClick={() => {
+          this._state = "goCoordinates";
+        }}
+      >
+        go
+      </button>
+    );
+    if (collides(this, scene.lab) && !scene.canMine) {
       result.push(
         <button
-          key="go"
-          id="goButton"
+          key="research"
+          id="researchButton"
           onClick={() => {
-            this._state = "goCoordinates";
+            scene.canMine = true;
           }}
         >
-          go
+          research
         </button>
       );
     }
@@ -99,10 +110,12 @@ export class Minion {
   };
 
   depleteResource = (scene: Scene): void => {
-    for (let i = 0; i < scene.resources.length; i++) {
-      if (collides(this, scene.resources[i])) {
-        scene.resources.splice(i, 1);
-        scene.inventory++;
+    if (scene.canMine) {
+      for (let i = 0; i < scene.resources.length; i++) {
+        if (collides(this, scene.resources[i])) {
+          scene.resources.splice(i, 1);
+          scene.inventory++;
+        }
       }
     }
   };

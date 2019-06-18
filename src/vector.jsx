@@ -49,3 +49,7 @@ export const random = (lower: number, upper: number): Vector => ({
   x: Math.random() * (upper - lower) + lower,
   y: Math.random() * (upper - lower) + lower
 });
+
+export const toClickEvent = (
+  v: Vector
+): { clientX: number, clientY: number } => ({ clientX: v.x, clientY: v.y });
