@@ -73,7 +73,7 @@ export class Minion {
             scene.objects.lab.startResearch();
           }}
         >
-          research
+          research mining
         </button>,
       );
     }
