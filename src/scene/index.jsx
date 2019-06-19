@@ -94,11 +94,11 @@ export class Scene {
     this.objects.minion.onClick(target);
   };
 
-  interface = (): React.Element<"div"> => {
+  interface = (): React.Element<typeof React.Fragment> => {
     const buttons = this.buttons();
     const commands =
       buttons.length === 0 ? null : (
-        <div>
+        <>
           available commands:{" "}
           <ul>
             {buttons.map(button => {
@@ -111,17 +111,17 @@ export class Scene {
               );
             })}
           </ul>
-        </div>
+        </>
       );
     return (
-      <div>
+      <>
         <div style={{ height: "10em" }}>
           {this.activeCommand()}
           {commands}
         </div>
         <div id="inventory">resources: {this.inventory}</div>
         {this.canMine ? <div id="newResearch">new research: mining</div> : null}
-      </div>
+      </>
     );
   };
 

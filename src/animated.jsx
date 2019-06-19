@@ -52,7 +52,7 @@ export function animated(
           <Component time={this.state.time} timeDelta={this.state.timeDelta} />
         );
       } else {
-        return <div />;
+        return null;
       }
     }
   }
