@@ -13,3 +13,6 @@ lint:
 lint-fix:
   eslint $(fd jsx src) --fix
   prettier --write $(fd jsx src)
+
+serve:
+  parcel src/index.html --no-hmr

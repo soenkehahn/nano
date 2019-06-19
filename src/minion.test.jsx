@@ -74,6 +74,18 @@ describe("Minion", () => {
         y: 0,
       });
     });
+
+    it("shows a message about to click on the map", async () => {
+      wrapper()
+        .find("#goButton")
+        .simulate("click");
+      wrapper().setProps({ timeDelta: 1 });
+      expect(
+        wrapper()
+          .find("#status")
+          .text(),
+      ).toEqual("click on the map to set the target");
+    });
   });
 
   it("minions need time to move around", () => {

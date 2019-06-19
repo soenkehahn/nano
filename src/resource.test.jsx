@@ -183,9 +183,9 @@ describe("Resource", () => {
         ).toEqual(7.5);
         expect(
           wrapper()
-            .find("#activeCommand")
+            .find("#status")
             .text(),
-        ).toEqual("active command: mining");
+        ).toEqual("status: mining...");
       });
 
       it("stops mining when the minion doesn't collide with the resource anymore", () => {

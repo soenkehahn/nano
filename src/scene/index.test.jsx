@@ -137,7 +137,7 @@ describe("Scene interface", () => {
     it("initially shows no active command", () => {
       expect(
         wrapper()
-          .find("#activeCommand")
+          .find("#status")
           .exists(),
       ).toEqual(false);
     });
@@ -152,9 +152,9 @@ describe("Scene interface", () => {
       wrapper().setProps({ timeDelta: 1 });
       expect(
         wrapper()
-          .find("#activeCommand")
+          .find("#status")
           .text(),
-      ).toEqual("active command: moving");
+      ).toEqual("status: moving...");
     });
   });
 });

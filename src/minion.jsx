@@ -58,10 +58,15 @@ export class Minion {
     }
   };
 
-  activeCommand = (): ?string => {
-    if (this._state.tag === "moving") return "moving";
-    else if (this._state.tag === "mining") return "mining";
-    else return null;
+  status = (): ?string => {
+    if (this._state.tag === "moving") return "status: moving...";
+    else if (this._state.tag === "mining") return "status: mining...";
+    else if (this._state.tag === "goCoordinates")
+      return "click on the map to set the target";
+    else if (this._state.tag === "idle") return null;
+    else {
+      (this._state.tag: empty);
+    }
   };
 
   buttons = (scene: Scene): Array<Button> => {
