@@ -7,9 +7,9 @@ test:
   jest
 
 lint:
-  prettier --check $(fd jsx src)
   eslint $(fd jsx src)
+  prettier --check $(fd jsx src)
 
 lint-fix:
-  prettier --write $(fd jsx src)
   eslint $(fd jsx src) --fix
+  prettier --write $(fd jsx src)
