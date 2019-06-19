@@ -15,6 +15,7 @@ module.exports = {
     "sort-imports-es6-autofix/sort-imports-es6": "error",
     "no-unused-vars": "error",
     "react/display-name": "off",
+    "flowtype/space-after-type-colon": "off",
   },
   settings: { react: { version: "detect" } },
 };
