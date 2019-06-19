@@ -5,10 +5,11 @@ import { type RenderProps } from "./minion";
 import { type Vector } from "./vector";
 
 export class Resource {
-  id: number;
   static idCounter: number = 0;
+  id: number;
   position: Vector;
-  radius: number = 10;
+  static initialRadius: number = 10;
+  radius: number = Resource.initialRadius;
 
   constructor(position: Vector) {
     this.id = Resource.idCounter;

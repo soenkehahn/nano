@@ -154,7 +154,7 @@ describe("Scene interface", () => {
         wrapper()
           .find("#activeCommand")
           .text(),
-      ).toEqual("active command: go");
+      ).toEqual("active command: moving");
     });
   });
 });

@@ -3,6 +3,7 @@
 import * as React from "react";
 import { type Config, Scene } from "./scene";
 import { Factory } from "./factory";
+import { Resource } from "./resource";
 import { SvgPane } from "./svgPane";
 import {
   type Vector,
@@ -20,7 +21,13 @@ export class Minion {
   target: Vector;
   position: Vector;
   radius: number = 10;
-  _state: "idle" | "goCoordinates" | "go" = "idle";
+  _state:
+    | {| tag: "idle" |}
+    | {| tag: "goCoordinates" |}
+    | {| tag: "moving" |}
+    | {| tag: "mining", i: number |} = {
+    tag: "idle",
+  };
 
   constructor(config: Config, position: Vector) {
     this.config = config;
@@ -30,21 +37,26 @@ export class Minion {
   }
 
   onClick = (target: Vector): void => {
-    if (this._state === "goCoordinates") {
+    if (this._state.tag === "goCoordinates") {
       this.target = target;
-      this._state = "go";
+      this._state = { tag: "moving" };
       SvgPane.draggingEnabled = true;
     }
   };
 
-  step = (timeDelta: number): void => {
-    this.handleMovement(timeDelta);
+  step = (scene: Scene, timeDelta: number): void => {
+    if (this._state.tag === "moving") {
+      this.move(timeDelta);
+    } else if (this._state.tag === "mining") {
+      this.mine(scene, timeDelta, this._state.i);
+    }
   };
 
-  activeCommand = (): ?string => (this._state === "go" ? "go" : null);
+  activeCommand = (): ?string =>
+    this._state.tag === "moving" ? "moving" : null;
 
   buttons = (scene: Scene): Array<React.Element<"button">> => {
-    if (this._state !== "idle") {
+    if (this._state.tag !== "idle") {
       return [];
     }
     const result = [];
@@ -54,7 +66,7 @@ export class Minion {
         id="goButton"
         onClick={() => {
           SvgPane.draggingEnabled = false;
-          this._state = "goCoordinates";
+          this._state = { tag: "goCoordinates" };
         }}
       >
         go
@@ -85,7 +97,7 @@ export class Minion {
               key={`mine-${i}`}
               id="mineButton"
               onClick={() => {
-                this.depleteResource(scene, i);
+                this._state = { tag: "mining", i };
               }}
             >
               mine
@@ -111,25 +123,33 @@ export class Minion {
     return result;
   };
 
-  handleMovement = (timeDelta: number): void => {
-    if (this._state === "go") {
-      const distanceLeft = distance(this.target, this.position);
-      const stepDistance = this.velocity * timeDelta;
-      if (stepDistance < distanceLeft) {
-        this.position = add(
-          this.position,
-          scale(unit(difference(this.position, this.target)), stepDistance),
-        );
-      } else {
-        this.position = this.target;
-        this._state = "idle";
-      }
+  move = (timeDelta: number): void => {
+    const distanceLeft = distance(this.target, this.position);
+    const stepDistance = this.velocity * timeDelta;
+    if (stepDistance < distanceLeft) {
+      this.position = add(
+        this.position,
+        scale(unit(difference(this.position, this.target)), stepDistance),
+      );
+    } else {
+      this.position = this.target;
+      this._state = { tag: "idle" };
     }
   };
 
-  depleteResource = (scene: Scene, i: number): void => {
-    scene.objects.resources.splice(i, 1);
-    scene.inventory++;
+  mine = (scene: Scene, timeDelta: number, i: number): void => {
+    const resource = scene.objects.resources[i];
+    if (collides(this, resource)) {
+      resource.radius -=
+        Resource.initialRadius * this.config.miningVelocity * timeDelta;
+      if (resource.radius <= 0) {
+        scene.objects.resources.splice(i, 1);
+        scene.inventory++;
+        this._state = { tag: "idle" };
+      }
+    } else {
+      this._state = { tag: "idle" };
+    }
   };
 
   draw = (): React.Element<typeof MinionRender> => {
@@ -150,7 +170,7 @@ export const MinionRender = (props: RenderProps) => (
     cx={props.position.x}
     cy={props.position.y}
     r={props.radius}
-    style={{ fill: lightBlue, fillOpacity: 0.9 }}
+    style={{ fill: lightBlue, fillOpacity: 0.8 }}
   />
 );
 

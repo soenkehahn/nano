@@ -1,7 +1,8 @@
 // @flow
 
 import { MinionRender, type RenderProps } from "./minion";
-import { ResourceRender } from "./resource";
+import { Resource, ResourceRender } from "./resource";
+import { cloneDeep } from "lodash";
 import { setupSceneWrapper, setupTestConfig } from "./test/utils";
 import { toClickEvent } from "./vector";
 
@@ -160,6 +161,54 @@ describe("Resource", () => {
             .find("#inventory")
             .text(),
         ).toEqual("resource: 1");
+      });
+
+      test("mining takes time", () => {
+        testConfig().miningVelocity = 0.5;
+        wrapper()
+          .find("#goButton")
+          .simulate("click");
+        wrapper()
+          .find("svg")
+          .simulate("click", toClickEvent(resourceProps.position));
+        wrapper().setProps({ timeDelta: 1 });
+        wrapper()
+          .find("#mineButton")
+          .simulate("click");
+        wrapper().setProps({ timeDelta: 0.5 });
+        expect(
+          wrapper()
+            .find(ResourceRender)
+            .props().radius,
+        ).toEqual(7.5);
+      });
+
+      it("stops mining when the minion doesn't collide with the resource anymore", () => {
+        testConfig().miningVelocity = 0.5;
+        testConfig().stepTimeDelta = 0.1;
+        wrapper()
+          .find("#goButton")
+          .simulate("click");
+        const target = cloneDeep(resourceProps.position);
+        target.x += Resource.initialRadius + scene().objects.minion.radius - 1;
+        wrapper()
+          .find("svg")
+          .simulate("click", toClickEvent(target));
+        wrapper().setProps({ timeDelta: 1 });
+        wrapper()
+          .find("#mineButton")
+          .simulate("click");
+        wrapper().setProps({ timeDelta: 3 });
+        expect(
+          wrapper()
+            .find(ResourceRender)
+            .props().radius,
+        ).toEqual(9);
+        expect(
+          wrapper()
+            .find("#goButton")
+            .exists(),
+        ).toEqual(true);
       });
     });
   });

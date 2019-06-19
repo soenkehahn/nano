@@ -43,6 +43,7 @@ export const setupTestConfig = (): (() => Config) => {
       velocity: 1,
       prices: { factory: 3 },
       researchVelocity: 1,
+      miningVelocity: 1000,
     };
   });
   return () => config;

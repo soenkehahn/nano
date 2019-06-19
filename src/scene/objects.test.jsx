@@ -1,6 +1,6 @@
 // @flow
 
-import { Scene } from "./index";
+import { type Config, Scene } from "./index";
 import { type ViewBox } from "../svgPane";
 import {
   findRandom,
@@ -12,13 +12,14 @@ import {
 
 describe("mkObjects", () => {
   it("has multiple resources", () => {
-    const config = {
+    const config: Config = {
       initialSize: { x: 200, y: 200 },
       zoomVelocity: 1.1,
       stepTimeDelta: 0.5,
       velocity: 1,
       prices: { factory: 3 },
       researchVelocity: 1,
+      miningVelocity: 1000,
     };
     expect(
       new Scene(config, mkObjects).objects.resources.length,

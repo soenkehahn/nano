@@ -21,11 +21,13 @@ if (!module.parent) {
     velocity: 0.03,
     prices: { factory: 3 },
     researchVelocity: 0.00001,
+    miningVelocity: 0.00004,
   };
   const queryParams = new URLSearchParams(window.location.search);
   if (queryParams.get("dev")) {
-    config.velocity = config.velocity * 10;
-    config.researchVelocity = config.researchVelocity * 20;
+    config.velocity *= 25;
+    config.researchVelocity *= 40;
+    config.miningVelocity *= 20;
   }
   const SceneRender = animated(
     slowDown,

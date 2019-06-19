@@ -12,6 +12,7 @@ export type Config = {|
   velocity: number,
   prices: { factory: number },
   researchVelocity: number,
+  miningVelocity: number,
 |};
 
 type Props = {| time: number, timeDelta: number |};
@@ -77,7 +78,7 @@ export class Scene {
 
   step = (timeDelta: number): void => {
     this.objects.lab.step(timeDelta);
-    this.objects.minion.step(timeDelta);
+    this.objects.minion.step(this, timeDelta);
   };
 
   activeCommand = (): null | React.Element<"div"> => (
@@ -108,8 +109,8 @@ export class Scene {
       radius: number,
       draw: () => React.Node,
     }> = [];
-    objects = objects.concat(this.objects.resources);
     objects = objects.concat(this.objects.factories);
+    objects = objects.concat(this.objects.resources);
     objects.push(this.objects.lab);
     objects.push(this.objects.minion);
     objects = objects.filter(object => insideViewBox(viewBox, object));
