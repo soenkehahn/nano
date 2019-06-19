@@ -11,7 +11,7 @@ export class Factory {
 
   position: Vector;
 
-  size: number = 16;
+  radius: number = 16;
 
   constructor(position: Vector) {
     this.id = counter;
@@ -21,7 +21,11 @@ export class Factory {
 
   draw = (): React.Element<typeof FactoryRender> => {
     return (
-      <FactoryRender key={this.id} position={this.position} size={this.size} />
+      <FactoryRender
+        key={this.id}
+        position={this.position}
+        radius={this.radius}
+      />
     );
   };
 }
@@ -30,7 +34,7 @@ export const FactoryRender = (props: RenderProps) => (
   <circle
     cx={props.position.x}
     cy={props.position.y}
-    r={props.size}
+    r={props.radius}
     style={{ fill: "green" }}
   />
 );

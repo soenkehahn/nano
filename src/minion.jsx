@@ -3,7 +3,7 @@
 import * as React from "react";
 import { type Config, Scene } from "./scene";
 import { Factory } from "./factory";
-import { SvgWithMouse } from "./svgWithMouse";
+import { SvgPane } from "./svgPane";
 import {
   type Vector,
   add,
@@ -16,15 +16,10 @@ import {
 
 export class Minion {
   config: Config;
-
   velocity: number;
-
   target: Vector;
-
   position: Vector;
-
-  size: number = 10;
-
+  radius: number = 10;
   _state: "idle" | "goCoordinates" | "go" = "idle";
 
   constructor(config: Config, position: Vector) {
@@ -38,7 +33,7 @@ export class Minion {
     if (this._state === "goCoordinates") {
       this.target = target;
       this._state = "go";
-      SvgWithMouse.draggingEnabled = true;
+      SvgPane.draggingEnabled = true;
     }
   };
 
@@ -58,7 +53,7 @@ export class Minion {
         key="go"
         id="goButton"
         onClick={() => {
-          SvgWithMouse.draggingEnabled = false;
+          SvgPane.draggingEnabled = false;
           this._state = "goCoordinates";
         }}
       >
@@ -138,17 +133,23 @@ export class Minion {
   };
 
   draw = (): React.Element<typeof MinionRender> => {
-    return <MinionRender position={this.position} size={this.size} />;
+    return (
+      <MinionRender
+        key="minion"
+        position={this.position}
+        radius={this.radius}
+      />
+    );
   };
 }
 
-export type RenderProps = {| position: Vector, size: number |};
+export type RenderProps = {| position: Vector, radius: number |};
 
 export const MinionRender = (props: RenderProps) => (
   <circle
     cx={props.position.x}
     cy={props.position.y}
-    r={props.size}
+    r={props.radius}
     style={{ fill: lightBlue, fillOpacity: 0.9 }}
   />
 );

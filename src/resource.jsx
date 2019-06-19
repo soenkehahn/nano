@@ -8,7 +8,7 @@ export class Resource {
   id: number;
   static idCounter: number = 0;
   position: Vector;
-  size: number = 10;
+  radius: number = 10;
 
   constructor(position: Vector) {
     this.id = Resource.idCounter;
@@ -18,7 +18,11 @@ export class Resource {
 
   draw = (): React.Element<typeof ResourceRender> => {
     return (
-      <ResourceRender key={this.id} position={this.position} size={this.size} />
+      <ResourceRender
+        key={this.id}
+        position={this.position}
+        radius={this.radius}
+      />
     );
   };
 }
@@ -27,7 +31,7 @@ export const ResourceRender = (props: RenderProps) => (
   <circle
     cx={props.position.x}
     cy={props.position.y}
-    r={props.size}
+    r={props.radius}
     style={{ fill: "red" }}
   />
 );

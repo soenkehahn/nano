@@ -1,6 +1,7 @@
 // @flow
 
 import { LabRender } from "./lab";
+import { SvgPane } from "./svgPane";
 import { setupSceneWrapper, setupTestConfig } from "./test/utils";
 import { toClickEvent } from "./vector";
 
@@ -13,7 +14,14 @@ describe("Lab", () => {
 
   const [wrapper, scene] = setupSceneWrapper(testConfig);
 
-  it("renders a lab", () => {
+  beforeEach(() => {
+    wrapper()
+      .find(SvgPane)
+      .simulate("wheel", { clientX: 0, clientY: 0, deltaY: 100 });
+    wrapper().setProps({ timeDelta: 1 });
+  });
+
+  it("renders a lab (out of the initial view)", () => {
     expect(
       wrapper()
         .find(LabRender)

@@ -6,7 +6,8 @@ import { Factory } from "../factory";
 import { Lab } from "../lab";
 import { Minion } from "../minion";
 import { Resource } from "../resource";
-import { type Vector, collides, vectorLength } from "../vector";
+import { type Vector, collides, scale, vectorLength } from "../vector";
+import { type ViewBox } from "../svgPane";
 import { iife } from "../utils";
 
 export type Objects = {
@@ -76,11 +77,24 @@ export function findRandom(
 }
 
 export const inside = (size: Vector, v: Vector): boolean => {
+  const offset = scale(size, -0.5);
   return (
-    v.x < size.x / 2 &&
-    v.x > -size.x / 2 &&
-    v.y < size.y / 2 &&
-    v.y > -size.y / 2
+    v.x - offset.x >= 0 &&
+    v.x - offset.x <= size.x &&
+    v.y - offset.y >= 0 &&
+    v.y - offset.y <= size.y
+  );
+};
+
+export const insideViewBox = (
+  viewBox: ViewBox,
+  { position, radius }: { position: Vector, radius: number },
+): boolean => {
+  return (
+    position.x - viewBox.offset.x + radius >= 0 &&
+    position.x - viewBox.offset.x - radius <= viewBox.size.x &&
+    position.y - viewBox.offset.y + radius >= 0 &&
+    position.y - viewBox.offset.y - radius <= viewBox.size.y
   );
 };
 

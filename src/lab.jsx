@@ -9,7 +9,7 @@ export class Lab {
   config: Config;
   scene: Scene;
   position: Vector;
-  size: number = 14;
+  radius: number = 14;
   status: {| tag: "idle" |} | {| tag: "researching", completion: number |} = {
     tag: "idle",
   };
@@ -36,8 +36,9 @@ export class Lab {
 
   draw = (): React.Element<typeof LabRender> => (
     <LabRender
+      key="lab"
       position={this.position}
-      size={this.size}
+      radius={this.radius}
       completion={
         this.status.tag === "researching" ? this.status.completion : null
       }
@@ -53,13 +54,13 @@ export const LabRender = (props: {|
     <circle
       cx={props.position.x}
       cy={props.position.y}
-      r={props.size - 1}
+      r={props.radius - 1}
       style={{ stroke: "yellow", strokeWidth: "2", fillOpacity: "0" }}
     />
     <circle
       cx={props.position.x}
       cy={props.position.y}
-      r={props.size * 0.4}
+      r={props.radius * 0.4}
       style={{ fill: "yellow" }}
     />
     {drawCompletion(props)}
@@ -68,20 +69,20 @@ export const LabRender = (props: {|
 
 function drawCompletion({
   position: { x, y },
-  size,
+  radius,
   completion,
 }: {|
   ...RenderProps,
   ...{| completion: ?number |},
 |}): React.Element<"path"> {
   completion = completion || 0;
-  const endpoint = add({ x, y }, scale(fromAngle(-TAU * completion), size));
+  const endpoint = add({ x, y }, scale(fromAngle(-TAU * completion), radius));
   return (
     <path
       d={`
         M ${x} ${y}
-        l 0 ${-size}
-        A ${size} ${size} 0
+        l 0 ${-radius}
+        A ${radius} ${radius} 0
           ${completion <= 0.5 ? 0 : 1}
           1
           ${endpoint.x} ${endpoint.y}

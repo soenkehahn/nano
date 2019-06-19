@@ -1,8 +1,8 @@
 // @flow
 
 import * as React from "react";
-import { type Objects } from "./objects";
-import { SvgWithMouse } from "../svgWithMouse";
+import { type Objects, insideViewBox } from "./objects";
+import { SvgPane, type ViewBox } from "../svgPane";
 import { type Vector } from "../vector";
 
 export type Config = {|
@@ -46,14 +46,13 @@ export const mkSceneRender = (
     render = () => {
       return (
         <div>
-          <SvgWithMouse
+          <SvgPane
             width={config.initialSize.x}
             height={config.initialSize.y}
             onClick={this.state.scene.onClick}
             zoomVelocity={config.zoomVelocity}
-          >
-            {this.state.scene.draw()}
-          </SvgWithMouse>
+            scene={this.state.scene}
+          />
           {this.state.scene.interface()}
         </div>
       );
@@ -103,14 +102,17 @@ export class Scene {
     </div>
   );
 
-  draw = (): React.Element<"g"> => {
-    return (
-      <g>
-        {this.objects.resources.map(x => x.draw())}
-        {this.objects.factories.map(x => x.draw())}
-        {this.objects.lab.draw()}
-        {this.objects.minion.draw()}
-      </g>
-    );
+  draw = (viewBox: ViewBox): React.Element<"g"> => {
+    let objects: Array<{
+      position: Vector,
+      radius: number,
+      draw: () => React.Node,
+    }> = [];
+    objects = objects.concat(this.objects.resources);
+    objects = objects.concat(this.objects.factories);
+    objects.push(this.objects.lab);
+    objects.push(this.objects.minion);
+    objects = objects.filter(object => insideViewBox(viewBox, object));
+    return <g>{objects.map(x => x.draw())}</g>;
   };
 }

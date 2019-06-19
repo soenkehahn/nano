@@ -2,17 +2,21 @@
 
 import * as React from "react";
 import * as jsdomExtensions from "./jsdomExtensions/svg";
-import { type Vector } from "./vector";
+import { type Vector, scale } from "./vector";
+
+export type ViewBox = {| offset: Vector, size: Vector |};
 
 type Props = {|
   width: number,
   height: number,
   onClick: Vector => void,
   zoomVelocity: number,
-  children: React.Node,
+  scene: {
+    draw: (viewBox: ViewBox) => React.Node,
+  },
 |};
 
-export class SvgWithMouse extends React.Component<
+export class SvgPane extends React.Component<
   Props,
   {| zoomFactor: number, offset: Vector |},
 > {
@@ -68,7 +72,7 @@ export class SvgWithMouse extends React.Component<
   };
 
   onMouseDown = () => {
-    if (SvgWithMouse.draggingEnabled) {
+    if (SvgPane.draggingEnabled) {
       this.dragging = true;
     }
   };
@@ -122,7 +126,13 @@ export class SvgWithMouse extends React.Component<
           height="100%"
           fill="black"
         />
-        {this.props.children}
+        {this.props.scene.draw({
+          offset: this.state.offset,
+          size: scale(
+            { x: this.props.width, y: this.props.height },
+            this.state.zoomFactor,
+          ),
+        })}
       </svg>
     );
   }

@@ -335,7 +335,7 @@ describe("Scene", () => {
               toClickEvent({
                 x:
                   resourceProps.position.x -
-                  (resourceProps.size + minionProps.size) +
+                  (resourceProps.radius + minionProps.radius) +
                   0.1,
                 y: resourceProps.position.y,
               }),
@@ -363,7 +363,7 @@ describe("Scene", () => {
               toClickEvent({
                 x:
                   resourceProps.position.x -
-                  (resourceProps.size + minionProps.size) -
+                  (resourceProps.radius + minionProps.radius) -
                   0.1,
                 y: resourceProps.position.y,
               }),

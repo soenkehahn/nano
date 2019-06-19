@@ -1,7 +1,14 @@
 // @flow
 
 import { Scene } from "./index";
-import { findRandom, inBiggerVicinity, inside, mkObjects } from "./objects";
+import { type ViewBox } from "../svgPane";
+import {
+  findRandom,
+  inBiggerVicinity,
+  inside,
+  insideViewBox,
+  mkObjects,
+} from "./objects";
 
 describe("mkObjects", () => {
   it("has multiple resources", () => {
@@ -48,6 +55,49 @@ describe("inside", () => {
     expect(inside(size, { x: 6, y: 6 })).toEqual(false);
     expect(inside(size, { x: 6, y: 4 })).toEqual(false);
     expect(inside(size, { x: 0, y: -6 })).toEqual(false);
+  });
+});
+
+describe("insideViewBox", () => {
+  const viewBox: ViewBox = {
+    offset: { x: -5, y: -15 },
+    size: { x: 10, y: 10 },
+  };
+
+  it("returns true if vector is inside the given viewBox", () => {
+    expect(
+      insideViewBox(viewBox, { position: { x: 0, y: -10 }, radius: 0 }),
+    ).toEqual(true);
+    expect(
+      insideViewBox(viewBox, { position: { x: 4, y: -6 }, radius: 0 }),
+    ).toEqual(true);
+    expect(
+      insideViewBox(viewBox, { position: { x: -3, y: -6 }, radius: 0 }),
+    ).toEqual(true);
+  });
+
+  it("returns false if vector is outside the given viewBox", () => {
+    expect(
+      insideViewBox(viewBox, { position: { x: 6, y: -4 }, radius: 0 }),
+    ).toEqual(false);
+    expect(
+      insideViewBox(viewBox, { position: { x: 6, y: -6 }, radius: 0 }),
+    ).toEqual(false);
+    expect(
+      insideViewBox(viewBox, { position: { x: 0, y: -16 }, radius: 0 }),
+    ).toEqual(false);
+  });
+
+  it("returns true if vector is outside the given viewBox, but reaches inside", () => {
+    expect(
+      insideViewBox(viewBox, { position: { x: 0, y: -3 }, radius: 3 }),
+    ).toEqual(true);
+    expect(
+      insideViewBox(viewBox, { position: { x: 7, y: -10 }, radius: 3 }),
+    ).toEqual(true);
+    expect(
+      insideViewBox(viewBox, { position: { x: 7, y: -3 }, radius: 3 }),
+    ).toEqual(true);
   });
 });
 

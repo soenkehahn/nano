@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { ReactWrapper, mount } from "enzyme";
-import { SvgWithMouse } from "./svgWithMouse";
+import { Resource, ResourceRender } from "./resource";
+import { SvgPane } from "./svgPane";
 import {
   mockSvgJsdomExtensions,
   setupSceneWrapper,
@@ -28,19 +29,18 @@ expect.extend({
   },
 });
 
-describe("SvgWithMouse", () => {
-  let wrapper: ReactWrapper<typeof SvgWithMouse>;
+describe("SvgPane", () => {
+  let wrapper: ReactWrapper<typeof SvgPane>;
 
   beforeEach(() => {
     wrapper = mount(
-      <SvgWithMouse
+      <SvgPane
         width={800}
         height={600}
         zoomVelocity={1.1}
         onClick={() => {}}
-      >
-        <g />
-      </SvgWithMouse>,
+        scene={{ draw: () => <g /> }}
+      />,
     );
     mockSvgJsdomExtensions(wrapper.find("svg"), { x: 400, y: 300 });
   });
@@ -140,10 +140,10 @@ describe("drag & minion interaction", () => {
       .find("#goButton")
       .simulate("click");
     wrapper()
-      .find(SvgWithMouse)
+      .find(SvgPane)
       .simulate("mousedown");
     wrapper()
-      .find(SvgWithMouse)
+      .find(SvgPane)
       .simulate("mousemove", { movementX: 10, movementY: -5 });
     (expect(
       wrapper()
@@ -161,15 +161,51 @@ describe("drag & minion interaction", () => {
       .simulate("click", toClickEvent({ x: 10, y: 10 }));
     wrapper().setProps({ timeDelta: 1 });
     wrapper()
-      .find(SvgWithMouse)
+      .find(SvgPane)
       .simulate("mousedown");
     wrapper()
-      .find(SvgWithMouse)
+      .find(SvgPane)
       .simulate("mousemove", { movementX: 10, movementY: -5 });
     (expect(
       wrapper()
         .find("svg")
         .props().viewBox,
     ): any).toBeCloseToViewBox([-110, -95, 200, 200]);
+  });
+});
+
+describe("viewbox optimization", () => {
+  const testConfig = setupTestConfig();
+
+  const [wrapper, scene] = setupSceneWrapper(testConfig);
+
+  it("includes objects that are in the viewBox", () => {
+    scene().objects.resources = [new Resource({ x: 0, y: 0 })];
+    wrapper().setProps({ timeDelta: 1 });
+    expect(
+      wrapper()
+        .find(ResourceRender)
+        .props().position,
+    ).toEqual({ x: 0, y: 0 });
+  });
+
+  it("excludes objects that are not in the viewBox", () => {
+    scene().objects.resources = [new Resource({ x: 150, y: 0 })];
+    wrapper().setProps({ timeDelta: 1 });
+    expect(
+      wrapper()
+        .find(ResourceRender)
+        .exists(),
+    ).toEqual(false);
+  });
+
+  it("includes objects that are not in the viewBox, but reach into it", () => {
+    scene().objects.resources = [new Resource({ x: 109, y: 0 })];
+    wrapper().setProps({ timeDelta: 1 });
+    expect(
+      wrapper()
+        .find(ResourceRender)
+        .exists(),
+    ).toEqual(true);
   });
 });
