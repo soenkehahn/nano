@@ -52,8 +52,11 @@ export class Minion {
     }
   };
 
-  activeCommand = (): ?string =>
-    this._state.tag === "moving" ? "moving" : null;
+  activeCommand = (): ?string => {
+    if (this._state.tag === "moving") return "moving";
+    else if (this._state.tag === "mining") return "mining";
+    else return null;
+  };
 
   buttons = (scene: Scene): Array<React.Element<"button">> => {
     if (this._state.tag !== "idle") {

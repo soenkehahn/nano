@@ -181,6 +181,11 @@ describe("Resource", () => {
             .find(ResourceRender)
             .props().radius,
         ).toEqual(7.5);
+        expect(
+          wrapper()
+            .find("#activeCommand")
+            .text(),
+        ).toEqual("active command: mining");
       });
 
       it("stops mining when the minion doesn't collide with the resource anymore", () => {
