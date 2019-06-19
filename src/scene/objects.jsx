@@ -32,8 +32,8 @@ export function mkObjects(
     findRandom(
       scale,
       v =>
-        inBiggerVicinity(3, config.initialSize, v) &&
-        !inside(vector.scale(config.initialSize, 1.6), v),
+        inBiggerVicinity(1.6, config.initialSize, v) &&
+        !inside(vector.scale(config.initialSize, 1.3), v),
     ),
   );
 
