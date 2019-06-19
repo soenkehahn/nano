@@ -31,7 +31,7 @@ describe("Lab", () => {
 
   it("allows to research mining", () => {
     wrapper()
-      .find("#goButton")
+      .find("#moveButton")
       .simulate("click");
     wrapper()
       .find("svg")
@@ -60,7 +60,7 @@ describe("Lab", () => {
 
   it("disallows researching when already researched", () => {
     wrapper()
-      .find("#goButton")
+      .find("#moveButton")
       .simulate("click");
     wrapper()
       .find("svg")
@@ -80,7 +80,7 @@ describe("Lab", () => {
   test("researching takes time", () => {
     testConfig().researchVelocity = 1 / 5;
     wrapper()
-      .find("#goButton")
+      .find("#moveButton")
       .simulate("click");
     wrapper()
       .find("svg")

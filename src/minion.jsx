@@ -28,7 +28,7 @@ export class Minion {
   radius: number = 10;
   _state:
     | {| tag: "idle" |}
-    | {| tag: "goCoordinates" |}
+    | {| tag: "waitForMoveTarget" |}
     | {| tag: "moving" |}
     | {| tag: "mining", i: number |} = {
     tag: "idle",
@@ -44,7 +44,7 @@ export class Minion {
   getRadius = () => this.radius;
 
   onClick = (target: Vector): void => {
-    if (this._state.tag === "goCoordinates") {
+    if (this._state.tag === "waitForMoveTarget") {
       this.target = target;
       this._state = { tag: "moving" };
       SvgPane.draggingEnabled = true;
@@ -62,7 +62,7 @@ export class Minion {
   status = (): ?string => {
     if (this._state.tag === "moving") return "status: moving...";
     else if (this._state.tag === "mining") return "status: mining...";
-    else if (this._state.tag === "goCoordinates")
+    else if (this._state.tag === "waitForMoveTarget")
       return "click on the map to set the target";
     else if (this._state.tag === "idle") return null;
     else {
@@ -76,11 +76,11 @@ export class Minion {
     }
     const result: Array<Button> = [];
     result.push({
-      id: "goButton",
-      text: "go",
+      id: "moveButton",
+      text: "move",
       onClick: () => {
         SvgPane.draggingEnabled = false;
-        this._state = { tag: "goCoordinates" };
+        this._state = { tag: "waitForMoveTarget" };
       },
     });
     if (

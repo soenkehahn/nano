@@ -34,10 +34,10 @@ describe("Minion", () => {
     });
   });
 
-  describe("after pressing 'go'", () => {
+  describe("after pressing 'move'", () => {
     it("allows to set the minion coordinates with a mouse click", async () => {
       wrapper()
-        .find("#goButton")
+        .find("#moveButton")
         .simulate("click");
       wrapper()
         .find("svg")
@@ -55,7 +55,7 @@ describe("Minion", () => {
 
     it("doesn't allow to change the minion target while it's underway", async () => {
       wrapper()
-        .find("#goButton")
+        .find("#moveButton")
         .simulate("click");
       wrapper()
         .find("svg")
@@ -77,7 +77,7 @@ describe("Minion", () => {
 
     it("shows a message about to click on the map", async () => {
       wrapper()
-        .find("#goButton")
+        .find("#moveButton")
         .simulate("click");
       wrapper().setProps({ timeDelta: 1 });
       expect(
@@ -91,7 +91,7 @@ describe("Minion", () => {
   it("minions need time to move around", () => {
     scene().objects.minion.position = { x: 0, y: 0 };
     wrapper()
-      .find("#goButton")
+      .find("#moveButton")
       .simulate("click");
     wrapper()
       .find("svg")

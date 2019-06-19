@@ -137,7 +137,7 @@ describe("drag & minion interaction", () => {
 
   it("disables dragging when selecting a minion target", () => {
     wrapper()
-      .find("#goButton")
+      .find("#moveButton")
       .simulate("click");
     wrapper()
       .find(SvgPane)
@@ -154,7 +154,7 @@ describe("drag & minion interaction", () => {
 
   it("enables dragging afterwards", () => {
     wrapper()
-      .find("#goButton")
+      .find("#moveButton")
       .simulate("click");
     wrapper()
       .find("svg")

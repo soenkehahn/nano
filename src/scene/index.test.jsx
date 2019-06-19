@@ -72,7 +72,7 @@ describe("Scene interface", () => {
   it("takes the offset of the svg pane into account", () => {
     mockSvgJsdomExtensions(wrapper().find("svg"), { x: 2, y: 1 });
     wrapper()
-      .find("#goButton")
+      .find("#moveButton")
       .simulate("click");
     wrapper()
       .find("svg")
@@ -88,21 +88,21 @@ describe("Scene interface", () => {
     });
   });
 
-  it("doesn't show the go button after being pressed", () => {
+  it("doesn't show the move button after being pressed", () => {
     wrapper()
-      .find("#goButton")
+      .find("#moveButton")
       .simulate("click");
     wrapper().setProps({ timeDelta: 1 });
     expect(
       wrapper()
-        .find("#goButton")
+        .find("#moveButton")
         .exists(),
     ).toEqual(false);
   });
 
-  it("shows the go button after minion reaches target", () => {
+  it("shows the move button after minion reaches target", () => {
     wrapper()
-      .find("#goButton")
+      .find("#moveButton")
       .simulate("click");
     wrapper()
       .find("svg")
@@ -110,7 +110,7 @@ describe("Scene interface", () => {
     wrapper().setProps({ timeDelta: 100 });
     expect(
       wrapper()
-        .find("#goButton")
+        .find("#moveButton")
         .exists(),
     ).toEqual(true);
   });
@@ -118,12 +118,12 @@ describe("Scene interface", () => {
   it("doesn't show any buttons if the minion is not idle", () => {
     scene().inventory = 3;
     wrapper()
-      .find("#goButton")
+      .find("#moveButton")
       .simulate("click");
     wrapper().setProps({ timeDelta: 1 });
     expect(
       wrapper()
-        .find("#goButton")
+        .find("#moveButton")
         .exists(),
     ).toEqual(false);
     expect(
@@ -144,7 +144,7 @@ describe("Scene interface", () => {
 
     it("shows the active command", () => {
       wrapper()
-        .find("#goButton")
+        .find("#moveButton")
         .simulate("click");
       wrapper()
         .find("svg")

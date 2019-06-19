@@ -41,7 +41,7 @@ describe("Factory", () => {
   it("builds the factory at the location of the minion", () => {
     scene().inventory = 300;
     wrapper()
-      .find("#goButton")
+      .find("#moveButton")
       .simulate("click");
     wrapper()
       .find("svg")
