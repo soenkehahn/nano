@@ -45,10 +45,10 @@ export function fromAngle(radians: number): Vector {
 }
 
 export function collides(
-  a: { position: Vector, radius: number },
-  b: { position: Vector, radius: number },
+  a: { position: Vector, getRadius: () => number },
+  b: { position: Vector, getRadius: () => number },
 ): boolean {
-  return distance(a.position, b.position) < a.radius + b.radius;
+  return distance(a.position, b.position) < a.getRadius() + b.getRadius();
 }
 
 export const random = (lower: number, upper: number): Vector => ({

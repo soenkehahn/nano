@@ -78,20 +78,20 @@ describe("fromAngle", () => {
 
 describe("collides", () => {
   it("detects collisions when positions are equal", () => {
-    const a = { position: { x: 2, y: 5 }, radius: 2 };
-    const b = { position: { x: 2, y: 5 }, radius: 3 };
+    const a = { position: { x: 2, y: 5 }, getRadius: () => 2 };
+    const b = { position: { x: 2, y: 5 }, getRadius: () => 3 };
     expect(collides(a, b)).toEqual(true);
   });
 
   it("returns false when positions are too far apart", () => {
-    const a = { position: { x: 2, y: 5 }, radius: 2 };
-    const b = { position: { x: 7.1, y: 5 }, radius: 3 };
+    const a = { position: { x: 2, y: 5 }, getRadius: () => 2 };
+    const b = { position: { x: 7.1, y: 5 }, getRadius: () => 3 };
     expect(collides(a, b)).toEqual(false);
   });
 
   it("detects collisions when objects overlap slightly", () => {
-    const a = { position: { x: 2, y: 5 }, radius: 2 };
-    const b = { position: { x: 6.9, y: 5 }, radius: 3 };
+    const a = { position: { x: 2, y: 5 }, getRadius: () => 2 };
+    const b = { position: { x: 6.9, y: 5 }, getRadius: () => 3 };
     expect(collides(a, b)).toEqual(true);
   });
 });

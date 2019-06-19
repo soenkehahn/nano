@@ -20,6 +20,8 @@ export class Lab {
     this.position = position;
   }
 
+  getRadius = () => this.radius;
+
   startResearch = (): void => {
     this.status = { tag: "researching", completion: 0 };
   };

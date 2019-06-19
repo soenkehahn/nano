@@ -109,7 +109,7 @@ export class Scene {
           )}
         </div>
         <div id="inventory" style={{ height: "10em" }}>
-          resources: {this.inventory}
+          resources: {this.inventory / 100}
         </div>
         {this.canMine ? (
           <div id="newResearch" style={{ height: "10em" }}>
@@ -129,7 +129,7 @@ export class Scene {
   draw = (viewBox: ViewBox): React.Element<"g"> => {
     let objects: Array<{
       position: Vector,
-      radius: number,
+      getRadius: () => number,
       draw: () => React.Node,
     }> = [];
     objects = objects.concat(this.objects.factories);

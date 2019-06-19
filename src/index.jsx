@@ -19,7 +19,7 @@ if (!module.parent) {
     zoomVelocity: 1.15,
     stepTimeDelta: 1000 / 60,
     velocity: 0.03,
-    prices: { factory: 3 },
+    prices: { factory: 300 },
     researchVelocity: 0.00001,
     miningVelocity: 0.00004,
   };

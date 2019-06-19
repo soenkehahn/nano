@@ -12,7 +12,7 @@ import { mount } from "enzyme";
 import { toClickEvent } from "../vector";
 import React from "react";
 
-const testConfig = setupTestConfig();
+const config = setupTestConfig();
 
 describe("SceneRender step function logic", () => {
   let timeDeltas;
@@ -22,7 +22,7 @@ describe("SceneRender step function logic", () => {
   });
 
   function mkMockScene(): Scene {
-    const scene = new Scene(testConfig(), testObjects);
+    const scene = new Scene(config(), testObjects);
     scene.step = (timeDelta: number) => {
       timeDeltas.push(timeDelta);
     };
@@ -30,16 +30,16 @@ describe("SceneRender step function logic", () => {
   }
 
   it("calls the step function as often as needed to reach the timeDelta", () => {
-    testConfig().stepTimeDelta = 1;
-    const SceneRender = mkSceneRender(testConfig(), mkMockScene());
+    config().stepTimeDelta = 1;
+    const SceneRender = mkSceneRender(config(), mkMockScene());
     const wrapper = mount(<SceneRender time={0} timeDelta={0} />);
     wrapper.setProps({ timeDelta: 10 });
     expect(timeDeltas.length).toEqual(10);
   });
 
   it("calls the step function with fixed timeDeltas", () => {
-    testConfig().stepTimeDelta = 0.5;
-    const Scene = mkSceneRender(testConfig(), mkMockScene());
+    config().stepTimeDelta = 0.5;
+    const Scene = mkSceneRender(config(), mkMockScene());
     const wrapper = mount(<Scene time={0} timeDelta={0} />);
     wrapper.setProps({ timeDelta: 5 });
     for (const timeDelta of timeDeltas) {
@@ -48,8 +48,8 @@ describe("SceneRender step function logic", () => {
   });
 
   it("saves the remainder of the timeDelta for the next round", () => {
-    testConfig().stepTimeDelta = 0.6;
-    const Scene = mkSceneRender(testConfig(), mkMockScene());
+    config().stepTimeDelta = 0.6;
+    const Scene = mkSceneRender(config(), mkMockScene());
     const wrapper = mount(<Scene time={0} timeDelta={0} />);
     wrapper.setProps({ timeDelta: 1 });
     expect(timeDeltas.length).toEqual(1);
@@ -67,7 +67,7 @@ describe("SceneRender step function logic", () => {
 });
 
 describe("Scene interface", () => {
-  const [wrapper, scene] = setupSceneWrapper(testConfig);
+  const [wrapper, scene] = setupSceneWrapper(config);
 
   it("takes the offset of the svg pane into account", () => {
     mockSvgJsdomExtensions(wrapper().find("svg"), { x: 2, y: 1 });

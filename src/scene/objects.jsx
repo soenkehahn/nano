@@ -88,8 +88,9 @@ export const inside = (size: Vector, v: Vector): boolean => {
 
 export const insideViewBox = (
   viewBox: ViewBox,
-  { position, radius }: { position: Vector, radius: number },
+  { position, getRadius }: { position: Vector, getRadius: () => number },
 ): boolean => {
+  const radius = getRadius();
   return (
     position.x - viewBox.offset.x + radius >= 0 &&
     position.x - viewBox.offset.x - radius <= viewBox.size.x &&

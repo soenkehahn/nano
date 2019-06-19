@@ -9,8 +9,8 @@ const testConfig = setupTestConfig();
 describe("Factory", () => {
   const [wrapper, scene] = setupSceneWrapper(testConfig);
 
-  it("doesn't allow to construct a factory with less than 3 resources", () => {
-    scene().inventory = 2;
+  it("doesn't allow to construct a factory with less than 300 resources", () => {
+    scene().inventory = 299;
     wrapper().setProps({ timeDelta: 1 });
     expect(
       wrapper()
@@ -19,8 +19,8 @@ describe("Factory", () => {
     ).toEqual(false);
   });
 
-  it("allows to construct a factory with 3 resources", () => {
-    scene().inventory = 3;
+  it("allows to construct a factory with 300 resources", () => {
+    scene().inventory = 300;
     wrapper().setProps({ timeDelta: 1 });
     expect(
       wrapper()
@@ -39,7 +39,7 @@ describe("Factory", () => {
   });
 
   it("builds the factory at the location of the minion", () => {
-    scene().inventory = 3;
+    scene().inventory = 300;
     wrapper()
       .find("#goButton")
       .simulate("click");
@@ -62,12 +62,12 @@ describe("Factory", () => {
   });
 
   it("uses up resources", () => {
-    scene().inventory = 4;
+    scene().inventory = 400;
     wrapper().setProps({ timeDelta: 1 });
     wrapper()
       .find("#buildButton")
       .simulate("click");
     wrapper().setProps({ timeDelta: 100 });
-    expect(scene().inventory).toEqual(1);
+    expect(scene().inventory).toEqual(100);
   });
 });

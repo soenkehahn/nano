@@ -3,7 +3,6 @@
 import * as React from "react";
 import { type Config, Scene } from "./scene";
 import { Factory } from "./factory";
-import { Resource } from "./resource";
 import { SvgPane } from "./svgPane";
 import {
   type Vector,
@@ -41,6 +40,8 @@ export class Minion {
     this.target = this.position;
     this.velocity = config.velocity;
   }
+
+  getRadius = () => this.radius;
 
   onClick = (target: Vector): void => {
     if (this._state.tag === "goCoordinates") {
@@ -138,11 +139,9 @@ export class Minion {
   mine = (scene: Scene, timeDelta: number, i: number): void => {
     const resource = scene.objects.resources[i];
     if (collides(this, resource)) {
-      resource.radius -=
-        Resource.initialRadius * this.config.miningVelocity * timeDelta;
-      if (resource.radius <= 0) {
+      scene.inventory += resource.mine(timeDelta * this.config.miningVelocity);
+      if (resource.status.level === 0) {
         scene.objects.resources.splice(i, 1);
-        scene.inventory++;
         this._state = { tag: "idle" };
       }
     } else {

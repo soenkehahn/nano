@@ -8,7 +8,7 @@ import { toClickEvent } from "./vector";
 
 const testConfig = setupTestConfig();
 
-describe("Resource", () => {
+describe("Resource in scene", () => {
   beforeEach(() => {
     testConfig().velocity = 99999999999999;
   });
@@ -188,6 +188,40 @@ describe("Resource", () => {
         ).toEqual("status: mining...");
       });
 
+      test("mining will increase the inventory by fractions", () => {
+        testConfig().miningVelocity = 0.5;
+        testConfig().stepTimeDelta = 0.1;
+        wrapper()
+          .find("#goButton")
+          .simulate("click");
+        wrapper()
+          .find("svg")
+          .simulate("click", toClickEvent(resourceProps.position));
+        wrapper().setProps({ timeDelta: 1 });
+        wrapper()
+          .find("#mineButton-0")
+          .simulate("click");
+        wrapper().setProps({ timeDelta: 1 });
+        expect(scene().inventory).toEqual(50);
+      });
+
+      test("a low stepTimeDelta doesn't screw up the inventory", () => {
+        testConfig().miningVelocity = 0.5;
+        testConfig().stepTimeDelta = 0.01;
+        wrapper()
+          .find("#goButton")
+          .simulate("click");
+        wrapper()
+          .find("svg")
+          .simulate("click", toClickEvent(resourceProps.position));
+        wrapper().setProps({ timeDelta: 1 });
+        wrapper()
+          .find("#mineButton-0")
+          .simulate("click");
+        wrapper().setProps({ timeDelta: 2 });
+        expect(scene().inventory).toEqual(100);
+      });
+
       it("stops mining when the minion doesn't collide with the resource anymore", () => {
         testConfig().miningVelocity = 0.5;
         testConfig().stepTimeDelta = 0.1;
@@ -215,6 +249,43 @@ describe("Resource", () => {
             .exists(),
         ).toEqual(true);
       });
+    });
+  });
+});
+
+describe("Resource", () => {
+  describe("mine", () => {
+    let resource;
+
+    beforeEach(() => {
+      resource = new Resource({ x: 0, y: 0 });
+    });
+
+    it("allows to mine a fraction, returning the units", () => {
+      expect(resource.mine(0.1)).toEqual(10);
+    });
+
+    it("doesn't allow to mine more than 1", () => {
+      expect(resource.mine(1.1)).toEqual(100);
+    });
+
+    it("allows to mine in multiple steps", () => {
+      expect(resource.mine(0.5)).toEqual(50);
+      expect(resource.mine(0.6)).toEqual(50);
+    });
+
+    it("rounds to cents", () => {
+      expect(resource.mine(0.123)).toEqual(12);
+    });
+
+    it("takes previous remainders into account", () => {
+      expect(resource.mine(0.006)).toEqual(0);
+      expect(resource.mine(0.006)).toEqual(1);
+    });
+
+    it("takes previous remainders into account at the end", () => {
+      expect(resource.mine(0.996)).toEqual(99);
+      expect(resource.mine(0.006)).toEqual(1);
     });
   });
 });

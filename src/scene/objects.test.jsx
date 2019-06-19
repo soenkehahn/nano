@@ -67,37 +67,49 @@ describe("insideViewBox", () => {
 
   it("returns true if vector is inside the given viewBox", () => {
     expect(
-      insideViewBox(viewBox, { position: { x: 0, y: -10 }, radius: 0 }),
+      insideViewBox(viewBox, {
+        position: { x: 0, y: -10 },
+        getRadius: () => 0,
+      }),
     ).toEqual(true);
     expect(
-      insideViewBox(viewBox, { position: { x: 4, y: -6 }, radius: 0 }),
+      insideViewBox(viewBox, { position: { x: 4, y: -6 }, getRadius: () => 0 }),
     ).toEqual(true);
     expect(
-      insideViewBox(viewBox, { position: { x: -3, y: -6 }, radius: 0 }),
+      insideViewBox(viewBox, {
+        position: { x: -3, y: -6 },
+        getRadius: () => 0,
+      }),
     ).toEqual(true);
   });
 
   it("returns false if vector is outside the given viewBox", () => {
     expect(
-      insideViewBox(viewBox, { position: { x: 6, y: -4 }, radius: 0 }),
+      insideViewBox(viewBox, { position: { x: 6, y: -4 }, getRadius: () => 0 }),
     ).toEqual(false);
     expect(
-      insideViewBox(viewBox, { position: { x: 6, y: -6 }, radius: 0 }),
+      insideViewBox(viewBox, { position: { x: 6, y: -6 }, getRadius: () => 0 }),
     ).toEqual(false);
     expect(
-      insideViewBox(viewBox, { position: { x: 0, y: -16 }, radius: 0 }),
+      insideViewBox(viewBox, {
+        position: { x: 0, y: -16 },
+        getRadius: () => 0,
+      }),
     ).toEqual(false);
   });
 
   it("returns true if vector is outside the given viewBox, but reaches inside", () => {
     expect(
-      insideViewBox(viewBox, { position: { x: 0, y: -3 }, radius: 3 }),
+      insideViewBox(viewBox, { position: { x: 0, y: -3 }, getRadius: () => 3 }),
     ).toEqual(true);
     expect(
-      insideViewBox(viewBox, { position: { x: 7, y: -10 }, radius: 3 }),
+      insideViewBox(viewBox, {
+        position: { x: 7, y: -10 },
+        getRadius: () => 3,
+      }),
     ).toEqual(true);
     expect(
-      insideViewBox(viewBox, { position: { x: 7, y: -3 }, radius: 3 }),
+      insideViewBox(viewBox, { position: { x: 7, y: -3 }, getRadius: () => 3 }),
     ).toEqual(true);
   });
 });

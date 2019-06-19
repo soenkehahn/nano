@@ -19,6 +19,8 @@ export class Factory {
     this.position = position;
   }
 
+  getRadius = () => this.radius;
+
   draw = (): React.Element<typeof FactoryRender> => {
     return (
       <FactoryRender
