@@ -16,10 +16,17 @@ export class Resource {
   }
 
   draw = (): React.Element<typeof ResourceRender> => {
-    return <ResourceRender key={this.id} {...this.position} size={this.size} />;
+    return (
+      <ResourceRender key={this.id} position={this.position} size={this.size} />
+    );
   };
 }
 
 export const ResourceRender = (props: RenderProps) => (
-  <circle cx={props.x} cy={props.y} r={props.size} style={{ fill: "red" }} />
+  <circle
+    cx={props.position.x}
+    cy={props.position.y}
+    r={props.size}
+    style={{ fill: "red" }}
+  />
 );

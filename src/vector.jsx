@@ -1,6 +1,6 @@
 // @flow
 
-export type Vector = { x: number, y: number };
+export type Vector = {| x: number, y: number |};
 
 export function equals(a: Vector, b: Vector): boolean {
   if (a.x !== b.x) {

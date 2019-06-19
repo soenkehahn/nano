@@ -36,8 +36,7 @@ export class Lab {
 
   draw = (): React.Element<typeof LabRender> => (
     <LabRender
-      x={this.position.x}
-      y={this.position.y}
+      position={this.position}
       size={this.size}
       completion={
         this.status.tag === "researching" ? this.status.completion : null
@@ -46,17 +45,20 @@ export class Lab {
   );
 }
 
-export const LabRender = (props: RenderProps & { completion: ?number }) => (
+export const LabRender = (props: {|
+  ...RenderProps,
+  ...{| completion: ?number |},
+|}) => (
   <g>
     <circle
-      cx={props.x}
-      cy={props.y}
+      cx={props.position.x}
+      cy={props.position.y}
       r={props.size - 1}
       style={{ stroke: "yellow", strokeWidth: "2", fillOpacity: "0" }}
     />
     <circle
-      cx={props.x}
-      cy={props.y}
+      cx={props.position.x}
+      cy={props.position.y}
       r={props.size * 0.4}
       style={{ fill: "yellow" }}
     />
@@ -65,11 +67,13 @@ export const LabRender = (props: RenderProps & { completion: ?number }) => (
 );
 
 function drawCompletion({
-  x,
-  y,
+  position: { x, y },
   size,
   completion,
-}: RenderProps & { completion: ?number }): React.Element<"path"> {
+}: {|
+  ...RenderProps,
+  ...{| completion: ?number |},
+|}): React.Element<"path"> {
   completion = completion || 0;
   const endpoint = add({ x, y }, scale(fromAngle(-TAU * completion), size));
   return (

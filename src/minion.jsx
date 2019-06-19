@@ -138,18 +138,16 @@ export class Minion {
   };
 
   draw = (): React.Element<typeof MinionRender> => {
-    return (
-      <MinionRender x={this.position.x} y={this.position.y} size={this.size} />
-    );
+    return <MinionRender position={this.position} size={this.size} />;
   };
 }
 
-export type RenderProps = Vector & { size: number };
+export type RenderProps = {| position: Vector, size: number |};
 
 export const MinionRender = (props: RenderProps) => (
   <circle
-    cx={props.x}
-    cy={props.y}
+    cx={props.position.x}
+    cy={props.position.y}
     r={props.size}
     style={{ fill: lightBlue, fillOpacity: 0.9 }}
   />

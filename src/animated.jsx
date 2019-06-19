@@ -34,9 +34,10 @@ export function animated(
 
     loop = async (now: number) => {
       if (this.mounted) {
-        const timeDelta = this.state.time ? now - this.state.time : null;
+        const timeDelta =
+          this.state.time === null ? null : now - this.state.time;
         this.setState({ time: now, timeDelta });
-        if (slowDown) {
+        if (slowDown !== null) {
           await wait(slowDown);
         }
         requestAnimationFrame(now => {

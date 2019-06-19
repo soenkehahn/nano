@@ -42,7 +42,10 @@ describe("Factory", () => {
     wrapper.setProps({ timeDelta: 100 });
     wrapper.find("#buildButton").simulate("click");
     wrapper.setProps({ timeDelta: 100 });
-    expect(wrapper.find(FactoryRender).props()).toMatchObject({ x: 10, y: 12 });
+    expect(wrapper.find(FactoryRender).props().position).toEqual({
+      x: 10,
+      y: 12,
+    });
   });
 
   it("uses up resources", () => {

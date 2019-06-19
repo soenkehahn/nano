@@ -81,7 +81,7 @@ describe("Scene", () => {
       wrapper.find("#goButton").simulate("click");
       wrapper.find("svg").simulate("click", toClickEvent({ x: 10, y: 10 }));
       wrapper.setProps({ timeDelta: 100 });
-      expect(wrapper.find(MinionRender).props()).toMatchObject({
+      expect(wrapper.find(MinionRender).props().position).toEqual({
         x: 8,
         y: 9,
       });
@@ -150,7 +150,7 @@ describe("Scene", () => {
       scene.objects.minion.position = { x: 0, y: 0 };
       wrapper.find("svg").simulate("click", toClickEvent({ x: 10, y: 10 }));
       wrapper.setProps({ timeDelta: 100 });
-      expect(wrapper.find(MinionRender).props()).toMatchObject({
+      expect(wrapper.find(MinionRender).props().position).toEqual({
         x: 0,
         y: 0,
       });
@@ -161,7 +161,7 @@ describe("Scene", () => {
         wrapper.find("#goButton").simulate("click");
         wrapper.find("svg").simulate("click", toClickEvent({ x: 10, y: 10 }));
         wrapper.setProps({ timeDelta: 100 });
-        expect(wrapper.find(MinionRender).props()).toMatchObject({
+        expect(wrapper.find(MinionRender).props().position).toEqual({
           x: 10,
           y: 10,
         });
@@ -173,7 +173,7 @@ describe("Scene", () => {
         wrapper.setProps({ timeDelta: 1 });
         wrapper.find("svg").simulate("click", toClickEvent({ x: 20, y: 0 }));
         wrapper.setProps({ timeDelta: 100 });
-        expect(wrapper.find(MinionRender).props()).toMatchObject({
+        expect(wrapper.find(MinionRender).props().position).toEqual({
           x: 10,
           y: 0,
         });
@@ -185,7 +185,7 @@ describe("Scene", () => {
       wrapper.find("#goButton").simulate("click");
       wrapper.find("svg").simulate("click", toClickEvent({ x: 1, y: 0 }));
       wrapper.setProps({ timeDelta: 0.5 });
-      expect(wrapper.find(MinionRender).props()).toMatchObject({
+      expect(wrapper.find(MinionRender).props().position).toEqual({
         x: 0.5,
         y: 0,
       });
@@ -220,7 +220,9 @@ describe("Scene", () => {
 
       it("doesn't deplete a resource when mining is not researched", () => {
         wrapper.find("#goButton").simulate("click");
-        wrapper.find("svg").simulate("click", toClickEvent(resourceProps));
+        wrapper
+          .find("svg")
+          .simulate("click", toClickEvent(resourceProps.position));
         wrapper.setProps({ timeDelta: 1 });
         expect(wrapper.find("#mineButton").exists()).toEqual(false);
         expect(wrapper.find(ResourceRender).exists()).toEqual(true);
@@ -233,7 +235,9 @@ describe("Scene", () => {
 
         it("allows to mine a resource when colliding (same position) with a minion", () => {
           wrapper.find("#goButton").simulate("click");
-          wrapper.find("svg").simulate("click", toClickEvent(resourceProps));
+          wrapper
+            .find("svg")
+            .simulate("click", toClickEvent(resourceProps.position));
           wrapper.setProps({ timeDelta: 1 });
           expect(wrapper.find(ResourceRender).exists()).toEqual(true);
           wrapper.find("#mineButton").simulate("click");
@@ -247,8 +251,10 @@ describe("Scene", () => {
             "click",
             toClickEvent({
               x:
-                resourceProps.x - (resourceProps.size + minionProps.size) + 0.1,
-              y: resourceProps.y,
+                resourceProps.position.x -
+                (resourceProps.size + minionProps.size) +
+                0.1,
+              y: resourceProps.position.y,
             }),
           );
           wrapper.setProps({ timeDelta: 1 });
@@ -263,8 +269,10 @@ describe("Scene", () => {
             "click",
             toClickEvent({
               x:
-                resourceProps.x - (resourceProps.size + minionProps.size) - 0.1,
-              y: resourceProps.y,
+                resourceProps.position.x -
+                (resourceProps.size + minionProps.size) -
+                0.1,
+              y: resourceProps.position.y,
             }),
           );
           wrapper.setProps({ timeDelta: 1 });
@@ -278,7 +286,9 @@ describe("Scene", () => {
 
         it("increases the inventory resource counter", () => {
           wrapper.find("#goButton").simulate("click");
-          wrapper.find("svg").simulate("click", toClickEvent(resourceProps));
+          wrapper
+            .find("svg")
+            .simulate("click", toClickEvent(resourceProps.position));
           wrapper.setProps({ timeDelta: 1 });
           wrapper.find("#mineButton").simulate("click");
           wrapper.setProps({ timeDelta: 1 });
