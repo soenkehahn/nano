@@ -20,7 +20,7 @@ export type Objects = {
 export function mkObjects(
   config: Config,
   scene: Scene,
-  numberOfResources: number = 1000,
+  numberOfResources: number = 3000,
 ): Objects {
   const scale = vectorLength(config.initialSize) * 20;
 
@@ -47,7 +47,7 @@ export function mkObjects(
       const position = findRandom(
         scale,
         v =>
-          inBiggerVicinity(10, config.initialSize, v) &&
+          vectorLength(v) < config.initialSize.x * 10 &&
           !collides(minion, new Resource(v)),
       );
       resources.push(new Resource(position));
