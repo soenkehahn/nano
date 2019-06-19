@@ -47,7 +47,7 @@ export function mkObjects(
       const position = findRandom(
         scale,
         v =>
-          inBiggerVicinity(30, config.initialSize, v) &&
+          inBiggerVicinity(10, config.initialSize, v) &&
           !collides(minion, new Resource(v)),
       );
       resources.push(new Resource(position));
