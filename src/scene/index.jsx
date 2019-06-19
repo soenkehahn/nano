@@ -85,10 +85,10 @@ export class Scene {
     this.objects.minion.onClick(target);
   };
 
-  interface = (): React.Element<typeof React.Fragment> => {
+  interface = (): React.Element<"div"> => {
     const buttons = this.objects.minion.buttons(this);
     return (
-      <>
+      <div style={{ paddingLeft: "1em" }}>
         <div style={{ height: "10em" }}>
           {this.activeCommand()}
           {buttons.length === 0 ? null : (
@@ -116,7 +116,7 @@ export class Scene {
             new research: mining
           </div>
         ) : null}
-      </>
+      </div>
     );
   };
 
