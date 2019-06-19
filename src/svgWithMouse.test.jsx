@@ -2,9 +2,12 @@
 
 import * as React from "react";
 import { ReactWrapper, mount } from "enzyme";
-import { Scene, mkSceneRender } from "./scene";
 import { SvgWithMouse } from "./svgWithMouse";
-import { mockSvgJsdomExtensions, setupTestConfig } from "./test/utils";
+import {
+  mockSvgJsdomExtensions,
+  setupSceneWrapper,
+  setupTestConfig,
+} from "./test/utils";
 import { toClickEvent } from "./vector";
 
 expect.extend({
@@ -128,42 +131,45 @@ describe("SvgWithMouse", () => {
 });
 
 describe("drag & minion interaction", () => {
-  let wrapper;
   const testConfig = setupTestConfig();
 
-  beforeEach(() => {
-    const SceneRender = mkSceneRender(testConfig(), new Scene(testConfig()));
-    wrapper = mount(<SceneRender time={0} timeDelta={0} />);
-    mockSvgJsdomExtensions(wrapper.find("svg"), { x: 100, y: 100 });
-  });
+  const [wrapper] = setupSceneWrapper(testConfig);
 
   it("disables dragging when selecting a minion target", () => {
-    wrapper.find("#goButton").simulate("click");
-    wrapper.find(SvgWithMouse).simulate("mousedown");
-    wrapper
+    wrapper()
+      .find("#goButton")
+      .simulate("click");
+    wrapper()
+      .find(SvgWithMouse)
+      .simulate("mousedown");
+    wrapper()
       .find(SvgWithMouse)
       .simulate("mousemove", { movementX: 10, movementY: -5 });
-    (expect(wrapper.find("svg").props().viewBox): any).toBeCloseToViewBox([
-      -100,
-      -100,
-      200,
-      200,
-    ]);
+    (expect(
+      wrapper()
+        .find("svg")
+        .props().viewBox,
+    ): any).toBeCloseToViewBox([-100, -100, 200, 200]);
   });
 
   it("enables dragging afterwards", () => {
-    wrapper.find("#goButton").simulate("click");
-    wrapper.find("svg").simulate("click", toClickEvent({ x: 10, y: 10 }));
-    wrapper.setProps({ timeDelta: 1 });
-    wrapper.find(SvgWithMouse).simulate("mousedown");
-    wrapper
+    wrapper()
+      .find("#goButton")
+      .simulate("click");
+    wrapper()
+      .find("svg")
+      .simulate("click", toClickEvent({ x: 10, y: 10 }));
+    wrapper().setProps({ timeDelta: 1 });
+    wrapper()
+      .find(SvgWithMouse)
+      .simulate("mousedown");
+    wrapper()
       .find(SvgWithMouse)
       .simulate("mousemove", { movementX: 10, movementY: -5 });
-    (expect(wrapper.find("svg").props().viewBox): any).toBeCloseToViewBox([
-      -110,
-      -95,
-      200,
-      200,
-    ]);
+    (expect(
+      wrapper()
+        .find("svg")
+        .props().viewBox,
+    ): any).toBeCloseToViewBox([-110, -95, 200, 200]);
   });
 });

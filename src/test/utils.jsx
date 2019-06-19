@@ -1,8 +1,14 @@
 // @flow
 
 import * as jsdomExtensions from "../jsdomExtensions/svg";
-import { type Config } from "../scene";
-import { ReactWrapper } from "enzyme";
+import {
+  type Config,
+  Scene,
+  type SceneRenderType,
+  mkSceneRender,
+} from "../scene";
+import { ReactWrapper, mount } from "enzyme";
+import React from "react";
 
 export function mockSvgJsdomExtensions(
   svgWrapper: ReactWrapper<any>,
@@ -39,4 +45,19 @@ export const setupTestConfig = (): (() => Config) => {
     };
   });
   return () => config;
+};
+
+export const setupSceneWrapper = (
+  testConfig: () => Config,
+): [() => ReactWrapper<SceneRenderType>, () => Scene] => {
+  let scene: Scene;
+  let wrapper: ReactWrapper<SceneRenderType>;
+
+  beforeEach(() => {
+    scene = new Scene(testConfig());
+    const SceneRender = mkSceneRender(testConfig(), scene);
+    wrapper = mount(<SceneRender time={0} timeDelta={0} />);
+    mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
+  });
+  return [() => wrapper, () => scene];
 };
