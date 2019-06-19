@@ -15,6 +15,12 @@ import {
   unit,
 } from "./vector";
 
+export type Button = {|
+  id: string,
+  text: string,
+  onClick: () => void,
+|};
+
 export class Minion {
   config: Config;
   velocity: number;
@@ -58,70 +64,54 @@ export class Minion {
     else return null;
   };
 
-  buttons = (scene: Scene): Array<React.Element<"button">> => {
+  buttons = (scene: Scene): Array<Button> => {
     if (this._state.tag !== "idle") {
       return [];
     }
-    const result = [];
-    result.push(
-      <button
-        key="go"
-        id="goButton"
-        onClick={() => {
-          SvgPane.draggingEnabled = false;
-          this._state = { tag: "goCoordinates" };
-        }}
-      >
-        go
-      </button>,
-    );
+    const result: Array<Button> = [];
+    result.push({
+      id: "goButton",
+      text: "go",
+      onClick: () => {
+        SvgPane.draggingEnabled = false;
+        this._state = { tag: "goCoordinates" };
+      },
+    });
     if (
       collides(this, scene.objects.lab) &&
       scene.objects.lab.status.tag === "idle" &&
       !scene.canMine
     ) {
-      result.push(
-        <button
-          key="research"
-          id="researchButton"
-          onClick={() => {
-            scene.objects.lab.startResearch();
-          }}
-        >
-          research mining
-        </button>,
-      );
+      result.push({
+        id: "researchButton",
+        text: "research mining",
+        onClick: () => {
+          scene.objects.lab.startResearch();
+        },
+      });
     }
     if (scene.canMine) {
       for (let i = 0; i < scene.objects.resources.length; i++) {
         if (collides(this, scene.objects.resources[i])) {
-          result.push(
-            <button
-              key={`mine-${i}`}
-              id="mineButton"
-              onClick={() => {
-                this._state = { tag: "mining", i };
-              }}
-            >
-              mine
-            </button>,
-          );
+          result.push({
+            id: `mineButton-${i}`,
+            text: "mine",
+            onClick: () => {
+              this._state = { tag: "mining", i };
+            },
+          });
         }
       }
     }
     if (scene.inventory >= this.config.prices.factory) {
-      result.push(
-        <button
-          key="build"
-          id="buildButton"
-          onClick={() => {
-            scene.objects.factories.push(new Factory(this.position));
-            scene.inventory -= this.config.prices.factory;
-          }}
-        >
-          build
-        </button>,
-      );
+      result.push({
+        id: "buildButton",
+        text: "build",
+        onClick: () => {
+          scene.objects.factories.push(new Factory(this.position));
+          scene.inventory -= this.config.prices.factory;
+        },
+      });
     }
     return result;
   };

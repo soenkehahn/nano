@@ -138,8 +138,8 @@ describe("Scene interface", () => {
       expect(
         wrapper()
           .find("#activeCommand")
-          .text(),
-      ).toEqual("active command: none");
+          .exists(),
+      ).toEqual(false);
     });
 
     it("shows the active command", () => {

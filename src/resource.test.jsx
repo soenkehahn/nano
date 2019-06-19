@@ -40,7 +40,7 @@ describe("Resource", () => {
       wrapper().setProps({ timeDelta: 1 });
       expect(
         wrapper()
-          .find("#mineButton")
+          .find("#mineButton-0")
           .exists(),
       ).toEqual(false);
       expect(
@@ -69,7 +69,7 @@ describe("Resource", () => {
             .exists(),
         ).toEqual(true);
         wrapper()
-          .find("#mineButton")
+          .find("#mineButton-0")
           .simulate("click");
         wrapper().setProps({ timeDelta: 1 });
         expect(
@@ -97,7 +97,7 @@ describe("Resource", () => {
           );
         wrapper().setProps({ timeDelta: 1 });
         wrapper()
-          .find("#mineButton")
+          .find("#mineButton-0")
           .simulate("click");
         wrapper().setProps({ timeDelta: 1 });
         expect(
@@ -126,7 +126,7 @@ describe("Resource", () => {
         wrapper().setProps({ timeDelta: 1 });
         expect(
           wrapper()
-            .find("#mineButton")
+            .find("#mineButton-0")
             .exists(),
         ).toEqual(false);
         expect(
@@ -141,7 +141,7 @@ describe("Resource", () => {
           wrapper()
             .find("#inventory")
             .text(),
-        ).toEqual("resource: 0");
+        ).toEqual("resources: 0");
       });
 
       it("increases the inventory resource counter", () => {
@@ -153,14 +153,14 @@ describe("Resource", () => {
           .simulate("click", toClickEvent(resourceProps.position));
         wrapper().setProps({ timeDelta: 1 });
         wrapper()
-          .find("#mineButton")
+          .find("#mineButton-0")
           .simulate("click");
         wrapper().setProps({ timeDelta: 1 });
         expect(
           wrapper()
             .find("#inventory")
             .text(),
-        ).toEqual("resource: 1");
+        ).toEqual("resources: 1");
       });
 
       test("mining takes time", () => {
@@ -173,7 +173,7 @@ describe("Resource", () => {
           .simulate("click", toClickEvent(resourceProps.position));
         wrapper().setProps({ timeDelta: 1 });
         wrapper()
-          .find("#mineButton")
+          .find("#mineButton-0")
           .simulate("click");
         wrapper().setProps({ timeDelta: 0.5 });
         expect(
@@ -201,7 +201,7 @@ describe("Resource", () => {
           .simulate("click", toClickEvent(target));
         wrapper().setProps({ timeDelta: 1 });
         wrapper()
-          .find("#mineButton")
+          .find("#mineButton-0")
           .simulate("click");
         wrapper().setProps({ timeDelta: 3 });
         expect(

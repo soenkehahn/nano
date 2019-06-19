@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from "react";
+import { type Button } from "../minion";
 import { type Objects, insideViewBox } from "./objects";
 import { SvgPane, type ViewBox } from "../svgPane";
 import { type Vector } from "../vector";
@@ -46,7 +47,7 @@ export const mkSceneRender = (
 
     render = () => {
       return (
-        <div>
+        <div style={{ display: "flex" }}>
           <SvgPane
             width={config.initialSize.x}
             height={config.initialSize.y}
@@ -54,7 +55,7 @@ export const mkSceneRender = (
             zoomVelocity={config.zoomVelocity}
             scene={this.state.scene}
           />
-          {this.state.scene.interface()}
+          <div style={{ flexGrow: 1 }}>{this.state.scene.interface()}</div>
         </div>
       );
     };
@@ -81,27 +82,48 @@ export class Scene {
     this.objects.minion.step(this, timeDelta);
   };
 
-  activeCommand = (): null | React.Element<"div"> => (
-    <div id="activeCommand">
-      active command: {this.objects.minion.activeCommand() || "none"}
-    </div>
-  );
+  activeCommand = (): null | React.Element<"div"> => {
+    const command = this.objects.minion.activeCommand();
+    if (command === null) return null;
+    else return <div id="activeCommand">active command: {command}</div>;
+  };
 
-  buttons = (): Array<React.Element<"button">> =>
-    this.objects.minion.buttons(this);
+  buttons = (): Array<Button> => this.objects.minion.buttons(this);
 
   onClick = (target: Vector): void => {
     this.objects.minion.onClick(target);
   };
 
-  interface = (): React.Element<"div"> => (
-    <div>
-      <div id="inventory">resource: {this.inventory}</div>
-      {this.activeCommand()}
-      commands: {this.buttons()}
-      {this.canMine ? <div id="newResearch">new research: mining</div> : null}
-    </div>
-  );
+  interface = (): React.Element<"div"> => {
+    const buttons = this.buttons();
+    const commands =
+      buttons.length === 0 ? null : (
+        <div>
+          available commands:{" "}
+          <ul>
+            {buttons.map(button => {
+              return (
+                <li key={button.id}>
+                  <button id={button.id} onClick={button.onClick}>
+                    {button.text}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      );
+    return (
+      <div>
+        <div style={{ height: "10em" }}>
+          {this.activeCommand()}
+          {commands}
+        </div>
+        <div id="inventory">resources: {this.inventory}</div>
+        {this.canMine ? <div id="newResearch">new research: mining</div> : null}
+      </div>
+    );
+  };
 
   draw = (viewBox: ViewBox): React.Element<"g"> => {
     let objects: Array<{
