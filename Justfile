@@ -16,3 +16,11 @@ lint-fix:
 
 serve:
   parcel src/index.html --no-hmr
+
+deploy-to-docs:
+  rm docs -rf
+  parcel build \
+    --public-url https://soenkehahn.github.io/nano/ \
+    --no-source-maps \
+    --out-dir docs \
+    src/index.html
