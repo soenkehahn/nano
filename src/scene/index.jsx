@@ -120,7 +120,7 @@ export class Scene {
           )}
         </div>
         <div id="inventory" style={{ height: "10em" }}>
-          resources: {Math.round(this.inventory.toNumber()) / 100}
+          resources: {Math.round(this.inventory.toNumber() * 100) / 100}
         </div>
         {this.objects.lab.newResearch()}
       </div>

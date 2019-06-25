@@ -1,7 +1,7 @@
 // @flow
 
 import { FactoryRender } from "./factory";
-import { fromInt } from "./rational";
+import { fromInt, rational } from "./rational";
 import { setupSceneWrapper, setupTestConfig } from "./test/utils";
 import { toClickEvent } from "./vector";
 
@@ -11,7 +11,7 @@ describe("Factory", () => {
   const [wrapper, scene] = setupSceneWrapper(testConfig);
 
   it("doesn't allow to construct a factory with less than 300 resources", () => {
-    scene().inventory = fromInt(299);
+    scene().inventory = rational(299, 100);
     wrapper().setProps({ timeDelta: 1 });
     expect(
       wrapper()
@@ -21,7 +21,7 @@ describe("Factory", () => {
   });
 
   it("allows to construct a factory with 300 resources", () => {
-    scene().inventory = fromInt(300);
+    scene().inventory = fromInt(3);
     wrapper().setProps({ timeDelta: 1 });
     expect(
       wrapper()
@@ -40,7 +40,7 @@ describe("Factory", () => {
   });
 
   it("builds the factory at the location of the minion", () => {
-    scene().inventory = fromInt(300);
+    scene().inventory = fromInt(3);
     wrapper()
       .find("#moveButton")
       .simulate("click");
@@ -63,12 +63,12 @@ describe("Factory", () => {
   });
 
   it("uses up resources", () => {
-    scene().inventory = fromInt(400);
+    scene().inventory = fromInt(4);
     wrapper().setProps({ timeDelta: 1 });
     wrapper()
       .find("#buildButton")
       .simulate("click");
     wrapper().setProps({ timeDelta: 100 });
-    expect(scene().inventory.toNumber()).toEqual(100);
+    expect(scene().inventory.toNumber()).toEqual(1);
   });
 });

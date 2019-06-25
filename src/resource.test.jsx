@@ -203,7 +203,7 @@ describe("Resource in scene", () => {
           .find("#mineButton-0")
           .simulate("click");
         wrapper().setProps({ timeDelta: 1 });
-        expect(scene().inventory.toNumber()).toEqual(50);
+        expect(scene().inventory.toNumber()).toEqual(0.5);
       });
 
       test("a low stepTimeDelta doesn't screw up the inventory", () => {
@@ -220,7 +220,7 @@ describe("Resource in scene", () => {
           .find("#mineButton-0")
           .simulate("click");
         wrapper().setProps({ timeDelta: 2 });
-        expect(scene().inventory.toNumber()).toEqual(100);
+        expect(scene().inventory.toNumber()).toEqual(1);
       });
 
       it("stops mining when the minion doesn't collide with the resource anymore", () => {
@@ -263,16 +263,16 @@ describe("Resource", () => {
     });
 
     it("allows to mine a fraction", () => {
-      expect(resource.mine(rational(1, 10)).toNumber()).toEqual(10);
+      expect(resource.mine(rational(1, 10)).toNumber()).toEqual(0.1);
     });
 
     it("doesn't allow to mine more than 1", () => {
-      expect(resource.mine(rational(11, 10)).toNumber()).toEqual(100);
+      expect(resource.mine(rational(11, 10)).toNumber()).toEqual(1);
     });
 
     it("allows to mine in multiple steps", () => {
-      expect(resource.mine(rational(1, 2)).toNumber()).toEqual(50);
-      expect(resource.mine(rational(6, 10)).toNumber()).toEqual(50);
+      expect(resource.mine(rational(1, 2)).toNumber()).toEqual(0.5);
+      expect(resource.mine(rational(6, 10)).toNumber()).toEqual(0.5);
     });
   });
 });

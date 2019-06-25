@@ -186,7 +186,7 @@ describe("Lab", () => {
 
     it("researching auto-mining costs resources", () => {
       scene().objects.lab.researched.add("mining");
-      testConfig().costs.research["auto-mining"] = fromInt(500);
+      testConfig().costs.research["auto-mining"] = fromInt(5);
       testConfig().researchVelocity = rational(1, 5);
       setMinionPosition(scene().objects.lab.position);
       expect(
@@ -194,7 +194,7 @@ describe("Lab", () => {
           .find("#researchAutoMiningButton")
           .props().disabled,
       ).toEqual(true);
-      scene().inventory = fromInt(500);
+      scene().inventory = fromInt(5);
       wrapper().setProps({ timeDelta: 0.1 });
       expect(
         wrapper()
@@ -205,28 +205,28 @@ describe("Lab", () => {
         .find("#researchAutoMiningButton")
         .simulate("click");
       wrapper().setProps({ timeDelta: 1 });
-      expect(scene().inventory.toNumber()).toEqual(400);
+      expect(scene().inventory.toNumber()).toEqual(4);
       wrapper().setProps({ timeDelta: 4 });
       expect(scene().inventory.toNumber()).toEqual(0);
     });
 
     it("doesn't overconsume inventory", () => {
       scene().objects.lab.researched.add("mining");
-      testConfig().costs.research["auto-mining"] = fromInt(10);
+      testConfig().costs.research["auto-mining"] = rational(1, 10);
       testConfig().researchVelocity = fromInt(3);
-      scene().inventory = fromInt(100);
+      scene().inventory = fromInt(1);
       setMinionPosition(scene().objects.lab.position);
       wrapper().setProps({ timeDelta: 0.1 });
       wrapper()
         .find("#researchAutoMiningButton")
         .simulate("click");
       wrapper().setProps({ timeDelta: 10 });
-      expect(scene().inventory.toNumber()).toEqual(90);
+      expect(scene().inventory.toNumber()).toEqual(0.9);
     });
 
     it("displays the research cost on the button", () => {
       scene().objects.lab.researched.add("mining");
-      testConfig().costs.research["auto-mining"] = fromInt(4200);
+      testConfig().costs.research["auto-mining"] = fromInt(42);
       setMinionPosition(scene().objects.lab.position);
       expect(
         wrapper()

@@ -10,7 +10,7 @@ export class Resource {
   id: number;
   position: Vector;
   static initialRadius: number = 10;
-  static initialUnits: Rational = fromInt(100);
+  static initialUnits: Rational = fromInt(1);
   status: { unitsLeft: Rational } = {
     unitsLeft: Resource.initialUnits,
   };

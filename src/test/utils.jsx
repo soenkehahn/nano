@@ -43,10 +43,10 @@ export const setupTestConfig: () => () => Config = () => {
       stepTimeDelta: rational(1, 2),
       velocity: 1,
       costs: {
-        factory: fromInt(300),
+        factory: fromInt(3),
         research: {
           mining: fromInt(0),
-          "auto-mining": fromInt(1000),
+          "auto-mining": fromInt(10),
         },
       },
       researchVelocity: fromInt(1),

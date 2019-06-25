@@ -22,7 +22,7 @@ describe("mkObjects", () => {
         factory: fromInt(3),
         research: {
           mining: fromInt(0),
-          "auto-mining": fromInt(1000),
+          "auto-mining": fromInt(10),
         },
       },
       researchVelocity: fromInt(1),

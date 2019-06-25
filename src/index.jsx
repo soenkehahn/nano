@@ -22,10 +22,10 @@ if (!module.parent) {
     stepTimeDelta: rational(1000, 60),
     velocity: 0.06,
     costs: {
-      factory: fromInt(300),
+      factory: fromInt(3),
       research: {
         mining: fromInt(0),
-        "auto-mining": fromInt(500),
+        "auto-mining": fromInt(5),
       },
     },
     researchVelocity: rational(1, 100000),
@@ -36,7 +36,7 @@ if (!module.parent) {
     config.velocity *= 25;
     config.researchVelocity = config.researchVelocity.times(fromInt(40));
     config.miningVelocity = config.miningVelocity.times(fromInt(20));
-    config.costs.research["auto-mining"] = fromInt(100);
+    config.costs.research["auto-mining"] = fromInt(1);
   }
   const SceneRender = animated(
     slowDown,

@@ -82,7 +82,7 @@ export class Lab {
           id: "researchAutoMiningButton",
           text: `research auto-mining (cost: ${this.config.costs.research[
             "auto-mining"
-          ].toNumber() / 100})`,
+          ].toNumber()})`,
           disabled: this.scene.inventory.lt(
             this.config.costs.research["auto-mining"],
           ),

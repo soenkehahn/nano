@@ -161,7 +161,7 @@ describe("Scene interface", () => {
 
   describe("inventory", () => {
     it("shows the inventory", () => {
-      scene().inventory = fromInt(4200);
+      scene().inventory = fromInt(42);
       wrapper().setProps({ timeDelta: 1 });
       expect(
         wrapper()
@@ -171,7 +171,7 @@ describe("Scene interface", () => {
     });
 
     it("rounds the inventory to cents", () => {
-      scene().inventory = rational(123456, 1000);
+      scene().inventory = rational(123456, 100000);
       wrapper().setProps({ timeDelta: 1 });
       expect(
         wrapper()
