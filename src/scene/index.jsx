@@ -123,6 +123,7 @@ export class Scene {
           resources: {Math.round(this.inventory.toNumber() * 100) / 100}
         </div>
         {this.objects.lab.newResearch()}
+        <>Use the mouse to drag the map and the scroll wheel to zoom.</>
       </div>
     );
   };
