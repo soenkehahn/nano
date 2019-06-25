@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from "react";
+import { type Rational, fromInt } from "./rational";
 import { type RenderProps } from "./minion";
 import { type Vector } from "./vector";
 
@@ -9,9 +10,9 @@ export class Resource {
   id: number;
   position: Vector;
   static initialRadius: number = 10;
-  status: { unitsLeft: number, level: number } = {
-    unitsLeft: 100,
-    level: 1,
+  static initialUnits: Rational = fromInt(100);
+  status: { unitsLeft: Rational } = {
+    unitsLeft: Resource.initialUnits,
   };
 
   constructor(position: Vector) {
@@ -20,13 +21,19 @@ export class Resource {
     this.position = position;
   }
 
-  getRadius = () => this.status.level * Resource.initialRadius;
+  getRadius = () =>
+    (this.status.unitsLeft.toNumber() / Resource.initialUnits.toNumber()) *
+    Resource.initialRadius;
 
-  mine: number => number = fraction => {
-    this.status.level = Math.max(0, this.status.level - fraction);
+  mine: Rational => Rational = fraction => {
     const oldUnitsLeft = this.status.unitsLeft;
-    this.status.unitsLeft = Math.ceil(this.status.level * 100);
-    return oldUnitsLeft - this.status.unitsLeft;
+    this.status.unitsLeft = this.status.unitsLeft.minus(
+      fraction.times(Resource.initialUnits),
+    );
+    if (this.status.unitsLeft.le(fromInt(0))) {
+      this.status.unitsLeft = fromInt(0);
+    }
+    return oldUnitsLeft.minus(this.status.unitsLeft);
   };
 
   draw: () => React.Node = () => {

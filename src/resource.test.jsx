@@ -3,6 +3,7 @@
 import { MinionRender, type RenderProps } from "./minion";
 import { Resource, ResourceRender } from "./resource";
 import { cloneDeep } from "lodash";
+import { rational } from "./rational";
 import { setupSceneWrapper, setupTestConfig } from "./test/utils";
 import { toClickEvent } from "./vector";
 
@@ -164,7 +165,7 @@ describe("Resource in scene", () => {
       });
 
       test("mining takes time", () => {
-        testConfig().miningVelocity = 0.5;
+        testConfig().miningVelocity = rational(1, 2);
         wrapper()
           .find("#moveButton")
           .simulate("click");
@@ -189,8 +190,8 @@ describe("Resource in scene", () => {
       });
 
       test("mining will increase the inventory by fractions", () => {
-        testConfig().miningVelocity = 0.5;
-        testConfig().stepTimeDelta = 0.1;
+        testConfig().miningVelocity = rational(1, 2);
+        testConfig().stepTimeDelta = rational(1, 10);
         wrapper()
           .find("#moveButton")
           .simulate("click");
@@ -202,12 +203,12 @@ describe("Resource in scene", () => {
           .find("#mineButton-0")
           .simulate("click");
         wrapper().setProps({ timeDelta: 1 });
-        expect(scene().inventory).toEqual(50);
+        expect(scene().inventory.toNumber()).toEqual(50);
       });
 
       test("a low stepTimeDelta doesn't screw up the inventory", () => {
-        testConfig().miningVelocity = 0.5;
-        testConfig().stepTimeDelta = 0.01;
+        testConfig().miningVelocity = rational(1, 2);
+        testConfig().stepTimeDelta = rational(1, 100);
         wrapper()
           .find("#moveButton")
           .simulate("click");
@@ -219,12 +220,12 @@ describe("Resource in scene", () => {
           .find("#mineButton-0")
           .simulate("click");
         wrapper().setProps({ timeDelta: 2 });
-        expect(scene().inventory).toEqual(100);
+        expect(scene().inventory.toNumber()).toEqual(100);
       });
 
       it("stops mining when the minion doesn't collide with the resource anymore", () => {
-        testConfig().miningVelocity = 0.5;
-        testConfig().stepTimeDelta = 0.1;
+        testConfig().miningVelocity = rational(1, 2);
+        testConfig().stepTimeDelta = rational(1, 10);
         wrapper()
           .find("#moveButton")
           .simulate("click");
@@ -261,31 +262,17 @@ describe("Resource", () => {
       resource = new Resource({ x: 0, y: 0 });
     });
 
-    it("allows to mine a fraction, returning the units", () => {
-      expect(resource.mine(0.1)).toEqual(10);
+    it("allows to mine a fraction", () => {
+      expect(resource.mine(rational(1, 10)).toNumber()).toEqual(10);
     });
 
     it("doesn't allow to mine more than 1", () => {
-      expect(resource.mine(1.1)).toEqual(100);
+      expect(resource.mine(rational(11, 10)).toNumber()).toEqual(100);
     });
 
     it("allows to mine in multiple steps", () => {
-      expect(resource.mine(0.5)).toEqual(50);
-      expect(resource.mine(0.6)).toEqual(50);
-    });
-
-    it("rounds to cents", () => {
-      expect(resource.mine(0.123)).toEqual(12);
-    });
-
-    it("takes previous remainders into account", () => {
-      expect(resource.mine(0.006)).toEqual(0);
-      expect(resource.mine(0.006)).toEqual(1);
-    });
-
-    it("takes previous remainders into account at the end", () => {
-      expect(resource.mine(0.996)).toEqual(99);
-      expect(resource.mine(0.006)).toEqual(1);
+      expect(resource.mine(rational(1, 2)).toNumber()).toEqual(50);
+      expect(resource.mine(rational(6, 10)).toNumber()).toEqual(50);
     });
   });
 });

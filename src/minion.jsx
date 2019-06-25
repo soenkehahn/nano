@@ -3,6 +3,7 @@
 import * as React from "react";
 import { type Config, Scene } from "./scene";
 import { Factory } from "./factory";
+import { type Rational, fromInt } from "./rational";
 import { SvgPane } from "./svgPane";
 import {
   type Vector,
@@ -51,7 +52,7 @@ export class Minion {
     }
   };
 
-  step: (Scene, number) => void = (scene, timeDelta) => {
+  step: (Scene, Rational) => void = (scene, timeDelta) => {
     if (this._state.tag === "moving") {
       this.move(timeDelta);
     } else if (this._state.tag === "mining") {
@@ -109,22 +110,22 @@ export class Minion {
         }
       }
     }
-    if (scene.inventory >= this.config.prices.factory) {
+    if (scene.inventory.ge(this.config.prices.factory)) {
       result.push({
         id: "buildButton",
         text: "build",
         onClick: () => {
           scene.objects.factories.push(new Factory(this.position));
-          scene.inventory -= this.config.prices.factory;
+          scene.inventory = scene.inventory.minus(this.config.prices.factory);
         },
       });
     }
     return result;
   };
 
-  move: number => void = timeDelta => {
+  move: Rational => void = timeDelta => {
     const distanceLeft = distance(this.target, this.position);
-    const stepDistance = this.velocity * timeDelta;
+    const stepDistance = this.velocity * timeDelta.toNumber();
     if (stepDistance < distanceLeft) {
       this.position = add(
         this.position,
@@ -136,11 +137,13 @@ export class Minion {
     }
   };
 
-  mine: (Scene, number, number) => void = (scene, timeDelta, i) => {
+  mine: (Scene, Rational, number) => void = (scene, timeDelta, i) => {
     const resource = scene.objects.resources[i];
     if (collides(this, resource)) {
-      scene.inventory += resource.mine(timeDelta * this.config.miningVelocity);
-      if (resource.status.level === 0) {
+      scene.inventory = scene.inventory.plus(
+        resource.mine(timeDelta.times(this.config.miningVelocity)),
+      );
+      if (resource.status.unitsLeft.equals(fromInt(0))) {
         scene.objects.resources.splice(i, 1);
         this._state = { tag: "idle" };
       }

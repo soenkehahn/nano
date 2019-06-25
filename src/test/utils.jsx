@@ -9,6 +9,7 @@ import {
 } from "../scene";
 import { type Objects, mkObjects } from "../scene/objects";
 import { ReactWrapper, mount } from "enzyme";
+import { fromInt, rational } from "../rational";
 import React from "react";
 
 export function mockSvgJsdomExtensions(
@@ -39,11 +40,11 @@ export const setupTestConfig: () => () => Config = () => {
     config = {
       initialSize: { x: 200, y: 200 },
       zoomVelocity: 1.1,
-      stepTimeDelta: 0.5,
+      stepTimeDelta: rational(1, 2),
       velocity: 1,
-      prices: { factory: 300 },
-      researchVelocity: 1,
-      miningVelocity: 1000,
+      prices: { factory: fromInt(300) },
+      researchVelocity: fromInt(1),
+      miningVelocity: fromInt(1000),
     };
   });
   return () => config;

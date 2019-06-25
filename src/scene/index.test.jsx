@@ -1,6 +1,7 @@
 // @flow
 
 import { MinionRender } from "../minion";
+import { type Rational, fromInt, rational } from "../rational";
 import { Scene, mkSceneRender } from "../scene";
 import {
   mockSvgJsdomExtensions,
@@ -23,14 +24,14 @@ describe("SceneRender step function logic", () => {
 
   function mkMockScene(): Scene {
     const scene = new Scene(config(), testObjects);
-    scene.step = (timeDelta: number) => {
+    scene.step = (timeDelta: Rational) => {
       timeDeltas.push(timeDelta);
     };
     return scene;
   }
 
   it("calls the step function as often as needed to reach the timeDelta", () => {
-    config().stepTimeDelta = 1;
+    config().stepTimeDelta = fromInt(1);
     const SceneRender = mkSceneRender(config(), mkMockScene());
     const wrapper = mount(<SceneRender time={0} timeDelta={0} />);
     wrapper.setProps({ timeDelta: 10 });
@@ -38,17 +39,17 @@ describe("SceneRender step function logic", () => {
   });
 
   it("calls the step function with fixed timeDeltas", () => {
-    config().stepTimeDelta = 0.5;
+    config().stepTimeDelta = rational(1, 2);
     const Scene = mkSceneRender(config(), mkMockScene());
     const wrapper = mount(<Scene time={0} timeDelta={0} />);
     wrapper.setProps({ timeDelta: 5 });
     for (const timeDelta of timeDeltas) {
-      expect(timeDelta).toEqual(0.5);
+      expect(timeDelta.toNumber()).toEqual(0.5);
     }
   });
 
   it("saves the remainder of the timeDelta for the next round", () => {
-    config().stepTimeDelta = 0.6;
+    config().stepTimeDelta = rational(6, 10);
     const Scene = mkSceneRender(config(), mkMockScene());
     const wrapper = mount(<Scene time={0} timeDelta={0} />);
     wrapper.setProps({ timeDelta: 1 });
@@ -116,7 +117,7 @@ describe("Scene interface", () => {
   });
 
   it("doesn't show any buttons if the minion is not idle", () => {
-    scene().inventory = 3;
+    scene().inventory = fromInt(3);
     wrapper()
       .find("#moveButton")
       .simulate("click");
@@ -155,6 +156,28 @@ describe("Scene interface", () => {
           .find("#status")
           .text(),
       ).toEqual("status: moving...");
+    });
+  });
+
+  describe("inventory", () => {
+    it("shows the inventory", () => {
+      scene().inventory = fromInt(4200);
+      wrapper().setProps({ timeDelta: 1 });
+      expect(
+        wrapper()
+          .find("#inventory")
+          .text(),
+      ).toEqual("resources: 42");
+    });
+
+    it("rounds the inventory to cents", () => {
+      scene().inventory = rational(123456, 1000);
+      wrapper().setProps({ timeDelta: 1 });
+      expect(
+        wrapper()
+          .find("#inventory")
+          .text(),
+      ).toEqual("resources: 1.23");
     });
   });
 });

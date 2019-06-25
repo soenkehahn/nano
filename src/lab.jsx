@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { type Config, Scene } from "./scene";
+import { type Rational, fromInt } from "./rational";
 import { type RenderProps } from "./minion";
 import { TAU, type Vector, add, fromAngle, scale } from "./vector";
 
@@ -10,7 +11,7 @@ export class Lab {
   scene: Scene;
   position: Vector;
   radius: number = 14;
-  status: {| tag: "idle" |} | {| tag: "researching", completion: number |} = {
+  status: {| tag: "idle" |} | {| tag: "researching", completion: Rational |} = {
     tag: "idle",
   };
 
@@ -23,13 +24,18 @@ export class Lab {
   getRadius = () => this.radius;
 
   startResearch: () => void = () => {
-    this.status = { tag: "researching", completion: 0 };
+    this.status = { tag: "researching", completion: fromInt(0) };
   };
 
-  step = (timeDelta: number) => {
+  step: Rational => void = timeDelta => {
     if (this.status.tag === "researching") {
-      this.status.completion += timeDelta * this.config.researchVelocity;
-      if (this.status.completion >= 1) {
+      this.status = {
+        tag: "researching",
+        completion: this.status.completion.plus(
+          timeDelta.times(this.config.researchVelocity),
+        ),
+      };
+      if (this.status.completion.ge(fromInt(1))) {
         this.scene.canMine = true;
         this.status = { tag: "idle" };
       }
@@ -42,7 +48,9 @@ export class Lab {
       position={this.position}
       radius={this.radius}
       completion={
-        this.status.tag === "researching" ? this.status.completion : null
+        this.status.tag === "researching"
+          ? this.status.completion.toNumber()
+          : null
       }
     />
   );

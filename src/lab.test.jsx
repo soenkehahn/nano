@@ -2,6 +2,7 @@
 
 import { LabRender } from "./lab";
 import { SvgPane } from "./svgPane";
+import { rational } from "./rational";
 import { setupSceneWrapper, setupTestConfig } from "./test/utils";
 import { toClickEvent } from "./vector";
 
@@ -78,7 +79,7 @@ describe("Lab", () => {
   });
 
   test("researching takes time", () => {
-    testConfig().researchVelocity = 1 / 5;
+    testConfig().researchVelocity = rational(1, 5);
     wrapper()
       .find("#moveButton")
       .simulate("click");

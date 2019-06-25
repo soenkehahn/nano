@@ -2,17 +2,18 @@
 
 import * as React from "react";
 import { type Objects, insideViewBox } from "./objects";
+import { type Rational, fromInt } from "../rational";
 import { SvgPane, type ViewBox } from "../svgPane";
 import { type Vector } from "../vector";
 
 export type Config = {|
   initialSize: Vector,
   zoomVelocity: number,
-  stepTimeDelta: number,
+  stepTimeDelta: Rational,
   velocity: number,
-  prices: { factory: number },
-  researchVelocity: number,
-  miningVelocity: number,
+  prices: { factory: Rational },
+  researchVelocity: Rational,
+  miningVelocity: Rational,
 |};
 
 type Props = {| time: number, timeDelta: number |};
@@ -36,11 +37,11 @@ export const mkSceneRender = (
 
     static getDerivedStateFromProps = (props: Props, state: State) => {
       const timeDelta = props.timeDelta + state.timeDeltaRemainder;
-      const n = Math.floor(timeDelta / config.stepTimeDelta);
+      const n = Math.floor(timeDelta / config.stepTimeDelta.toNumber());
       for (let i = 0; i < n; i++) {
         state.scene.step(config.stepTimeDelta);
       }
-      state.timeDeltaRemainder = timeDelta % config.stepTimeDelta;
+      state.timeDeltaRemainder = timeDelta % config.stepTimeDelta.toNumber();
       return state;
     };
 
@@ -64,7 +65,7 @@ export const mkSceneRender = (
 
 export class Scene {
   canMine: boolean;
-  inventory: number;
+  inventory: Rational;
   objects: Objects;
 
   constructor(
@@ -72,11 +73,11 @@ export class Scene {
     objects: (config: Config, scene: Scene) => Objects,
   ) {
     this.canMine = false;
-    this.inventory = 0;
+    this.inventory = fromInt(0);
     this.objects = objects(config, this);
   }
 
-  step: number => void = timeDelta => {
+  step: Rational => void = timeDelta => {
     this.objects.lab.step(timeDelta);
     this.objects.minion.step(this, timeDelta);
   };
@@ -109,7 +110,7 @@ export class Scene {
           )}
         </div>
         <div id="inventory" style={{ height: "10em" }}>
-          resources: {this.inventory / 100}
+          resources: {Math.round(this.inventory.toNumber()) / 100}
         </div>
         {this.canMine ? (
           <div id="newResearch" style={{ height: "10em" }}>
