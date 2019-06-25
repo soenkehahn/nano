@@ -42,7 +42,13 @@ export const setupTestConfig: () => () => Config = () => {
       zoomVelocity: 1.1,
       stepTimeDelta: rational(1, 2),
       velocity: 1,
-      prices: { factory: fromInt(300) },
+      costs: {
+        factory: fromInt(300),
+        research: {
+          mining: fromInt(0),
+          "auto-mining": fromInt(1000),
+        },
+      },
       researchVelocity: fromInt(1),
       miningVelocity: fromInt(1000),
     };

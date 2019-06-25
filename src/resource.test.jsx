@@ -53,7 +53,7 @@ describe("Resource in scene", () => {
 
     describe("when mining is researched", () => {
       beforeEach(() => {
-        scene().canMine = true;
+        scene().objects.lab.researched.add("mining");
       });
 
       it("allows to mine a resource when colliding (same position) with a minion", () => {

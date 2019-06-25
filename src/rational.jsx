@@ -61,9 +61,21 @@ class _Rational {
     );
   };
 
+  gt: Rational => boolean = other => {
+    return (
+      this.numerator * other.denominator > other.numerator * this.denominator
+    );
+  };
+
   le: Rational => boolean = other => {
     return (
       this.numerator * other.denominator <= other.numerator * this.denominator
+    );
+  };
+
+  lt: Rational => boolean = other => {
+    return (
+      this.numerator * other.denominator < other.numerator * this.denominator
     );
   };
 

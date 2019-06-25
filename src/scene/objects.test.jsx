@@ -18,7 +18,13 @@ describe("mkObjects", () => {
       zoomVelocity: 1.1,
       stepTimeDelta: rational(1, 2),
       velocity: 1,
-      prices: { factory: fromInt(3) },
+      costs: {
+        factory: fromInt(3),
+        research: {
+          mining: fromInt(0),
+          "auto-mining": fromInt(1000),
+        },
+      },
       researchVelocity: fromInt(1),
       miningVelocity: fromInt(1000),
     };

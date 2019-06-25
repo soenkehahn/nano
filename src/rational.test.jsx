@@ -44,7 +44,7 @@ describe("equals", () => {
   ];
 
   for (let i = 0; i < tests.length; i++) {
-    it(`returns whether the rational is equal than another (${i})`, () => {
+    it(`equals (===) test #${i}`, () => {
       const [a, b, expected] = tests[i];
       if (a.equals(b) !== expected) {
         throw new Error(
@@ -74,11 +74,44 @@ describe("ge", () => {
   ];
 
   for (let i = 0; i < tests.length; i++) {
-    it(`returns whether the rational is bigger or equal than another (${i})`, () => {
+    it(`ge (>=) test #${i}`, () => {
       const [a, b, expected] = tests[i];
       if (a.ge(b) !== expected) {
         throw new Error(
           `${a.toString()}.ge(${b.toString()}) !== ${expected.toString()}`,
+        );
+      }
+    });
+  }
+});
+
+describe("gt", () => {
+  const tests = [
+    [fromInt(1), fromInt(1), false],
+    [fromInt(2), fromInt(1), true],
+    [fromInt(1), fromInt(2), false],
+    [rational(2, 2), rational(3, 3), false],
+    [rational(2, 2), rational(3, 3), false],
+    [rational(2, -2), rational(-3, 3), false],
+    [rational(1, 2), rational(1, 2), false],
+    [rational(1, 2), rational(1, 3), true],
+    [rational(1, 3), rational(1, 2), false],
+    [rational(2, 3), rational(1, 3), true],
+    [rational(1, 3), rational(2, 3), false],
+    [rational(1, -3), rational(2, 3), false],
+    [rational(-1, 3), rational(2, 3), false],
+    [rational(1, 3), rational(-2, 3), true],
+    [rational(1, 3), rational(2, -3), true],
+    [rational(1, 3), rational(-2, -3), false],
+    [rational(-1, 3), rational(2, -3), true],
+  ];
+
+  for (let i = 0; i < tests.length; i++) {
+    it(`gt (>) test #${i}`, () => {
+      const [a, b, expected] = tests[i];
+      if (a.gt(b) !== expected) {
+        throw new Error(
+          `${a.toString()}.gt(${b.toString()}) !== ${expected.toString()}`,
         );
       }
     });
@@ -104,11 +137,44 @@ describe("le", () => {
   ];
 
   for (let i = 0; i < tests.length; i++) {
-    it(`returns whether the rational is lesser or equal than another (${i})`, () => {
+    it(`le (<=) test #${i}`, () => {
       const [a, b, expected] = tests[i];
       if (a.le(b) !== expected) {
         throw new Error(
           `${a.toString()}.le(${b.toString()}) !== ${expected.toString()}`,
+        );
+      }
+    });
+  }
+});
+
+describe("lt", () => {
+  const tests = [
+    [fromInt(1), fromInt(1), false],
+    [fromInt(2), fromInt(1), false],
+    [fromInt(1), fromInt(2), true],
+    [rational(2, 2), rational(3, 3), false],
+    [rational(2, 2), rational(3, 3), false],
+    [rational(2, -2), rational(-3, 3), false],
+    [rational(1, 2), rational(1, 2), false],
+    [rational(1, 2), rational(1, 3), false],
+    [rational(1, 3), rational(1, 2), true],
+    [rational(2, 3), rational(1, 3), false],
+    [rational(1, 3), rational(2, 3), true],
+    [rational(1, -3), rational(2, 3), true],
+    [rational(-1, 3), rational(2, 3), true],
+    [rational(1, 3), rational(-2, 3), false],
+    [rational(1, 3), rational(2, -3), false],
+    [rational(1, 3), rational(-2, -3), true],
+    [rational(-1, 3), rational(2, -3), false],
+  ];
+
+  for (let i = 0; i < tests.length; i++) {
+    it(`lt (<) test #${i}`, () => {
+      const [a, b, expected] = tests[i];
+      if (a.lt(b) !== expected) {
+        throw new Error(
+          `${a.toString()}.lt(${b.toString()}) !== ${expected.toString()}`,
         );
       }
     });

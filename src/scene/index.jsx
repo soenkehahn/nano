@@ -11,7 +11,13 @@ export type Config = {|
   zoomVelocity: number,
   stepTimeDelta: Rational,
   velocity: number,
-  prices: { factory: Rational },
+  costs: {
+    factory: Rational,
+    research: {
+      mining: Rational,
+      "auto-mining": Rational,
+    },
+  },
   researchVelocity: Rational,
   miningVelocity: Rational,
 |};
@@ -64,7 +70,6 @@ export const mkSceneRender = (
 };
 
 export class Scene {
-  canMine: boolean;
   inventory: Rational;
   objects: Objects;
 
@@ -72,7 +77,6 @@ export class Scene {
     config: Config,
     objects: (config: Config, scene: Scene) => Objects,
   ) {
-    this.canMine = false;
     this.inventory = fromInt(0);
     this.objects = objects(config, this);
   }
@@ -87,7 +91,9 @@ export class Scene {
   };
 
   interface: () => React.Node = () => {
-    const buttons = this.objects.minion.buttons(this);
+    const buttons = this.objects.minion
+      .buttons(this)
+      .concat(this.objects.lab.buttons());
     return (
       <div style={{ paddingLeft: "1em" }}>
         <div style={{ height: "10em" }}>
@@ -99,7 +105,11 @@ export class Scene {
                 {buttons.map(button => {
                   return (
                     <li key={button.id}>
-                      <button id={button.id} onClick={button.onClick}>
+                      <button
+                        id={button.id}
+                        disabled={button.disabled}
+                        onClick={button.onClick}
+                      >
                         {button.text}
                       </button>
                     </li>
@@ -112,17 +122,13 @@ export class Scene {
         <div id="inventory" style={{ height: "10em" }}>
           resources: {Math.round(this.inventory.toNumber()) / 100}
         </div>
-        {this.canMine ? (
-          <div id="newResearch" style={{ height: "10em" }}>
-            new research: mining
-          </div>
-        ) : null}
+        {this.objects.lab.newResearch()}
       </div>
     );
   };
 
   activeCommand: () => null | React.Node = () => {
-    const status = this.objects.minion.status();
+    const status = this.objects.minion.getStatus();
     if (status === null) return null;
     else return <div id="status">{status}</div>;
   };
