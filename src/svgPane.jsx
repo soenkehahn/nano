@@ -45,7 +45,7 @@ export class SvgPane extends React.Component<
     return point.matrixTransform(svgRef.getScreenCTM().inverse());
   };
 
-  handleClick = (event: SyntheticMouseEvent<HTMLElement>): void => {
+  handleClick: (SyntheticMouseEvent<HTMLElement>) => void = event => {
     if (this.svgRef) {
       const svgPoint = this.transformClickEvent(this.svgRef, event);
       this.props.onClick({

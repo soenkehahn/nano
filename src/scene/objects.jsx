@@ -76,7 +76,7 @@ export function findRandom(
   return result;
 }
 
-export const inside = (size: Vector, v: Vector): boolean => {
+export const inside: (Vector, Vector) => boolean = (size, v) => {
   const offset = scale(size, -0.5);
   return (
     v.x - offset.x >= 0 &&

@@ -22,14 +22,14 @@ export class Resource {
 
   getRadius = () => this.status.level * Resource.initialRadius;
 
-  mine = (fraction: number): number => {
+  mine: number => number = fraction => {
     this.status.level = Math.max(0, this.status.level - fraction);
     const oldUnitsLeft = this.status.unitsLeft;
     this.status.unitsLeft = Math.ceil(this.status.level * 100);
     return oldUnitsLeft - this.status.unitsLeft;
   };
 
-  draw = (): React.Element<typeof ResourceRender> => {
+  draw: () => React.Node = () => {
     return (
       <ResourceRender
         key={this.id}

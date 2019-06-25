@@ -76,16 +76,16 @@ export class Scene {
     this.objects = objects(config, this);
   }
 
-  step = (timeDelta: number): void => {
+  step: number => void = timeDelta => {
     this.objects.lab.step(timeDelta);
     this.objects.minion.step(this, timeDelta);
   };
 
-  onClick = (target: Vector): void => {
+  onClick: Vector => void = target => {
     this.objects.minion.onClick(target);
   };
 
-  interface = (): React.Element<"div"> => {
+  interface: () => React.Node = () => {
     const buttons = this.objects.minion.buttons(this);
     return (
       <div style={{ paddingLeft: "1em" }}>
@@ -120,13 +120,13 @@ export class Scene {
     );
   };
 
-  activeCommand = (): null | React.Element<"div"> => {
+  activeCommand: () => null | React.Node = () => {
     const status = this.objects.minion.status();
     if (status === null) return null;
     else return <div id="status">{status}</div>;
   };
 
-  draw = (viewBox: ViewBox): React.Element<"g"> => {
+  draw: ViewBox => React.Node = viewBox => {
     let objects: Array<{
       position: Vector,
       getRadius: () => number,

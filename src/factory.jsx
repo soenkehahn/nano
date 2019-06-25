@@ -21,7 +21,7 @@ export class Factory {
 
   getRadius = () => this.radius;
 
-  draw = (): React.Element<typeof FactoryRender> => {
+  draw: () => React.Node = () => {
     return (
       <FactoryRender
         key={this.id}

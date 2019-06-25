@@ -33,7 +33,7 @@ export function mockSvgJsdomExtensions(
   }
 }
 
-export const setupTestConfig = (): (() => Config) => {
+export const setupTestConfig: () => () => Config = () => {
   let config: Config;
   beforeEach(() => {
     config = {

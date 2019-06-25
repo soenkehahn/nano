@@ -22,7 +22,7 @@ export class Lab {
 
   getRadius = () => this.radius;
 
-  startResearch = (): void => {
+  startResearch: () => void = () => {
     this.status = { tag: "researching", completion: 0 };
   };
 
@@ -36,7 +36,7 @@ export class Lab {
     }
   };
 
-  draw = (): React.Element<typeof LabRender> => (
+  draw: () => React.Node = () => (
     <LabRender
       key="lab"
       position={this.position}

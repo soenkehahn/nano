@@ -43,7 +43,7 @@ export class Minion {
 
   getRadius = () => this.radius;
 
-  onClick = (target: Vector): void => {
+  onClick: Vector => void = target => {
     if (this._state.tag === "waitForMoveTarget") {
       this.target = target;
       this._state = { tag: "moving" };
@@ -51,7 +51,7 @@ export class Minion {
     }
   };
 
-  step = (scene: Scene, timeDelta: number): void => {
+  step: (Scene, number) => void = (scene, timeDelta) => {
     if (this._state.tag === "moving") {
       this.move(timeDelta);
     } else if (this._state.tag === "mining") {
@@ -59,7 +59,7 @@ export class Minion {
     }
   };
 
-  status = (): ?string => {
+  status: () => ?string = () => {
     if (this._state.tag === "moving") return "status: moving...";
     else if (this._state.tag === "mining") return "status: mining...";
     else if (this._state.tag === "waitForMoveTarget")
@@ -70,7 +70,7 @@ export class Minion {
     }
   };
 
-  buttons = (scene: Scene): Array<Button> => {
+  buttons: Scene => Array<Button> = scene => {
     if (this._state.tag !== "idle") {
       return [];
     }
@@ -122,7 +122,7 @@ export class Minion {
     return result;
   };
 
-  move = (timeDelta: number): void => {
+  move: number => void = timeDelta => {
     const distanceLeft = distance(this.target, this.position);
     const stepDistance = this.velocity * timeDelta;
     if (stepDistance < distanceLeft) {
@@ -136,7 +136,7 @@ export class Minion {
     }
   };
 
-  mine = (scene: Scene, timeDelta: number, i: number): void => {
+  mine: (Scene, number, number) => void = (scene, timeDelta, i) => {
     const resource = scene.objects.resources[i];
     if (collides(this, resource)) {
       scene.inventory += resource.mine(timeDelta * this.config.miningVelocity);
@@ -149,7 +149,7 @@ export class Minion {
     }
   };
 
-  draw = (): React.Element<typeof MinionRender> => {
+  draw: () => React.Node = () => {
     return (
       <MinionRender
         key="minion"

@@ -51,7 +51,7 @@ export function collides(
   return distance(a.position, b.position) < a.getRadius() + b.getRadius();
 }
 
-export const random = (lower: number, upper: number): Vector => ({
+export const random: (number, number) => Vector = (lower, upper) => ({
   x: Math.random() * (upper - lower) + lower,
   y: Math.random() * (upper - lower) + lower,
 });
