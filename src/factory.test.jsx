@@ -20,6 +20,7 @@ describe("Factory", () => {
   });
 
   it("allows to construct a factory with 3 resources", () => {
+    scene().objects.resources = [];
     scene().inventory = fromInt(3);
     wrapper().setProps({ timeDelta: 1 });
     expect(
@@ -39,6 +40,7 @@ describe("Factory", () => {
   });
 
   it("builds the factory at the location of the minion", () => {
+    scene().objects.resources = [];
     scene().inventory = fromInt(3);
     scene().objects.minion.position = { x: 10, y: 12 };
     scene().objects.minion.target = { x: 10, y: 12 };
@@ -73,6 +75,7 @@ describe("Factory", () => {
   });
 
   it("uses up resources", () => {
+    scene().objects.resources = [];
     scene().inventory = fromInt(4);
     wrapper().setProps({ timeDelta: 1 });
     wrapper()

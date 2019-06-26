@@ -200,6 +200,7 @@ describe("collides", () => {
   });
 
   it("detects missing collisions", () => {
+    scene.objects.resources = [new Resource({ x: 10, y: 10 })];
     expect(
       scene.collides({ position: { x: 42, y: 23 }, getRadius: () => 10 }),
     ).toEqual(false);
