@@ -1,7 +1,10 @@
 // @flow
 
+import { Factory } from "../factory";
+import { Lab } from "../lab";
 import { MinionRender } from "../minion";
 import { type Rational, fromInt, rational } from "../rational";
+import { Resource } from "../resource";
 import { Scene, mkSceneRender } from "../scene";
 import {
   mockSvgJsdomExtensions,
@@ -179,5 +182,56 @@ describe("Scene interface", () => {
           .text(),
       ).toEqual("resources: 1.23");
     });
+  });
+});
+
+describe("collides", () => {
+  let scene;
+
+  beforeEach(() => {
+    scene = new Scene(config(), testObjects);
+  });
+
+  it("detects collisions with resources", () => {
+    scene.objects.resources.push(new Resource({ x: 42, y: 23 }));
+    expect(
+      scene.collides({ position: { x: 42, y: 23 }, getRadius: () => 10 }),
+    ).toEqual(true);
+  });
+
+  it("detects missing collisions", () => {
+    expect(
+      scene.collides({ position: { x: 42, y: 23 }, getRadius: () => 10 }),
+    ).toEqual(false);
+  });
+
+  it("detects collisions with the lab", () => {
+    scene.objects.lab = new Lab(config(), scene, { x: 42, y: 23 });
+    expect(
+      scene.collides({ position: { x: 42, y: 23 }, getRadius: () => 10 }),
+    ).toEqual(true);
+  });
+
+  it("detects collisions with factories", () => {
+    scene.objects.factories.push(new Factory({ x: 42, y: 23 }));
+    expect(
+      scene.collides({ position: { x: 42, y: 23 }, getRadius: () => 10 }),
+    ).toEqual(true);
+  });
+
+  it("detects slight collisions", () => {
+    scene.objects.resources.push(new Resource({ x: 42, y: 23 }));
+    expect(
+      scene.collides({
+        position: { x: 42 + Resource.initialRadius + 10 - 0.1, y: 23 },
+        getRadius: () => 10,
+      }),
+    ).toEqual(true);
+    expect(
+      scene.collides({
+        position: { x: 42 + Resource.initialRadius + 10 + 0.1, y: 23 },
+        getRadius: () => 10,
+      }),
+    ).toEqual(false);
   });
 });

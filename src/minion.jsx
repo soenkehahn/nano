@@ -116,7 +116,13 @@ export class Minion {
         },
       });
     }
-    if (scene.inventory.ge(this.config.costs.factory)) {
+    if (
+      scene.inventory.ge(this.config.costs.factory) &&
+      !scene.collides({
+        position: this.position,
+        getRadius: () => Factory.radius,
+      })
+    ) {
       result.push({
         id: "buildButton",
         text: "build",

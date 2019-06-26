@@ -4,7 +4,8 @@ import * as React from "react";
 import { type Objects, insideViewBox } from "./objects";
 import { type Rational, fromInt } from "../rational";
 import { SvgPane, type ViewBox } from "../svgPane";
-import { type Vector } from "../vector";
+import { type Vector, collides } from "../vector";
+import { some } from "lodash";
 
 export type Config = {|
   initialSize: Vector,
@@ -80,6 +81,22 @@ export class Scene {
     this.inventory = fromInt(0);
     this.objects = objects(config, this);
   }
+
+  collides: ({
+    position: Vector,
+    getRadius: () => number,
+  }) => boolean = other => {
+    if (some(this.objects.resources, object => collides(object, other))) {
+      return true;
+    }
+    if (some(this.objects.factories, object => collides(object, other))) {
+      return true;
+    }
+    if (collides(this.objects.lab, other)) {
+      return true;
+    }
+    return false;
+  };
 
   step: Rational => void = timeDelta => {
     this.objects.lab.step(timeDelta);

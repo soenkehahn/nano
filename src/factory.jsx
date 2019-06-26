@@ -11,7 +11,7 @@ export class Factory {
 
   position: Vector;
 
-  radius: number = 16;
+  static radius: number = 16;
 
   constructor(position: Vector) {
     this.id = counter;
@@ -19,14 +19,14 @@ export class Factory {
     this.position = position;
   }
 
-  getRadius = () => this.radius;
+  getRadius = () => Factory.radius;
 
   draw: () => React.Node = () => {
     return (
       <FactoryRender
         key={this.id}
         position={this.position}
-        radius={this.radius}
+        radius={Factory.radius}
       />
     );
   };
