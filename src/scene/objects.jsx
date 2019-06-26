@@ -4,14 +4,15 @@ import * as vector from "../vector";
 import { type Config, Scene } from "./index";
 import { Factory } from "../factory";
 import { Lab } from "../lab";
-import { Minion } from "../minion";
+import { Minion, Minions } from "../minion";
 import { Resource } from "../resource";
 import { type Vector, collides, scale, vectorLength } from "../vector";
 import { type ViewBox } from "../svgPane";
+import { every } from "lodash";
 import { iife } from "../utils";
 
 export type Objects = {
-  minion: Minion,
+  minions: Minions,
   lab: Lab,
   resources: Array<Resource>,
   factories: Array<Factory>,
@@ -24,7 +25,7 @@ export function mkObjects(
 ): Objects {
   const scale = vectorLength(config.initialSize) * 20;
 
-  const minion = new Minion(config, { x: 0, y: 0 });
+  const minions = new Minions(new Minion(config, { x: 0, y: 0 }));
 
   const lab = new Lab(
     config,
@@ -48,7 +49,7 @@ export function mkObjects(
         scale,
         v =>
           vectorLength(v) < config.initialSize.x * 10 &&
-          !collides(minion, new Resource(v)),
+          every(minions.toList(), minion => !collides(minion, new Resource(v))),
       );
       resources.push(new Resource(position));
     }
@@ -58,7 +59,7 @@ export function mkObjects(
   const factories = [];
 
   return {
-    minion,
+    minions,
     lab,
     resources,
     factories,

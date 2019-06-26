@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from "react";
+import { Minion } from "../minion";
 import { type Objects, insideViewBox } from "./objects";
 import { type Rational, fromInt } from "../rational";
 import { SvgPane, type ViewBox } from "../svgPane";
@@ -98,17 +99,19 @@ export class Scene {
     return false;
   };
 
+  focusedMinion: () => Minion = () => this.objects.minions.focused();
+
   step: Rational => void = timeDelta => {
     this.objects.lab.step(timeDelta);
-    this.objects.minion.step(this, timeDelta);
+    this.objects.minions.step(this, timeDelta);
   };
 
   onClick: Vector => void = target => {
-    this.objects.minion.onClick(target);
+    this.objects.minions.onClick(target);
   };
 
   interface: () => React.Node = () => {
-    const buttons = this.objects.minion
+    const buttons = this.focusedMinion()
       .buttons(this)
       .concat(this.objects.lab.buttons());
     return (
@@ -146,7 +149,7 @@ export class Scene {
   };
 
   activeCommand: () => null | React.Node = () => {
-    const status = this.objects.minion.getStatus();
+    const status = this.focusedMinion().getStatus();
     if (status === null) return null;
     else return <div id="status">{status}</div>;
   };
@@ -160,7 +163,7 @@ export class Scene {
     objects = objects.concat(this.objects.factories);
     objects = objects.concat(this.objects.resources);
     objects.push(this.objects.lab);
-    objects.push(this.objects.minion);
+    objects = objects.concat(this.objects.minions.toList());
     objects = objects.filter(object => insideViewBox(viewBox, object));
     return <g>{objects.map(x => x.draw())}</g>;
   };

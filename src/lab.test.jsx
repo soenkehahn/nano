@@ -133,16 +133,18 @@ describe("Lab", () => {
     });
 
     it("doesn't allow to research, when minion is not 'idle'", () => {
-      scene().objects.minion.position = cloneDeep(scene().objects.lab.position);
-      scene().objects.minion.status = { tag: "moving" };
+      scene().focusedMinion().position = cloneDeep(
+        scene().objects.lab.position,
+      );
+      scene().focusedMinion().status = { tag: "moving" };
       expect(scene().objects.lab.buttons()).toEqual([]);
     });
   });
 
   describe("auto-mining", () => {
     const setMinionPosition = (position: Vector): void => {
-      scene().objects.minion.position = cloneDeep(position);
-      scene().objects.minion.target = cloneDeep(position);
+      scene().focusedMinion().position = cloneDeep(position);
+      scene().focusedMinion().target = cloneDeep(position);
       wrapper().setProps({ timeDelta: 0.01 });
     };
 
@@ -239,7 +241,7 @@ describe("Lab", () => {
       it("doesn't switch to mining when colliding with a resource", () => {
         scene().objects.lab.researched.add("mining");
         setMinionPosition(scene().objects.lab.position);
-        expect(scene().objects.minion.status.tag).toEqual("idle");
+        expect(scene().focusedMinion().status.tag).toEqual("idle");
       });
     });
 
@@ -249,7 +251,7 @@ describe("Lab", () => {
         scene().objects.lab.researched.add("auto-mining");
         setMinionPosition(scene().objects.resources[0].position);
         wrapper().setProps({ timeDelta: 0.5 });
-        expect(scene().objects.minion.status.tag).toEqual("mining");
+        expect(scene().focusedMinion().status.tag).toEqual("mining");
       });
 
       it("switches back to the previous status after mining is done", () => {
@@ -258,12 +260,12 @@ describe("Lab", () => {
         scene().objects.lab.researched.add("mining");
         scene().objects.lab.researched.add("auto-mining");
         setMinionPosition(scene().objects.resources[0].position);
-        scene().objects.minion.status = { tag: "moving" };
-        scene().objects.minion.target = { x: 100000, y: 0 };
+        scene().focusedMinion().status = { tag: "moving" };
+        scene().focusedMinion().target = { x: 100000, y: 0 };
         wrapper().setProps({ timeDelta: 0.1 });
-        expect(scene().objects.minion.status.tag).toEqual("mining");
+        expect(scene().focusedMinion().status.tag).toEqual("mining");
         wrapper().setProps({ timeDelta: 2 });
-        expect(scene().objects.minion.status.tag).toEqual("moving");
+        expect(scene().focusedMinion().status.tag).toEqual("moving");
       });
     });
   });

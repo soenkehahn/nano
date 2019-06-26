@@ -1,6 +1,7 @@
 // @flow
 
 import { Factory, FactoryRender } from "./factory";
+import { MinionRender } from "./minion";
 import { fromInt, rational } from "./rational";
 import { setupSceneWrapper, setupTestConfig } from "./test/utils";
 
@@ -42,8 +43,8 @@ describe("Factory", () => {
   it("builds the factory at the location of the minion", () => {
     scene().objects.resources = [];
     scene().inventory = fromInt(3);
-    scene().objects.minion.position = { x: 10, y: 12 };
-    scene().objects.minion.target = { x: 10, y: 12 };
+    scene().focusedMinion().position = { x: 10, y: 12 };
+    scene().focusedMinion().target = { x: 10, y: 12 };
     wrapper().setProps({ timeDelta: 0.1 });
     wrapper()
       .find("#buildButton")
@@ -62,8 +63,8 @@ describe("Factory", () => {
   describe("collisions", () => {
     it("disallows building a factory that overlaps with another object", () => {
       scene().inventory = fromInt(6);
-      scene().objects.minion.position = { x: 10, y: 12 };
-      scene().objects.minion.target = { x: 10, y: 12 };
+      scene().focusedMinion().position = { x: 10, y: 12 };
+      scene().focusedMinion().target = { x: 10, y: 12 };
       scene().objects.factories.push(new Factory({ x: 10, y: 12 }));
       wrapper().setProps({ timeDelta: 0.1 });
       expect(
@@ -74,14 +75,33 @@ describe("Factory", () => {
     });
   });
 
-  it("uses up resources", () => {
+  test("building uses up resources", () => {
     scene().objects.resources = [];
     scene().inventory = fromInt(4);
     wrapper().setProps({ timeDelta: 1 });
     wrapper()
       .find("#buildButton")
       .simulate("click");
-    wrapper().setProps({ timeDelta: 100 });
+    wrapper().setProps({ timeDelta: 1 });
     expect(scene().inventory.toNumber()).toEqual(1);
+  });
+
+  it("produces one minion when being built", () => {
+    scene().objects.resources = [];
+    scene().inventory = fromInt(4);
+    scene().focusedMinion().position = { x: 42, y: 23 };
+    scene().focusedMinion().target = { x: 42, y: 23 };
+    wrapper().setProps({ timeDelta: 1 });
+    wrapper()
+      .find("#buildButton")
+      .simulate("click");
+    wrapper().setProps({ timeDelta: 1 });
+    expect(wrapper().find(MinionRender).length).toEqual(2);
+    expect(
+      wrapper()
+        .find(MinionRender)
+        .at(1)
+        .props().position,
+    ).toEqual({ x: 42, y: 23 });
   });
 });

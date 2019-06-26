@@ -230,7 +230,7 @@ describe("Resource in scene", () => {
           .find("#moveButton")
           .simulate("click");
         const target = cloneDeep(resourceProps.position);
-        target.x += Resource.initialRadius + scene().objects.minion.radius - 1;
+        target.x += Resource.initialRadius + scene().focusedMinion().radius - 1;
         wrapper()
           .find("svg")
           .simulate("click", toClickEvent(target));

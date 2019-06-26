@@ -1,7 +1,8 @@
 // @flow
 
 import * as React from "react";
-import { type RenderProps } from "./minion";
+import { type Config, Scene } from "./scene";
+import { Minion, type RenderProps } from "./minion";
 import { type Vector } from "./vector";
 
 let counter = 0;
@@ -20,6 +21,12 @@ export class Factory {
   }
 
   getRadius = () => Factory.radius;
+
+  static construct(config: Config, scene: Scene, position: Vector) {
+    scene.objects.factories.push(new Factory(position));
+    scene.objects.minions.add(new Minion(config, position));
+    scene.inventory = scene.inventory.minus(config.costs.factory);
+  }
 
   draw: () => React.Node = () => {
     return (

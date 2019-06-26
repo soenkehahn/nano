@@ -60,8 +60,8 @@ export class Lab {
   buttons: () => Array<Button> = () => {
     const result: Array<Button> = [];
     if (
-      collides(this, this.scene.objects.minion) &&
-      this.scene.objects.minion.status.tag === "idle" &&
+      collides(this, this.scene.focusedMinion()) &&
+      this.scene.focusedMinion().status.tag === "idle" &&
       this.status.tag === "idle"
     ) {
       if (!this.researched.has("mining")) {

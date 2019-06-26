@@ -1,14 +1,14 @@
 // @flow
 
-import { MinionRender } from "./minion";
+import { Minion, MinionRender } from "./minion";
 import { setupSceneWrapper, setupTestConfig } from "./test/utils";
 import { toClickEvent } from "./vector";
 
-const testConfig = setupTestConfig();
+const config = setupTestConfig();
+
+const [wrapper, scene] = setupSceneWrapper(config);
 
 describe("Minion", () => {
-  const [wrapper, scene] = setupSceneWrapper(testConfig);
-
   it("shows minion in svg context", () => {
     expect(
       wrapper()
@@ -19,7 +19,7 @@ describe("Minion", () => {
   });
 
   it("doesn't allow to set the minion coordinates with a mouse click", async () => {
-    scene().objects.minion.position = { x: 0, y: 0 };
+    scene().focusedMinion().position = { x: 0, y: 0 };
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 10, y: 10 }));
@@ -89,7 +89,7 @@ describe("Minion", () => {
   });
 
   it("minions need time to move around", () => {
-    scene().objects.minion.position = { x: 0, y: 0 };
+    scene().focusedMinion().position = { x: 0, y: 0 };
     wrapper()
       .find("#moveButton")
       .simulate("click");
@@ -105,5 +105,79 @@ describe("Minion", () => {
       x: 0.5,
       y: 0,
     });
+  });
+});
+
+describe("Minions", () => {
+  it("renders multiple minions", () => {
+    scene().objects.minions.add(new Minion(config(), { x: 10, y: 10 }));
+    wrapper().setProps({ timeDelta: 0.1 });
+    expect(
+      wrapper()
+        .find(MinionRender)
+        .map(x => x.props().position),
+    ).toEqual([{ x: 0, y: 0 }, { x: 10, y: 10 }]);
+  });
+
+  it("allows to switch the focused minion", () => {
+    scene().objects.minions.add(new Minion(config(), { x: 100, y: 0 }));
+    wrapper().setProps({ timeDelta: 0.1 });
+    expect(
+      wrapper()
+        .find(MinionRender)
+        .map(x => x.props().focused),
+    ).toEqual([true, false]);
+    wrapper()
+      .find("svg")
+      .simulate("click", toClickEvent({ x: 100, y: 0 }));
+    wrapper().setProps({ timeDelta: 0.1 });
+    expect(
+      wrapper()
+        .find(MinionRender)
+        .map(x => x.props().focused),
+    ).toEqual([false, true]);
+  });
+
+  it("allows to move the focused minion", () => {
+    config().velocity = 100;
+    scene().objects.minions.add(new Minion(config(), { x: 100, y: 0 }));
+    wrapper().setProps({ timeDelta: 0.1 });
+    wrapper()
+      .find("svg")
+      .simulate("click", toClickEvent({ x: 100, y: 0 }));
+    wrapper().setProps({ timeDelta: 0.1 });
+    wrapper()
+      .find("#moveButton")
+      .simulate("click");
+    wrapper()
+      .find("svg")
+      .simulate("click", toClickEvent({ x: 100, y: 100 }));
+    wrapper().setProps({ timeDelta: 1 });
+    expect(
+      wrapper()
+        .find(MinionRender)
+        .map(x => x.props().position),
+    ).toEqual([{ x: 0, y: 0 }, { x: 100, y: 100 }]);
+  });
+
+  it("moves unfocused minions", () => {
+    scene().objects.minions.add(new Minion(config(), { x: 100, y: 0 }));
+    wrapper().setProps({ timeDelta: 0.1 });
+    wrapper()
+      .find("#moveButton")
+      .simulate("click");
+    wrapper()
+      .find("svg")
+      .simulate("click", toClickEvent({ x: 0, y: 100 }));
+    wrapper()
+      .find("svg")
+      .simulate("click", toClickEvent({ x: 100, y: 0 }));
+    wrapper().setProps({ timeDelta: 1 });
+    expect(
+      wrapper()
+        .find(MinionRender)
+        .at(0)
+        .props().position,
+    ).toEqual({ x: 0, y: 1 });
   });
 });

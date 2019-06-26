@@ -30,14 +30,19 @@ type Status =
 
 export class Minion {
   config: Config;
+  static counter: number = 0;
+  id: number;
   target: Vector;
   position: Vector;
+  focused: boolean = false;
   radius: number = 10;
   status: Status = { tag: "idle" };
   collidingResources: Array<number> = [];
 
   constructor(config: Config, position: Vector) {
     this.config = config;
+    this.id = Minion.counter;
+    Minion.counter++;
     this.position = position;
     this.target = this.position;
   }
@@ -128,8 +133,7 @@ export class Minion {
         text: "build",
         disabled: false,
         onClick: () => {
-          scene.objects.factories.push(new Factory(this.position));
-          scene.inventory = scene.inventory.minus(this.config.costs.factory);
+          Factory.construct(this.config, scene, this.position);
         },
       });
     }
@@ -168,8 +172,9 @@ export class Minion {
   draw: () => React.Node = () => {
     return (
       <MinionRender
-        key="minion"
+        key={`minion-${this.id}`}
         position={this.position}
+        focused={this.focused}
         radius={this.radius}
       />
     );
@@ -178,13 +183,66 @@ export class Minion {
 
 export type RenderProps = {| position: Vector, radius: number |};
 
-export const MinionRender = (props: RenderProps) => (
-  <circle
-    cx={props.position.x}
-    cy={props.position.y}
-    r={props.radius}
-    style={{ fill: lightBlue, fillOpacity: 0.8 }}
-  />
+export const MinionRender = (props: {| ...RenderProps, focused: boolean |}) => (
+  <>
+    <circle
+      cx={props.position.x}
+      cy={props.position.y}
+      r={props.radius}
+      style={{ fill: lightBlue, fillOpacity: 0.8 }}
+    />
+    {props.focused && (
+      <circle
+        cx={props.position.x}
+        cy={props.position.y}
+        r={props.radius * 0.4}
+        style={{ fill: "black" }}
+      />
+    )}
+  </>
 );
 
 const lightBlue = "#8888ff";
+
+export class Minions {
+  focus: number;
+  minions: Array<Minion>;
+
+  constructor(minion: Minion) {
+    this.focus = 0;
+    this.minions = [minion];
+    minion.focused = true;
+  }
+
+  focused: () => Minion = () => this.minions[this.focus];
+
+  add: Minion => void = minion => {
+    this.minions.push(minion);
+    minion.focused = false;
+  };
+
+  step: (Scene, Rational) => void = (scene, rational) => {
+    for (const minion of this.minions) {
+      minion.step(scene, rational);
+    }
+  };
+
+  onClick: Vector => void = clickedPoint => {
+    if (this.focused().status.tag === "waitForMoveTarget") {
+      this.focused().onClick(clickedPoint);
+    } else {
+      const clicked = this.minions.findIndex(minion =>
+        collides(minion, { position: clickedPoint, getRadius: () => 0 }),
+      );
+      if (clicked >= 0) {
+        this.minions[this.focus].focused = false;
+        this.focus = clicked;
+        this.minions[this.focus].focused = true;
+      }
+    }
+  };
+
+  toList: () => Array<Minion> = () => {
+    return this.minions;
+  };
+}
