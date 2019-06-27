@@ -193,14 +193,14 @@ describe("collides", () => {
   });
 
   it("detects collisions with resources", () => {
-    scene.objects.resources.push(new Resource({ x: 42, y: 23 }));
+    scene.objects.resources = new Map([[0, new Resource({ x: 42, y: 23 })]]);
     expect(
       scene.collides({ position: { x: 42, y: 23 }, getRadius: () => 10 }),
     ).toEqual(true);
   });
 
   it("detects missing collisions", () => {
-    scene.objects.resources = [new Resource({ x: 10, y: 10 })];
+    scene.objects.resources = new Map([[0, new Resource({ x: 10, y: 10 })]]);
     expect(
       scene.collides({ position: { x: 42, y: 23 }, getRadius: () => 10 }),
     ).toEqual(false);
@@ -221,7 +221,7 @@ describe("collides", () => {
   });
 
   it("detects slight collisions", () => {
-    scene.objects.resources.push(new Resource({ x: 42, y: 23 }));
+    scene.objects.resources = new Map([[0, new Resource({ x: 42, y: 23 })]]);
     expect(
       scene.collides({
         position: { x: 42 + Resource.initialRadius + 10 - 0.1, y: 23 },

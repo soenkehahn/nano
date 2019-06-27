@@ -20,7 +20,7 @@ if (!module.parent) {
     initialSize: { x: 800, y: 550 },
     zoomVelocity: 1.15,
     stepTimeDelta: rational(1000, 60),
-    velocity: 0.06,
+    velocity: 0.04,
     costs: {
       factory: fromInt(3),
       research: {
@@ -28,8 +28,8 @@ if (!module.parent) {
         "auto-mining": fromInt(5),
       },
     },
-    researchVelocity: rational(1, 100000),
-    miningVelocity: rational(1, 10000),
+    researchVelocity: rational(5, 100000),
+    miningVelocity: rational(5, 100000),
   };
   const queryParams = new URLSearchParams(window.location.search);
   if (queryParams.get("dev")) {

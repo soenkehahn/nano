@@ -87,8 +87,10 @@ export class Scene {
     position: Vector,
     getRadius: () => number,
   }) => boolean = other => {
-    if (some(this.objects.resources, object => collides(object, other))) {
-      return true;
+    for (const object of this.objects.resources.values()) {
+      if (collides(object, other)) {
+        return true;
+      }
     }
     if (some(this.objects.factories, object => collides(object, other))) {
       return true;
@@ -161,7 +163,9 @@ export class Scene {
       draw: () => React.Node,
     }> = [];
     objects = objects.concat(this.objects.factories);
-    objects = objects.concat(this.objects.resources);
+    for (const resource of this.objects.resources.values()) {
+      objects.push(resource);
+    }
     objects.push(this.objects.lab);
     objects = objects.concat(this.objects.minions.toList());
     objects = objects.filter(object => insideViewBox(viewBox, object));

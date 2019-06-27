@@ -14,7 +14,7 @@ import { iife } from "../utils";
 export type Objects = {
   minions: Minions,
   lab: Lab,
-  resources: Array<Resource>,
+  resources: Map<number, Resource>,
   factories: Array<Factory>,
 };
 
@@ -39,11 +39,12 @@ export function mkObjects(
   );
 
   const resources = iife(() => {
-    const resources = [];
+    const resources: Map<number, Resource> = new Map();
+    let counter = 0;
     const closeResource = new Resource(
       findRandom(scale, v => inside(config.initialSize, v)),
     );
-    resources.push(closeResource);
+    resources.set(counter++, closeResource);
     for (let i = 0; i < numberOfResources; i++) {
       const position = findRandom(
         scale,
@@ -51,7 +52,7 @@ export function mkObjects(
           vectorLength(v) < config.initialSize.x * 10 &&
           every(minions.toList(), minion => !collides(minion, new Resource(v))),
       );
-      resources.push(new Resource(position));
+      resources.set(counter++, new Resource(position));
     }
     return resources;
   });

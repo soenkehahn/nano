@@ -180,7 +180,7 @@ describe("viewbox optimization", () => {
   const [wrapper, scene] = setupSceneWrapper(testConfig);
 
   it("includes objects that are in the viewBox", () => {
-    scene().objects.resources = [new Resource({ x: 0, y: 0 })];
+    scene().objects.resources = new Map([[0, new Resource({ x: 0, y: 0 })]]);
     wrapper().setProps({ timeDelta: 1 });
     expect(
       wrapper()
@@ -190,7 +190,7 @@ describe("viewbox optimization", () => {
   });
 
   it("excludes objects that are not in the viewBox", () => {
-    scene().objects.resources = [new Resource({ x: 150, y: 0 })];
+    scene().objects.resources = new Map([[0, new Resource({ x: 150, y: 0 })]]);
     wrapper().setProps({ timeDelta: 1 });
     expect(
       wrapper()
@@ -200,7 +200,7 @@ describe("viewbox optimization", () => {
   });
 
   it("includes objects that are not in the viewBox, but reach into it", () => {
-    scene().objects.resources = [new Resource({ x: 109, y: 0 })];
+    scene().objects.resources = new Map([[0, new Resource({ x: 109, y: 0 })]]);
     wrapper().setProps({ timeDelta: 1 });
     expect(
       wrapper()

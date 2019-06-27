@@ -4,7 +4,7 @@ import { MinionRender, type RenderProps } from "./minion";
 import { Resource, ResourceRender } from "./resource";
 import { cloneDeep } from "lodash";
 import { rational } from "./rational";
-import { setupSceneWrapper, setupTestConfig } from "./test/utils";
+import { setupSceneWrapper, setupTestConfig, unsafeGet } from "./test/utils";
 import { toClickEvent } from "./vector";
 
 const testConfig = setupTestConfig();
@@ -21,7 +21,9 @@ describe("Resource in scene", () => {
     let resourceProps: RenderProps;
 
     beforeEach(() => {
-      scene().objects.resources = [scene().objects.resources[0]];
+      scene().objects.resources = new Map([
+        [0, unsafeGet(scene().objects.resources, 0)],
+      ]);
       wrapper().setProps({ timeDelta: 1 });
       minionProps = wrapper()
         .find(MinionRender)
@@ -41,7 +43,7 @@ describe("Resource in scene", () => {
       wrapper().setProps({ timeDelta: 1 });
       expect(
         wrapper()
-          .find("#mineButton-0")
+          .find("#mineButton")
           .exists(),
       ).toEqual(false);
       expect(
@@ -70,7 +72,7 @@ describe("Resource in scene", () => {
             .exists(),
         ).toEqual(true);
         wrapper()
-          .find("#mineButton-0")
+          .find("#mineButton")
           .simulate("click");
         wrapper().setProps({ timeDelta: 1 });
         expect(
@@ -98,7 +100,7 @@ describe("Resource in scene", () => {
           );
         wrapper().setProps({ timeDelta: 1 });
         wrapper()
-          .find("#mineButton-0")
+          .find("#mineButton")
           .simulate("click");
         wrapper().setProps({ timeDelta: 1 });
         expect(
@@ -127,7 +129,7 @@ describe("Resource in scene", () => {
         wrapper().setProps({ timeDelta: 1 });
         expect(
           wrapper()
-            .find("#mineButton-0")
+            .find("#mineButton")
             .exists(),
         ).toEqual(false);
         expect(
@@ -154,7 +156,7 @@ describe("Resource in scene", () => {
           .simulate("click", toClickEvent(resourceProps.position));
         wrapper().setProps({ timeDelta: 1 });
         wrapper()
-          .find("#mineButton-0")
+          .find("#mineButton")
           .simulate("click");
         wrapper().setProps({ timeDelta: 1 });
         expect(
@@ -174,7 +176,7 @@ describe("Resource in scene", () => {
           .simulate("click", toClickEvent(resourceProps.position));
         wrapper().setProps({ timeDelta: 1 });
         wrapper()
-          .find("#mineButton-0")
+          .find("#mineButton")
           .simulate("click");
         wrapper().setProps({ timeDelta: 0.5 });
         expect(
@@ -200,7 +202,7 @@ describe("Resource in scene", () => {
           .simulate("click", toClickEvent(resourceProps.position));
         wrapper().setProps({ timeDelta: 1 });
         wrapper()
-          .find("#mineButton-0")
+          .find("#mineButton")
           .simulate("click");
         wrapper().setProps({ timeDelta: 1 });
         expect(scene().inventory.toNumber()).toEqual(0.5);
@@ -217,7 +219,7 @@ describe("Resource in scene", () => {
           .simulate("click", toClickEvent(resourceProps.position));
         wrapper().setProps({ timeDelta: 1 });
         wrapper()
-          .find("#mineButton-0")
+          .find("#mineButton")
           .simulate("click");
         wrapper().setProps({ timeDelta: 2 });
         expect(scene().inventory.toNumber()).toEqual(1);
@@ -236,7 +238,7 @@ describe("Resource in scene", () => {
           .simulate("click", toClickEvent(target));
         wrapper().setProps({ timeDelta: 1 });
         wrapper()
-          .find("#mineButton-0")
+          .find("#mineButton")
           .simulate("click");
         wrapper().setProps({ timeDelta: 3 });
         expect(

@@ -28,9 +28,9 @@ describe("mkObjects", () => {
       researchVelocity: fromInt(1),
       miningVelocity: fromInt(1000),
     };
-    expect(
-      new Scene(config, mkObjects).objects.resources.length,
-    ).toBeGreaterThan(5);
+    expect(new Scene(config, mkObjects).objects.resources.size).toBeGreaterThan(
+      5,
+    );
   });
 });
 

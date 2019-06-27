@@ -26,7 +26,7 @@ type Status =
   | {| tag: "idle" |}
   | {| tag: "waitForMoveTarget" |}
   | {| tag: "moving" |}
-  | {| tag: "mining", i: number, autoMiningSuccessor?: Status |};
+  | {| tag: "mining", resourceId: number, autoMiningSuccessor?: Status |};
 
 export class Minion {
   config: Config;
@@ -62,23 +62,24 @@ export class Minion {
       this.move(timeDelta);
     }
     this.collidingResources = [];
-    for (let i = 0; i < scene.objects.resources.length; i++) {
-      if (collides(this, scene.objects.resources[i])) {
-        this.collidingResources.push(i);
+    for (const [resourceId, resource] of scene.objects.resources) {
+      if (collides(this, resource)) {
+        this.collidingResources.push(resourceId);
       }
     }
     if (
+      (this.status.tag === "moving" || this.status.tag === "idle") &&
       scene.objects.lab.researched.has("auto-mining") &&
       this.collidingResources.length > 0
     ) {
       this.status = {
         tag: "mining",
-        i: this.collidingResources[0],
+        resourceId: this.collidingResources[0],
         autoMiningSuccessor: this.status,
       };
     }
     if (this.status.tag === "mining") {
-      this.mine(scene, timeDelta, this.status.i);
+      this.mine(scene, timeDelta, this.status.resourceId);
     }
   };
 
@@ -111,13 +112,13 @@ export class Minion {
       scene.objects.lab.researched.has("mining") &&
       this.collidingResources.length > 0
     ) {
-      const i = this.collidingResources[0];
+      const resourceId = this.collidingResources[0];
       result.push({
-        id: `mineButton-${i}`,
+        id: `mineButton`,
         text: "mine",
         disabled: false,
         onClick: () => {
-          this.status = { tag: "mining", i };
+          this.status = { tag: "mining", resourceId };
         },
       });
     }
@@ -154,14 +155,14 @@ export class Minion {
     }
   };
 
-  mine: (Scene, Rational, number) => void = (scene, timeDelta, i) => {
-    const resource = scene.objects.resources[i];
-    if (collides(this, resource)) {
+  mine: (Scene, Rational, number) => void = (scene, timeDelta, resourceId) => {
+    const resource = scene.objects.resources.get(resourceId);
+    if (resource && collides(this, resource)) {
       scene.inventory = scene.inventory.plus(
         resource.mine(timeDelta.times(this.config.miningVelocity)),
       );
       if (resource.status.unitsLeft.equals(fromInt(0))) {
-        scene.objects.resources.splice(i, 1);
+        scene.objects.resources.delete(resourceId);
         this.status = this.status.autoMiningSuccessor || { tag: "idle" };
       }
     } else {

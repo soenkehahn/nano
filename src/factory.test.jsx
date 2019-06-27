@@ -21,7 +21,7 @@ describe("Factory", () => {
   });
 
   it("allows to construct a factory with 3 resources", () => {
-    scene().objects.resources = [];
+    scene().objects.resources = new Map();
     scene().inventory = fromInt(3);
     wrapper().setProps({ timeDelta: 1 });
     expect(
@@ -41,7 +41,7 @@ describe("Factory", () => {
   });
 
   it("builds the factory at the location of the minion", () => {
-    scene().objects.resources = [];
+    scene().objects.resources = new Map();
     scene().inventory = fromInt(3);
     scene().focusedMinion().position = { x: 10, y: 12 };
     scene().focusedMinion().target = { x: 10, y: 12 };
@@ -76,7 +76,7 @@ describe("Factory", () => {
   });
 
   test("building uses up resources", () => {
-    scene().objects.resources = [];
+    scene().objects.resources = new Map();
     scene().inventory = fromInt(4);
     wrapper().setProps({ timeDelta: 1 });
     wrapper()
@@ -87,7 +87,7 @@ describe("Factory", () => {
   });
 
   it("produces one minion when being built", () => {
-    scene().objects.resources = [];
+    scene().objects.resources = new Map();
     scene().inventory = fromInt(4);
     scene().focusedMinion().position = { x: 42, y: 23 };
     scene().focusedMinion().target = { x: 42, y: 23 };

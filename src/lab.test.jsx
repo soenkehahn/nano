@@ -5,7 +5,7 @@ import { SvgPane } from "./svgPane";
 import { type Vector, toClickEvent } from "./vector";
 import { cloneDeep } from "lodash";
 import { fromInt, rational } from "./rational";
-import { setupSceneWrapper, setupTestConfig } from "./test/utils";
+import { setupSceneWrapper, setupTestConfig, unsafeGet } from "./test/utils";
 
 const testConfig = setupTestConfig();
 
@@ -249,7 +249,7 @@ describe("Lab", () => {
       it("switches to mining when colliding with a resource", () => {
         scene().objects.lab.researched.add("mining");
         scene().objects.lab.researched.add("auto-mining");
-        setMinionPosition(scene().objects.resources[0].position);
+        setMinionPosition(unsafeGet(scene().objects.resources, 0).position);
         wrapper().setProps({ timeDelta: 0.5 });
         expect(scene().focusedMinion().status.tag).toEqual("mining");
       });
@@ -259,7 +259,7 @@ describe("Lab", () => {
         testConfig().stepTimeDelta = rational(1, 10);
         scene().objects.lab.researched.add("mining");
         scene().objects.lab.researched.add("auto-mining");
-        setMinionPosition(scene().objects.resources[0].position);
+        setMinionPosition(unsafeGet(scene().objects.resources, 0).position);
         scene().focusedMinion().status = { tag: "moving" };
         scene().focusedMinion().target = { x: 100000, y: 0 };
         wrapper().setProps({ timeDelta: 0.1 });

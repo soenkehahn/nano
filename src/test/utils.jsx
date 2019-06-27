@@ -74,3 +74,12 @@ export const setupSceneWrapper = (
 export function testObjects(config: Config, scene: Scene): Objects {
   return mkObjects(config, scene, 1);
 }
+
+export function unsafeGet<Key, Value>(map: Map<Key, Value>, key: Key): Value {
+  const result = map.get(key);
+  if (result === undefined) {
+    const k: any = key;
+    throw new Error(`key error: ${k}`);
+  }
+  return result;
+}

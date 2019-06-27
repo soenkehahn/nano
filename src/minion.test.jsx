@@ -1,6 +1,8 @@
 // @flow
 
 import { Minion, MinionRender } from "./minion";
+import { Resource } from "./resource";
+import { fromInt, rational } from "./rational";
 import { setupSceneWrapper, setupTestConfig } from "./test/utils";
 import { toClickEvent } from "./vector";
 
@@ -160,7 +162,7 @@ describe("Minions", () => {
     ).toEqual([{ x: 0, y: 0 }, { x: 100, y: 100 }]);
   });
 
-  it("moves unfocused minions", () => {
+  it("keeps moving unfocused minions", () => {
     scene().objects.minions.add(new Minion(config(), { x: 100, y: 0 }));
     wrapper().setProps({ timeDelta: 0.1 });
     wrapper()
@@ -179,5 +181,34 @@ describe("Minions", () => {
         .at(0)
         .props().position,
     ).toEqual({ x: 0, y: 1 });
+  });
+
+  it("keeps unfocused minions in mining mode", () => {
+    config().stepTimeDelta = rational(1, 10);
+    config().miningVelocity = fromInt(1);
+    scene().objects.lab.researched.add("mining");
+    scene().objects.minions.add(new Minion(config(), { x: 100, y: 0 }));
+    scene().objects.resources = new Map([
+      [0, new Resource({ x: 0, y: 0 })],
+      [1, new Resource({ x: 100, y: 0 })],
+    ]);
+    wrapper().setProps({ timeDelta: 0.1 });
+    wrapper()
+      .find("#mineButton")
+      .simulate("click");
+    wrapper().setProps({ timeDelta: 0.5 });
+    wrapper()
+      .find("svg")
+      .simulate("click", toClickEvent({ x: 100, y: 0 }));
+    wrapper().setProps({ timeDelta: 0.1 });
+    wrapper()
+      .find("#mineButton")
+      .simulate("click");
+    wrapper().setProps({ timeDelta: 0.1 });
+    expect(
+      scene().objects.minions.minions.map(minion => minion.status.tag),
+    ).toEqual(["mining", "mining"]);
+    wrapper().setProps({ timeDelta: 1 });
+    expect(scene().inventory.toNumber()).toEqual(2);
   });
 });
