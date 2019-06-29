@@ -26,44 +26,43 @@ export type Config = {|
 
 type Props = {| time: number, timeDelta: number |};
 
-type State = {| scene: Scene, timeDeltaRemainder: number |};
-
 export type SceneRenderType = React.ComponentType<Props>;
 
 export const mkSceneRender = (
   config: Config,
   scene: Scene,
 ): SceneRenderType => {
-  class SceneRender extends React.Component<Props, State> {
+  class SceneRender extends React.Component<Props, {||}> {
+    scene: Scene;
+    timeDeltaRemainder: number;
+
     constructor() {
       super();
-      this.state = {
-        scene,
-        timeDeltaRemainder: 0,
-      };
+      this.scene = scene;
+      this.timeDeltaRemainder = 0;
     }
 
-    static getDerivedStateFromProps = (props: Props, state: State) => {
-      const timeDelta = props.timeDelta + state.timeDeltaRemainder;
+    step: () => void = () => {
+      const timeDelta = this.props.timeDelta + this.timeDeltaRemainder;
       const n = Math.floor(timeDelta / config.stepTimeDelta.toNumber());
       for (let i = 0; i < n; i++) {
-        state.scene.step(config.stepTimeDelta);
+        this.scene.step(config.stepTimeDelta);
       }
-      state.timeDeltaRemainder = timeDelta % config.stepTimeDelta.toNumber();
-      return state;
+      this.timeDeltaRemainder = timeDelta % config.stepTimeDelta.toNumber();
     };
 
-    render = () => {
+    render: () => React.Node = () => {
+      this.step();
       return (
         <div style={{ display: "flex" }}>
           <SvgPane
             width={config.initialSize.x}
             height={config.initialSize.y}
-            onClick={this.state.scene.onClick}
+            onClick={this.scene.onClick}
             zoomVelocity={config.zoomVelocity}
-            scene={this.state.scene}
+            scene={this.scene}
           />
-          <div style={{ flexGrow: 1 }}>{this.state.scene.interface()}</div>
+          <div style={{ flexGrow: 1 }}>{this.scene.interface()}</div>
         </div>
       );
     };

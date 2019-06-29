@@ -22,10 +22,10 @@ if (!module.parent) {
     stepTimeDelta: rational(1000, 60),
     velocity: 0.04,
     costs: {
-      factory: fromInt(3),
+      factory: fromInt(6),
       research: {
         mining: fromInt(0),
-        "auto-mining": fromInt(5),
+        "auto-mining": fromInt(15),
       },
     },
     researchVelocity: rational(5, 100000),
