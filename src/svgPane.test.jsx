@@ -39,7 +39,7 @@ describe("SvgPane", () => {
         height={600}
         zoomVelocity={1.1}
         onClick={() => {}}
-        scene={{ draw: () => <g /> }}
+        draw={() => <g />}
       />,
     );
     mockSvgJsdomExtensions(wrapper.find("svg"), { x: 400, y: 300 });

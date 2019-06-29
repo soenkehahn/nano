@@ -11,9 +11,7 @@ type Props = {|
   height: number,
   onClick: Vector => void,
   zoomVelocity: number,
-  scene: {
-    draw: (viewBox: ViewBox) => React.Node,
-  },
+  draw: (viewBox: ViewBox) => React.Node,
 |};
 
 export class SvgPane extends React.Component<
@@ -127,7 +125,7 @@ export class SvgPane extends React.Component<
           height="100%"
           fill="black"
         />
-        {this.props.scene.draw({
+        {this.props.draw({
           offset: this.state.offset,
           size: scale(
             { x: this.props.width, y: this.props.height },

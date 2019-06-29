@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as jsdomExtensions from "../jsdomExtensions/svg";
-import { type Config, Scene, SceneRender } from "../scene";
+import { type Config, Scene, SceneStepper } from "../scene";
 import { Minion } from "../minion";
 import { type Objects, mkObjects } from "../scene/objects";
 import { ReactWrapper, mount } from "enzyme";
@@ -66,8 +66,10 @@ export const setupSceneWrapper = (
 
   beforeEach(() => {
     scene = new Scene(testConfig(), testObjects);
-    const sceneRender = new SceneRender(testConfig(), scene);
-    wrapper = mount(createElement(sceneRender.draw, { time: 0, timeDelta: 0 }));
+    const sceneStepper = new SceneStepper(testConfig(), scene);
+    wrapper = mount(
+      createElement(sceneStepper.draw, { time: 0, timeDelta: 0 }),
+    );
     mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
   });
   return [() => wrapper, () => scene];

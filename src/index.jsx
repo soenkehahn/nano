@@ -1,7 +1,7 @@
 // @flow
 
 import "regenerator-runtime/runtime";
-import { type Config, Scene, SceneRender } from "./scene";
+import { type Config, Scene, SceneStepper } from "./scene";
 import { animate } from "./animated";
 import { fromInt } from "./rational";
 import { mkObjects } from "./scene/objects";
@@ -40,7 +40,7 @@ if (!module.parent) {
   }
   const App = animate(
     slowDown,
-    new SceneRender(config, new Scene(config, mkObjects)),
+    new SceneStepper(config, new Scene(config, mkObjects)),
   );
   dom.render(<App />, appElement);
 }

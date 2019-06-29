@@ -5,7 +5,7 @@ import { Lab } from "../lab";
 import { MinionRender } from "../minion";
 import { type Rational, fromInt, rational } from "../rational";
 import { Resource } from "../resource";
-import { Scene, SceneRender } from "../scene";
+import { Scene, SceneStepper } from "../scene";
 import { createElement } from "react";
 import {
   mockSvgJsdomExtensions,
@@ -18,7 +18,7 @@ import { toClickEvent } from "../vector";
 
 const config = setupTestConfig();
 
-describe("SceneRender step function logic", () => {
+describe("SceneStepper step function logic", () => {
   let timeDeltas;
 
   beforeEach(() => {
@@ -35,9 +35,9 @@ describe("SceneRender step function logic", () => {
 
   it("calls the step function as often as needed to reach the timeDelta", () => {
     config().stepTimeDelta = fromInt(1);
-    const sceneRender = new SceneRender(config(), mkMockScene());
+    const sceneStepper = new SceneStepper(config(), mkMockScene());
     const wrapper = mount(
-      createElement(sceneRender.draw, { time: 0, timeDelta: 0 }),
+      createElement(sceneStepper.draw, { time: 0, timeDelta: 0 }),
     );
     wrapper.setProps({ timeDelta: 10 });
     expect(timeDeltas.length).toEqual(10);
@@ -45,9 +45,9 @@ describe("SceneRender step function logic", () => {
 
   it("calls the step function with fixed timeDeltas", () => {
     config().stepTimeDelta = rational(1, 2);
-    const sceneRender = new SceneRender(config(), mkMockScene());
+    const sceneStepper = new SceneStepper(config(), mkMockScene());
     const wrapper = mount(
-      createElement(sceneRender.draw, { time: 0, timeDelta: 0 }),
+      createElement(sceneStepper.draw, { time: 0, timeDelta: 0 }),
     );
     wrapper.setProps({ timeDelta: 5 });
     for (const timeDelta of timeDeltas) {
@@ -57,9 +57,9 @@ describe("SceneRender step function logic", () => {
 
   it("saves the remainder of the timeDelta for the next round", () => {
     config().stepTimeDelta = rational(6, 10);
-    const sceneRender = new SceneRender(config(), mkMockScene());
+    const sceneStepper = new SceneStepper(config(), mkMockScene());
     const wrapper = mount(
-      createElement(sceneRender.draw, { time: 0, timeDelta: 0 }),
+      createElement(sceneStepper.draw, { time: 0, timeDelta: 0 }),
     );
     wrapper.setProps({ timeDelta: 1 });
     expect(timeDeltas.length).toEqual(1);

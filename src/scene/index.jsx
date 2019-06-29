@@ -25,7 +25,7 @@ export type Config = {|
   miningVelocity: Rational,
 |};
 
-export class SceneRender {
+export class SceneStepper {
   config: Config;
   scene: Scene;
   timeDeltaRemainder: number;
@@ -47,22 +47,12 @@ export class SceneRender {
 
   draw: TimeStep => React.Node = props => {
     this.step(props);
-    return (
-      <div style={{ display: "flex" }}>
-        <SvgPane
-          width={this.config.initialSize.x}
-          height={this.config.initialSize.y}
-          onClick={this.scene.onClick}
-          zoomVelocity={this.config.zoomVelocity}
-          scene={this.scene}
-        />
-        <div style={{ flexGrow: 1 }}>{this.scene.interface()}</div>
-      </div>
-    );
+    return this.scene.draw();
   };
 }
 
 export class Scene {
+  config: Config;
   inventory: Rational;
   objects: Objects;
 
@@ -70,6 +60,7 @@ export class Scene {
     config: Config,
     objects: (config: Config, scene: Scene) => Objects,
   ) {
+    this.config = config;
     this.inventory = fromInt(0);
     this.objects = objects(config, this);
   }
@@ -101,6 +92,21 @@ export class Scene {
 
   onClick: Vector => void = target => {
     this.objects.minions.onClick(target);
+  };
+
+  draw: () => React.Node = () => {
+    return (
+      <div style={{ display: "flex" }}>
+        <SvgPane
+          width={this.config.initialSize.x}
+          height={this.config.initialSize.y}
+          onClick={this.onClick}
+          zoomVelocity={this.config.zoomVelocity}
+          draw={this.drawSvgObjects}
+        />
+        <div style={{ flexGrow: 1 }}>{this.interface()}</div>
+      </div>
+    );
   };
 
   interface: () => React.Node = () => {
@@ -138,7 +144,7 @@ export class Scene {
     else return <div id="status">{status}</div>;
   };
 
-  draw: ViewBox => React.Node = viewBox => {
+  drawSvgObjects: ViewBox => React.Node = viewBox => {
     let objects: Array<{
       position: Vector,
       getRadius: () => number,
