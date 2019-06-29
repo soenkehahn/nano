@@ -5,6 +5,7 @@ import { type Button, Minion } from "../minion";
 import { type Objects, insideViewBox } from "./objects";
 import { type Rational, fromInt } from "../rational";
 import { SvgPane, type ViewBox } from "../svgPane";
+import { type TimeStep } from "../animated";
 import { type Vector, collides } from "../vector";
 import { some } from "lodash";
 
@@ -24,51 +25,42 @@ export type Config = {|
   miningVelocity: Rational,
 |};
 
-type Props = {| time: number, timeDelta: number |};
+export class SceneRender {
+  config: Config;
+  scene: Scene;
+  timeDeltaRemainder: number;
 
-export type SceneRenderType = React.ComponentType<Props>;
-
-export const mkSceneRender = (
-  config: Config,
-  scene: Scene,
-): SceneRenderType => {
-  class SceneRender extends React.Component<Props, {||}> {
-    scene: Scene;
-    timeDeltaRemainder: number;
-
-    constructor() {
-      super();
-      this.scene = scene;
-      this.timeDeltaRemainder = 0;
-    }
-
-    step: () => void = () => {
-      const timeDelta = this.props.timeDelta + this.timeDeltaRemainder;
-      const n = Math.floor(timeDelta / config.stepTimeDelta.toNumber());
-      for (let i = 0; i < n; i++) {
-        this.scene.step(config.stepTimeDelta);
-      }
-      this.timeDeltaRemainder = timeDelta % config.stepTimeDelta.toNumber();
-    };
-
-    render: () => React.Node = () => {
-      this.step();
-      return (
-        <div style={{ display: "flex" }}>
-          <SvgPane
-            width={config.initialSize.x}
-            height={config.initialSize.y}
-            onClick={this.scene.onClick}
-            zoomVelocity={config.zoomVelocity}
-            scene={this.scene}
-          />
-          <div style={{ flexGrow: 1 }}>{this.scene.interface()}</div>
-        </div>
-      );
-    };
+  constructor(config: Config, scene: Scene) {
+    this.config = config;
+    this.scene = scene;
+    this.timeDeltaRemainder = 0;
   }
-  return SceneRender;
-};
+
+  step: TimeStep => void = props => {
+    const timeDelta = props.timeDelta + this.timeDeltaRemainder;
+    const n = Math.floor(timeDelta / this.config.stepTimeDelta.toNumber());
+    for (let i = 0; i < n; i++) {
+      this.scene.step(this.config.stepTimeDelta);
+    }
+    this.timeDeltaRemainder = timeDelta % this.config.stepTimeDelta.toNumber();
+  };
+
+  draw: TimeStep => React.Node = props => {
+    this.step(props);
+    return (
+      <div style={{ display: "flex" }}>
+        <SvgPane
+          width={this.config.initialSize.x}
+          height={this.config.initialSize.y}
+          onClick={this.scene.onClick}
+          zoomVelocity={this.config.zoomVelocity}
+          scene={this.scene}
+        />
+        <div style={{ flexGrow: 1 }}>{this.scene.interface()}</div>
+      </div>
+    );
+  };
+}
 
 export class Scene {
   inventory: Rational;

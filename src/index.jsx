@@ -1,8 +1,8 @@
 // @flow
 
 import "regenerator-runtime/runtime";
-import { type Config, Scene, mkSceneRender } from "./scene";
-import { animated } from "./animated";
+import { type Config, Scene, SceneRender } from "./scene";
+import { animate } from "./animated";
 import { fromInt } from "./rational";
 import { mkObjects } from "./scene/objects";
 import { rational } from "./rational";
@@ -38,9 +38,9 @@ if (!module.parent) {
     config.miningVelocity = config.miningVelocity.times(fromInt(20));
     config.costs.research["auto-mining"] = fromInt(1);
   }
-  const SceneRender = animated(
+  const App = animate(
     slowDown,
-    mkSceneRender(config, new Scene(config, mkObjects)),
+    new SceneRender(config, new Scene(config, mkObjects)),
   );
-  dom.render(<SceneRender />, appElement);
+  dom.render(<App />, appElement);
 }

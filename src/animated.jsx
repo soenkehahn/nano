@@ -3,9 +3,13 @@
 import * as React from "react";
 import { wait } from "./utils";
 
-export function animated(
+export type Animated = { draw: TimeStep => React.Node };
+
+export type TimeStep = {| time: number, timeDelta: number |};
+
+export function animate(
   slowDown: null | number,
-  Component: React.AbstractComponent<{| time: number, timeDelta: number |}>,
+  animated: Animated,
 ): React.AbstractComponent<{||}> {
   class Wrapper extends React.Component<
     {||},
@@ -48,9 +52,10 @@ export function animated(
 
     render() {
       if (this.state.time !== null && this.state.timeDelta !== null) {
-        return (
-          <Component time={this.state.time} timeDelta={this.state.timeDelta} />
-        );
+        return animated.draw({
+          time: this.state.time,
+          timeDelta: this.state.timeDelta,
+        });
       } else {
         return null;
       }

@@ -1,22 +1,23 @@
 // @flow
 
-import { animated } from "./animated";
+import * as React from "react";
+import { type Animated, animate } from "./animated";
+import { createElement } from "react";
 import { mount } from "enzyme";
 import { wait } from "./utils";
-import React, { createElement } from "react";
 
 let propsList;
 let wrapper;
 
 beforeEach(async () => {
   propsList = [];
-  class Mock extends React.Component<{ time: number, timeDelta: number }> {
-    render() {
-      propsList.push(this.props);
+  const mock: Animated = {
+    draw: props => {
+      propsList.push(props);
       return <div />;
-    }
-  }
-  wrapper = mount(createElement(animated(null, Mock)));
+    },
+  };
+  wrapper = mount(createElement(animate(null, mock)));
   await waitUntil(() => propsList.length > 10, 0.5);
 });
 

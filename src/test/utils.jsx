@@ -1,17 +1,14 @@
 // @flow
 
+import * as React from "react";
 import * as jsdomExtensions from "../jsdomExtensions/svg";
-import {
-  type Config,
-  Scene,
-  type SceneRenderType,
-  mkSceneRender,
-} from "../scene";
+import { type Config, Scene, SceneRender } from "../scene";
 import { Minion } from "../minion";
 import { type Objects, mkObjects } from "../scene/objects";
 import { ReactWrapper, mount } from "enzyme";
+import { type TimeStep } from "../animated";
+import { createElement } from "react";
 import { fromInt, rational } from "../rational";
-import React from "react";
 
 export function mockSvgJsdomExtensions(
   svgWrapper: ReactWrapper<any>,
@@ -59,18 +56,18 @@ export const setupTestConfig: () => () => Config = () => {
 
 export const setupSceneWrapper = (
   testConfig: () => Config,
-): [() => ReactWrapper<SceneRenderType>, () => Scene] => {
+): [() => ReactWrapper<(TimeStep) => React.Node>, () => Scene] => {
   beforeEach(() => {
     Minion.idCounter = 0;
   });
 
   let scene: Scene;
-  let wrapper: ReactWrapper<SceneRenderType>;
+  let wrapper: ReactWrapper<(TimeStep) => React.Node>;
 
   beforeEach(() => {
     scene = new Scene(testConfig(), testObjects);
-    const SceneRender = mkSceneRender(testConfig(), scene);
-    wrapper = mount(<SceneRender time={0} timeDelta={0} />);
+    const sceneRender = new SceneRender(testConfig(), scene);
+    wrapper = mount(createElement(sceneRender.draw, { time: 0, timeDelta: 0 }));
     mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
   });
   return [() => wrapper, () => scene];
