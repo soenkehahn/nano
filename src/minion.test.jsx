@@ -211,4 +211,68 @@ describe("Minions", () => {
     wrapper().setProps({ timeDelta: 1 });
     expect(scene().inventory.toNumber()).toEqual(2);
   });
+
+  it("shows the number of minions", () => {
+    for (let i = 0; i < 22; i++) {
+      scene().objects.minions.add(new Minion(config(), { x: 0, y: 0 }));
+    }
+    wrapper().setProps({ timeDelta: 0.1 });
+    expect(
+      wrapper()
+        .find("#interface")
+        .text(),
+    ).toContain("minions: 23");
+  });
+
+  describe("idle buttons", () => {
+    it("shows a idle button for an idle minion", () => {
+      expect(
+        wrapper()
+          .find("#idleButton-0")
+          .exists(),
+      ).toEqual(true);
+    });
+
+    it("includes the minion id in the button text", () => {
+      scene().focusedMinion().id = 42;
+      wrapper().setProps({ timeDelta: 0.1 });
+      expect(
+        wrapper()
+          .find("#idleButton-42")
+          .text(),
+      ).toEqual("minion #42");
+    });
+
+    it("hides the idle button when the minion is moving", () => {
+      scene().focusedMinion().status = { tag: "moving" };
+      wrapper().setProps({ timeDelta: 0.1 });
+      expect(
+        wrapper()
+          .find("#idleButton-0")
+          .exists(),
+      ).toEqual(false);
+    });
+
+    describe("when there are two minions", () => {
+      beforeEach(() => {
+        scene().objects.minions.add(new Minion(config(), { x: 100, y: 0 }));
+        wrapper().setProps({ timeDelta: 0.1 });
+      });
+
+      it("shows an idle button for the unfocused minion", () => {
+        expect(
+          wrapper()
+            .find("#idleButton-1")
+            .exists(),
+        ).toEqual(true);
+      });
+
+      it("allows to switch focus to the unfocused minion", () => {
+        wrapper()
+          .find("#idleButton-1")
+          .simulate("click");
+        expect(scene().focusedMinion().id).toEqual(1);
+      });
+    });
+  });
 });

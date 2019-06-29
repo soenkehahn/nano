@@ -30,7 +30,7 @@ type Status =
 
 export class Minion {
   config: Config;
-  static counter: number = 0;
+  static idCounter: number = 0;
   id: number;
   target: Vector;
   position: Vector;
@@ -41,8 +41,8 @@ export class Minion {
 
   constructor(config: Config, position: Vector) {
     this.config = config;
-    this.id = Minion.counter;
-    Minion.counter++;
+    this.id = Minion.idCounter;
+    Minion.idCounter++;
     this.position = position;
     this.target = this.position;
   }
@@ -222,6 +222,16 @@ export class Minions {
     minion.focused = false;
   };
 
+  toList: () => Array<Minion> = () => {
+    return this.minions;
+  };
+
+  setFocus: number => void = index => {
+    this.minions[this.focus].focused = false;
+    this.focus = index;
+    this.minions[this.focus].focused = true;
+  };
+
   step: (Scene, Rational) => void = (scene, rational) => {
     for (const minion of this.minions) {
       minion.step(scene, rational);
@@ -236,14 +246,26 @@ export class Minions {
         collides(minion, { position: clickedPoint, getRadius: () => 0 }),
       );
       if (clicked >= 0) {
-        this.minions[this.focus].focused = false;
-        this.focus = clicked;
-        this.minions[this.focus].focused = true;
+        this.setFocus(clicked);
       }
     }
   };
 
-  toList: () => Array<Minion> = () => {
-    return this.minions;
+  idleButtons: () => Array<Button> = () => {
+    const result: Array<Button> = [];
+    for (let i = 0; i < this.minions.length; i++) {
+      const minion = this.minions[i];
+      if (minion.status.tag === "idle") {
+        result.push({
+          text: `minion #${minion.id}`,
+          onClick: () => {
+            this.setFocus(i);
+          },
+          id: `idleButton-${minion.id}`,
+          disabled: false,
+        });
+      }
+    }
+    return result;
   };
 }

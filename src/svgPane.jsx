@@ -110,6 +110,7 @@ export class SvgPane extends React.Component<
     return (
       <svg
         ref={svgRef => (this.svgRef = (svgRef: any))}
+        style={{ flexShrink: 0 }}
         onClick={this.handleClick}
         width={this.props.width}
         height={this.props.height}

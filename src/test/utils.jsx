@@ -7,6 +7,7 @@ import {
   type SceneRenderType,
   mkSceneRender,
 } from "../scene";
+import { Minion } from "../minion";
 import { type Objects, mkObjects } from "../scene/objects";
 import { ReactWrapper, mount } from "enzyme";
 import { fromInt, rational } from "../rational";
@@ -59,6 +60,10 @@ export const setupTestConfig: () => () => Config = () => {
 export const setupSceneWrapper = (
   testConfig: () => Config,
 ): [() => ReactWrapper<SceneRenderType>, () => Scene] => {
+  beforeEach(() => {
+    Minion.idCounter = 0;
+  });
+
   let scene: Scene;
   let wrapper: ReactWrapper<SceneRenderType>;
 
