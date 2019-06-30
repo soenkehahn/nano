@@ -44,7 +44,6 @@ describe("Factory", () => {
     scene().objects.resources = new Map();
     scene().inventory = fromInt(3);
     scene().focusedMinion().position = { x: 10, y: 12 };
-    scene().focusedMinion().target = { x: 10, y: 12 };
     wrapper().setProps({ timeDelta: 0.1 });
     wrapper()
       .find("#buildButton")
@@ -64,7 +63,6 @@ describe("Factory", () => {
     it("disallows building a factory that overlaps with another object", () => {
       scene().inventory = fromInt(6);
       scene().focusedMinion().position = { x: 10, y: 12 };
-      scene().focusedMinion().target = { x: 10, y: 12 };
       scene().objects.factories.push(new Factory({ x: 10, y: 12 }));
       wrapper().setProps({ timeDelta: 0.1 });
       expect(
@@ -90,7 +88,6 @@ describe("Factory", () => {
     scene().objects.resources = new Map();
     scene().inventory = fromInt(4);
     scene().focusedMinion().position = { x: 42, y: 23 };
-    scene().focusedMinion().target = { x: 42, y: 23 };
     wrapper().setProps({ timeDelta: 1 });
     wrapper()
       .find("#buildButton")

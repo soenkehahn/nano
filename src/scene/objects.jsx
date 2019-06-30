@@ -25,7 +25,7 @@ export function mkObjects(
 ): Objects {
   const scale = vectorLength(config.initialSize) * 20;
 
-  const minions = new Minions(new Minion(config, { x: 0, y: 0 }));
+  const minions = new Minions(new Minion(config, scene, { x: 0, y: 0 }));
 
   const lab = new Lab(
     config,

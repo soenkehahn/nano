@@ -112,7 +112,9 @@ describe("Minion", () => {
 
 describe("Minions", () => {
   it("renders multiple minions", () => {
-    scene().objects.minions.add(new Minion(config(), { x: 10, y: 10 }));
+    scene().objects.minions.add(
+      new Minion(config(), scene(), { x: 10, y: 10 }),
+    );
     wrapper().setProps({ timeDelta: 0.1 });
     expect(
       wrapper()
@@ -122,7 +124,9 @@ describe("Minions", () => {
   });
 
   it("allows to switch the focused minion", () => {
-    scene().objects.minions.add(new Minion(config(), { x: 100, y: 0 }));
+    scene().objects.minions.add(
+      new Minion(config(), scene(), { x: 100, y: 0 }),
+    );
     wrapper().setProps({ timeDelta: 0.1 });
     expect(
       wrapper()
@@ -142,7 +146,9 @@ describe("Minions", () => {
 
   it("allows to move the focused minion", () => {
     config().velocity = 100;
-    scene().objects.minions.add(new Minion(config(), { x: 100, y: 0 }));
+    scene().objects.minions.add(
+      new Minion(config(), scene(), { x: 100, y: 0 }),
+    );
     wrapper().setProps({ timeDelta: 0.1 });
     wrapper()
       .find("svg")
@@ -163,7 +169,9 @@ describe("Minions", () => {
   });
 
   it("keeps moving unfocused minions", () => {
-    scene().objects.minions.add(new Minion(config(), { x: 100, y: 0 }));
+    scene().objects.minions.add(
+      new Minion(config(), scene(), { x: 100, y: 0 }),
+    );
     wrapper().setProps({ timeDelta: 0.1 });
     wrapper()
       .find("#moveButton")
@@ -187,7 +195,9 @@ describe("Minions", () => {
     config().stepTimeDelta = rational(1, 10);
     config().miningVelocity = fromInt(1);
     scene().objects.lab.researched.add("mining");
-    scene().objects.minions.add(new Minion(config(), { x: 100, y: 0 }));
+    scene().objects.minions.add(
+      new Minion(config(), scene(), { x: 100, y: 0 }),
+    );
     scene().objects.resources = new Map([
       [0, new Resource({ x: 0, y: 0 })],
       [1, new Resource({ x: 100, y: 0 })],
@@ -214,7 +224,9 @@ describe("Minions", () => {
 
   it("shows the number of minions", () => {
     for (let i = 0; i < 22; i++) {
-      scene().objects.minions.add(new Minion(config(), { x: 0, y: 0 }));
+      scene().objects.minions.add(
+        new Minion(config(), scene(), { x: 0, y: 0 }),
+      );
     }
     wrapper().setProps({ timeDelta: 0.1 });
     expect(
@@ -244,7 +256,10 @@ describe("Minions", () => {
     });
 
     it("hides the idle button when the minion is moving", () => {
-      scene().focusedMinion().status = { tag: "moving" };
+      scene().focusedMinion().status = {
+        tag: "moving",
+        target: { x: 100, y: 0 },
+      };
       wrapper().setProps({ timeDelta: 0.1 });
       expect(
         wrapper()
@@ -255,7 +270,9 @@ describe("Minions", () => {
 
     describe("when there are two minions", () => {
       beforeEach(() => {
-        scene().objects.minions.add(new Minion(config(), { x: 3, y: 4 }));
+        scene().objects.minions.add(
+          new Minion(config(), scene(), { x: 3, y: 4 }),
+        );
         wrapper().setProps({ timeDelta: 0.1 });
       });
 

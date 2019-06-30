@@ -45,6 +45,7 @@ export const setupTestConfig: () => () => Config = () => {
         research: {
           mining: fromInt(0),
           "auto-mining": fromInt(10),
+          "auto-resource-seeking": fromInt(10),
         },
       },
       researchVelocity: fromInt(1),

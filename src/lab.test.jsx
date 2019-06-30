@@ -135,7 +135,10 @@ describe("Lab", () => {
       scene().focusedMinion().position = cloneDeep(
         scene().objects.lab.position,
       );
-      scene().focusedMinion().status = { tag: "moving" };
+      scene().focusedMinion().status = {
+        tag: "moving",
+        target: { x: 100, y: 0 },
+      };
       expect(scene().objects.lab.buttons()).toEqual([]);
     });
   });
@@ -143,7 +146,6 @@ describe("Lab", () => {
   describe("auto-mining", () => {
     const setMinionPosition = (position: Vector): void => {
       scene().focusedMinion().position = cloneDeep(position);
-      scene().focusedMinion().target = cloneDeep(position);
       wrapper().setProps({ timeDelta: 0.01 });
     };
 
@@ -259,8 +261,10 @@ describe("Lab", () => {
         scene().objects.lab.researched.add("mining");
         scene().objects.lab.researched.add("auto-mining");
         setMinionPosition(unsafeGet(scene().objects.resources, 0).position);
-        scene().focusedMinion().status = { tag: "moving" };
-        scene().focusedMinion().target = { x: 100000, y: 0 };
+        scene().focusedMinion().status = {
+          tag: "moving",
+          target: { x: 100000, y: 0 },
+        };
         wrapper().setProps({ timeDelta: 0.1 });
         expect(scene().focusedMinion().status.tag).toEqual("mining");
         wrapper().setProps({ timeDelta: 2 });

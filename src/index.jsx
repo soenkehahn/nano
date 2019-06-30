@@ -24,18 +24,24 @@ if (!module.parent) {
       research: {
         mining: fromInt(0),
         "auto-mining": fromInt(15),
+        "auto-resource-seeking": fromInt(15),
       },
     },
     researchVelocity: rational(5, 100000),
     miningVelocity: rational(5, 100000),
   };
+  const scene = new Scene(config, mkObjects);
   const queryParams = new URLSearchParams(window.location.search);
   if (queryParams.get("dev")) {
     config.velocity *= 25;
     config.researchVelocity = config.researchVelocity.times(fromInt(40));
     config.miningVelocity = config.miningVelocity.times(fromInt(20));
-    config.costs.research["auto-mining"] = fromInt(1);
+    config.costs.research["auto-mining"] = fromInt(0);
+    config.costs.research["auto-resource-seeking"] = fromInt(0);
+    for (const goal of ["mining", "auto-resource-seeking"]) {
+      scene.objects.lab.researched.add(goal);
+    }
   }
-  const App = animate(new SceneStepper(config, new Scene(config, mkObjects)));
+  const App = animate(new SceneStepper(config, scene));
   dom.render(<App />, appElement);
 }

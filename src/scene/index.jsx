@@ -1,12 +1,13 @@
 // @flow
 
 import * as React from "react";
-import { type Button, Minion } from "../minion";
+import { Minion } from "../minion";
 import { type Objects, insideViewBox } from "./objects";
 import { type Rational, fromInt } from "../rational";
 import { SvgPane, type ViewBox } from "../svgPane";
 import { type TimeStep } from "../animated";
 import { type Vector, collides } from "../vector";
+import { renderButtons } from "../button";
 import { some } from "lodash";
 
 export type Config = {|
@@ -19,6 +20,7 @@ export type Config = {|
     research: {
       mining: Rational,
       "auto-mining": Rational,
+      "auto-resource-seeking": Rational,
     },
   },
   researchVelocity: Rational,
@@ -111,29 +113,27 @@ export class Scene {
 
   interface: () => React.Node = () => {
     return (
-      <div id="interface">
-        <div style={{ paddingLeft: "1em", width: "50%", float: "left" }}>
-          <div style={{ height: "10em" }}>
-            {this.activeCommand()}
-            available commands:
-            {renderButtons(
-              this.focusedMinion()
-                .buttons(this)
-                .concat(this.objects.lab.buttons()),
-            )}
-          </div>
-          <div id="inventory" style={{ height: "10em" }}>
+      <div id="interface" style={{ display: "flex", padding: "0.2em" }}>
+        <div style={{ flex: "1 1 0", margin: "0.2em" }}>
+          {this.activeCommand()}
+          available commands:
+          {this.focusedMinion().interface()}
+          {renderButtons(this.objects.lab.buttons())}
+          <hr />
+          <div id="inventory">
             resources: {Math.round(this.inventory.toNumber() * 100) / 100}
           </div>
+          <hr />
           {this.objects.lab.newResearch()}
+          <hr />
           <>Use the mouse to drag the map and the scroll wheel to zoom.</>
         </div>
-        <>
+        <div style={{ flex: "1 1 0", margin: "0.2em" }}>
           minions: {this.objects.minions.minions.length}
-          <br />
+          <hr />
           idle:
           {renderButtons(this.objects.minions.idleButtons(this.svgPane))}
-        </>
+        </div>
       </div>
     );
   };
@@ -159,25 +159,4 @@ export class Scene {
     objects = objects.filter(object => insideViewBox(viewBox, object));
     return <g>{objects.map(x => x.draw())}</g>;
   };
-}
-
-function renderButtons(buttons: Array<Button>): ?React.Node {
-  if (buttons.length === 0) return null;
-  return (
-    <ul>
-      {buttons.map(button => {
-        return (
-          <li key={button.id}>
-            <button
-              id={button.id}
-              disabled={button.disabled}
-              onClick={button.onClick}
-            >
-              {button.text}
-            </button>
-          </li>
-        );
-      })}
-    </ul>
-  );
 }

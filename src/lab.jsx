@@ -1,12 +1,13 @@
 // @flow
 
 import * as React from "react";
-import { type Button, type RenderProps } from "./minion";
+import { type Button } from "./button";
 import { type Config, Scene } from "./scene";
 import { type Rational, fromInt } from "./rational";
+import { type RenderProps } from "./minion";
 import { TAU, type Vector, add, collides, fromAngle, scale } from "./vector";
 
-type Goal = "mining" | "auto-mining";
+type Goal = "mining" | "auto-mining" | "auto-resource-seeking";
 
 export class Lab {
   config: Config;
@@ -74,22 +75,35 @@ export class Lab {
           },
         });
       }
-      if (
-        this.researched.has("mining") &&
-        !this.researched.has("auto-mining")
-      ) {
-        result.push({
-          id: "researchAutoMiningButton",
-          text: `research auto-mining (cost: ${this.config.costs.research[
-            "auto-mining"
-          ].toNumber()})`,
-          disabled: this.scene.inventory.lt(
-            this.config.costs.research["auto-mining"],
-          ),
-          onClick: () => {
-            this.startResearch("auto-mining");
-          },
-        });
+      if (this.researched.has("mining")) {
+        if (!this.researched.has("auto-mining")) {
+          result.push({
+            id: "researchAutoMiningButton",
+            text: `research auto-mining (cost: ${this.config.costs.research[
+              "auto-mining"
+            ].toNumber()})`,
+            disabled: this.scene.inventory.lt(
+              this.config.costs.research["auto-mining"],
+            ),
+            onClick: () => {
+              this.startResearch("auto-mining");
+            },
+          });
+        }
+        if (!this.researched.has("auto-resource-seeking")) {
+          result.push({
+            id: "researchAutoResourceSeekingButton",
+            text: `research auto-resource-seeking (cost: ${this.config.costs.research[
+              "auto-resource-seeking"
+            ].toNumber()})`,
+            disabled: this.scene.inventory.lt(
+              this.config.costs.research["auto-resource-seeking"],
+            ),
+            onClick: () => {
+              this.startResearch("auto-resource-seeking");
+            },
+          });
+        }
       }
     }
     return result;

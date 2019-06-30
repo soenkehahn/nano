@@ -24,7 +24,7 @@ export class Factory {
 
   static construct(config: Config, scene: Scene, position: Vector) {
     scene.objects.factories.push(new Factory(position));
-    scene.objects.minions.add(new Minion(config, position));
+    scene.objects.minions.add(new Minion(config, scene, position));
     scene.inventory = scene.inventory.minus(config.costs.factory);
   }
 
