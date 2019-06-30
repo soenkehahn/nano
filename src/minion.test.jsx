@@ -255,7 +255,7 @@ describe("Minions", () => {
 
     describe("when there are two minions", () => {
       beforeEach(() => {
-        scene().objects.minions.add(new Minion(config(), { x: 100, y: 0 }));
+        scene().objects.minions.add(new Minion(config(), { x: 3, y: 4 }));
         wrapper().setProps({ timeDelta: 0.1 });
       });
 
@@ -272,6 +272,18 @@ describe("Minions", () => {
           .find("#idleButton-1")
           .simulate("click");
         expect(scene().focusedMinion().id).toEqual(1);
+      });
+
+      it("centers the view on the new focused minion", () => {
+        wrapper()
+          .find("#idleButton-1")
+          .simulate("click");
+        wrapper().setProps({ timeDelta: 0.1 });
+        expect(
+          wrapper()
+            .find("svg")
+            .props().viewBox,
+        ).toEqual("-97 -96 200 200");
       });
     });
   });

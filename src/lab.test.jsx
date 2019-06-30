@@ -1,7 +1,6 @@
 // @flow
 
 import { LabRender } from "./lab";
-import { SvgPane } from "./svgPane";
 import { type Vector, toClickEvent } from "./vector";
 import { cloneDeep } from "lodash";
 import { fromInt, rational } from "./rational";

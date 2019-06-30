@@ -34,10 +34,7 @@ export class SvgPane {
     this.height = height;
     this.zoomVelocity = zoomVelocity;
     this.zoomFactor = 1.0;
-    this.offset = {
-      x: -width / 2,
-      y: -height / 2,
-    };
+    this.setCenter({ x: 0, y: 0 });
   }
 
   transformClickEvent = (
@@ -48,6 +45,13 @@ export class SvgPane {
     point.x = event.clientX;
     point.y = event.clientY;
     return point.matrixTransform(svgRef.getScreenCTM().inverse());
+  };
+
+  setCenter: Vector => void = center => {
+    this.offset = {
+      x: center.x - (this.zoomFactor * this.width) / 2,
+      y: center.y - (this.zoomFactor * this.height) / 2,
+    };
   };
 
   handleClick: (Child, SyntheticMouseEvent<HTMLElement>) => void = (

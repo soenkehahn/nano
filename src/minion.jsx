@@ -251,7 +251,7 @@ export class Minions {
     }
   };
 
-  idleButtons: () => Array<Button> = () => {
+  idleButtons: SvgPane => Array<Button> = svgPane => {
     const result: Array<Button> = [];
     for (let i = 0; i < this.minions.length; i++) {
       const minion = this.minions[i];
@@ -260,6 +260,7 @@ export class Minions {
           text: `minion #${minion.id}`,
           onClick: () => {
             this.setFocus(i);
+            svgPane.setCenter(minion.position);
           },
           id: `idleButton-${minion.id}`,
           disabled: false,

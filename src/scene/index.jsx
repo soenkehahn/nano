@@ -132,7 +132,7 @@ export class Scene {
           minions: {this.objects.minions.minions.length}
           <br />
           idle:
-          {renderButtons(this.objects.minions.idleButtons())}
+          {renderButtons(this.objects.minions.idleButtons(this.svgPane))}
         </>
       </div>
     );

@@ -1,11 +1,10 @@
 // @flow
 
 import * as React from "react";
-import { createElement } from "react";
 import { ReactWrapper, mount } from "enzyme";
 import { Resource, ResourceRender } from "./resource";
-import { SceneStepper } from "./scene";
 import { SvgPane } from "./svgPane";
+import { createElement } from "react";
 import {
   mockSvgJsdomExtensions,
   setupSceneWrapper,
@@ -37,10 +36,11 @@ function update(wrapper: ReactWrapper<any>): void {
 }
 
 describe("SvgPane", () => {
+  let svgPane: SvgPane;
   let wrapper: ReactWrapper<any>;
 
   beforeEach(() => {
-    const svgPane = new SvgPane({
+    svgPane = new SvgPane({
       width: 800,
       height: 600,
       zoomVelocity: 1.1,
@@ -147,6 +147,25 @@ describe("SvgPane", () => {
         880,
         660,
       ]);
+    });
+
+    describe("setCenter", () => {
+      it("allows to center the viewBox", () => {
+        svgPane.setCenter({ x: 3, y: 4 });
+        update(wrapper);
+        expect(wrapper.find("svg").props().viewBox).toEqual(
+          "-397 -296 800 600",
+        );
+      });
+
+      it("takes the current zoom into account", () => {
+        svgPane.zoomFactor = 2;
+        svgPane.setCenter({ x: 3, y: 4 });
+        update(wrapper);
+        expect(wrapper.find("svg").props().viewBox).toEqual(
+          "-797 -596 1600 1200",
+        );
+      });
     });
   });
 });
