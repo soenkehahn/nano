@@ -53,6 +53,7 @@ export class SceneStepper {
 
 export class Scene {
   config: Config;
+  svgPane: SvgPane;
   inventory: Rational;
   objects: Objects;
 
@@ -61,6 +62,11 @@ export class Scene {
     objects: (config: Config, scene: Scene) => Objects,
   ) {
     this.config = config;
+    this.svgPane = new SvgPane({
+      width: this.config.initialSize.x,
+      height: config.initialSize.y,
+      zoomVelocity: this.config.zoomVelocity,
+    });
     this.inventory = fromInt(0);
     this.objects = objects(config, this);
   }
@@ -97,13 +103,7 @@ export class Scene {
   draw: () => React.Node = () => {
     return (
       <div style={{ display: "flex" }}>
-        <SvgPane
-          width={this.config.initialSize.x}
-          height={this.config.initialSize.y}
-          onClick={this.onClick}
-          zoomVelocity={this.config.zoomVelocity}
-          draw={this.drawSvgObjects}
-        />
+        {this.svgPane.render(this)}
         <div style={{ flexGrow: 1 }}>{this.interface()}</div>
       </div>
     );
@@ -144,7 +144,7 @@ export class Scene {
     else return <div id="status">{status}</div>;
   };
 
-  drawSvgObjects: ViewBox => React.Node = viewBox => {
+  drawSvgElements: ViewBox => React.Element<"g"> = viewBox => {
     let objects: Array<{
       position: Vector,
       getRadius: () => number,

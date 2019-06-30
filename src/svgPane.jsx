@@ -6,30 +6,37 @@ import { type Vector, scale } from "./vector";
 
 export type ViewBox = {| offset: Vector, size: Vector |};
 
-type Props = {|
-  width: number,
-  height: number,
+type Child = {
   onClick: Vector => void,
-  zoomVelocity: number,
-  draw: (viewBox: ViewBox) => React.Node,
-|};
+  drawSvgElements: (viewBox: ViewBox) => React.Element<"g">,
+};
 
-export class SvgPane extends React.Component<
-  Props,
-  {| zoomFactor: number, offset: Vector |},
-> {
+export class SvgPane {
+  width: number;
+  height: number;
+  zoomVelocity: number;
   svgRef: null | jsdomExtensions.SvgElement = null;
   dragging: boolean = false;
   static draggingEnabled: boolean = true;
+  zoomFactor: number;
+  offset: Vector;
 
-  constructor(props: Props) {
-    super();
-    this.state = {
-      zoomFactor: 1.0,
-      offset: {
-        x: -props.width / 2,
-        y: -props.height / 2,
-      },
+  constructor({
+    width,
+    height,
+    zoomVelocity,
+  }: {|
+    width: number,
+    height: number,
+    zoomVelocity: number,
+  |}) {
+    this.width = width;
+    this.height = height;
+    this.zoomVelocity = zoomVelocity;
+    this.zoomFactor = 1.0;
+    this.offset = {
+      x: -width / 2,
+      y: -height / 2,
     };
   }
 
@@ -43,10 +50,13 @@ export class SvgPane extends React.Component<
     return point.matrixTransform(svgRef.getScreenCTM().inverse());
   };
 
-  handleClick: (SyntheticMouseEvent<HTMLElement>) => void = event => {
+  handleClick: (Child, SyntheticMouseEvent<HTMLElement>) => void = (
+    child,
+    event,
+  ) => {
     if (this.svgRef) {
       const svgPoint = this.transformClickEvent(this.svgRef, event);
-      this.props.onClick({
+      child.onClick({
         x: svgPoint.x,
         y: svgPoint.y,
       });
@@ -58,14 +68,12 @@ export class SvgPane extends React.Component<
   ): void => {
     if (this.svgRef !== null) {
       const point = this.transformClickEvent(this.svgRef, event);
-      const zoomFactor = Math.pow(this.props.zoomVelocity, event.deltaY / 3);
-      this.setState({
-        zoomFactor: this.state.zoomFactor * zoomFactor,
-        offset: {
-          x: (this.state.offset.x - point.x) * zoomFactor + point.x,
-          y: (this.state.offset.y - point.y) * zoomFactor + point.y,
-        },
-      });
+      const zoomFactor = Math.pow(this.zoomVelocity, event.deltaY / 3);
+      this.zoomFactor = this.zoomFactor * zoomFactor;
+      this.offset = {
+        x: (this.offset.x - point.x) * zoomFactor + point.x,
+        y: (this.offset.y - point.y) * zoomFactor + point.y,
+      };
     }
   };
 
@@ -86,32 +94,25 @@ export class SvgPane extends React.Component<
     },
   ) => {
     if (this.dragging) {
-      const old = this.state.offset;
-      this.setState({
-        offset: {
-          x: old.x - event.movementX * this.state.zoomFactor,
-          y: old.y - event.movementY * this.state.zoomFactor,
-        },
-      });
+      const old = this.offset;
+      this.offset = {
+        x: old.x - event.movementX * this.zoomFactor,
+        y: old.y - event.movementY * this.zoomFactor,
+      };
     }
   };
 
-  render() {
-    const width = this.props.width * this.state.zoomFactor;
-    const height = this.props.height * this.state.zoomFactor;
-    const viewBox = [
-      this.state.offset.x,
-      this.state.offset.y,
-      width,
-      height,
-    ].join(" ");
+  render: Child => React.Node = child => {
+    const width = this.width * this.zoomFactor;
+    const height = this.height * this.zoomFactor;
+    const viewBox = [this.offset.x, this.offset.y, width, height].join(" ");
     return (
       <svg
         ref={svgRef => (this.svgRef = (svgRef: any))}
         style={{ flexShrink: 0 }}
-        onClick={this.handleClick}
-        width={this.props.width}
-        height={this.props.height}
+        onClick={event => this.handleClick(child, event)}
+        width={this.width}
+        height={this.height}
         viewBox={viewBox}
         onWheel={this.onWheel}
         onMouseDown={this.onMouseDown}
@@ -119,20 +120,17 @@ export class SvgPane extends React.Component<
         onMouseMove={this.onMouseMove}
       >
         <rect
-          x={this.state.offset.x}
-          y={this.state.offset.y}
+          x={this.offset.x}
+          y={this.offset.y}
           width="100%"
           height="100%"
           fill="black"
         />
-        {this.props.draw({
-          offset: this.state.offset,
-          size: scale(
-            { x: this.props.width, y: this.props.height },
-            this.state.zoomFactor,
-          ),
+        {child.drawSvgElements({
+          offset: this.offset,
+          size: scale({ x: this.width, y: this.height }, this.zoomFactor),
         })}
       </svg>
     );
-  }
+  };
 }

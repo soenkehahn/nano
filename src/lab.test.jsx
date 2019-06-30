@@ -19,7 +19,7 @@ describe("Lab", () => {
 
   beforeEach(() => {
     wrapper()
-      .find(SvgPane)
+      .find("svg")
       .simulate("wheel", { clientX: 0, clientY: 0, deltaY: 100 });
     wrapper().setProps({ timeDelta: 1 });
   });
