@@ -1,16 +1,12 @@
 // @flow
 
 import * as React from "react";
-import { wait } from "./utils";
 
 export type Animated = { draw: TimeStep => React.Node };
 
 export type TimeStep = {| time: number, timeDelta: number |};
 
-export function animate(
-  slowDown: null | number,
-  animated: Animated,
-): React.AbstractComponent<{||}> {
+export function animate(animated: Animated): React.AbstractComponent<{||}> {
   class Wrapper extends React.Component<
     {||},
     {|
@@ -41,9 +37,6 @@ export function animate(
         const timeDelta =
           this.state.time === null ? null : now - this.state.time;
         this.setState({ time: now, timeDelta });
-        if (slowDown !== null) {
-          await wait(slowDown);
-        }
         requestAnimationFrame(now => {
           this.loop(now);
         });

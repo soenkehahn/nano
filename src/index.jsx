@@ -9,8 +9,6 @@ import { rational } from "./rational";
 import React from "react";
 import dom from "react-dom";
 
-const slowDown = null;
-
 if (!module.parent) {
   const appElement = document.getElementById("app");
   if (!appElement) {
@@ -38,9 +36,6 @@ if (!module.parent) {
     config.miningVelocity = config.miningVelocity.times(fromInt(20));
     config.costs.research["auto-mining"] = fromInt(1);
   }
-  const App = animate(
-    slowDown,
-    new SceneStepper(config, new Scene(config, mkObjects)),
-  );
+  const App = animate(new SceneStepper(config, new Scene(config, mkObjects)));
   dom.render(<App />, appElement);
 }

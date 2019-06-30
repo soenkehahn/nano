@@ -17,7 +17,7 @@ beforeEach(async () => {
       return <div />;
     },
   };
-  wrapper = mount(createElement(animate(null, mock)));
+  wrapper = mount(createElement(animate(mock)));
   await waitUntil(() => propsList.length > 10, 0.5);
 });
 
