@@ -189,6 +189,16 @@ describe("Scene interface", () => {
       ).toEqual("resources: 1.23");
     });
   });
+
+  it("shows a game end success message when no resources are left", () => {
+    scene().objects.resources = new Map();
+    wrapper().setProps({ timeDelta: 0.1 });
+    expect(
+      wrapper()
+        .find("#gameEndSuccess")
+        .exists(),
+    ).toEqual(true);
+  });
 });
 
 describe("collides", () => {

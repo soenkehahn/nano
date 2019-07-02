@@ -2,6 +2,7 @@
 
 import { Factory, FactoryRender } from "./factory";
 import { MinionRender } from "./minion";
+import { Resource } from "./resource";
 import { fromInt, rational } from "./rational";
 import { setupSceneWrapper, setupTestConfig } from "./test/utils";
 
@@ -21,7 +22,7 @@ describe("Factory", () => {
   });
 
   it("allows to construct a factory with 3 resources", () => {
-    scene().objects.resources = new Map();
+    scene().objects.resources = new Map([[0, new Resource({ x: -100, y: 0 })]]);
     scene().inventory = fromInt(3);
     wrapper().setProps({ timeDelta: 1 });
     expect(
@@ -41,7 +42,7 @@ describe("Factory", () => {
   });
 
   it("builds the factory at the location of the minion", () => {
-    scene().objects.resources = new Map();
+    scene().objects.resources = new Map([[0, new Resource({ x: -100, y: 0 })]]);
     scene().inventory = fromInt(3);
     scene().focusedMinion().position = { x: 10, y: 12 };
     wrapper().setProps({ timeDelta: 0.1 });
@@ -74,7 +75,7 @@ describe("Factory", () => {
   });
 
   test("building uses up resources", () => {
-    scene().objects.resources = new Map();
+    scene().objects.resources = new Map([[0, new Resource({ x: -100, y: 0 })]]);
     scene().inventory = fromInt(4);
     wrapper().setProps({ timeDelta: 1 });
     wrapper()
@@ -85,7 +86,7 @@ describe("Factory", () => {
   });
 
   it("produces one minion when being built", () => {
-    scene().objects.resources = new Map();
+    scene().objects.resources = new Map([[0, new Resource({ x: -100, y: 0 })]]);
     scene().inventory = fromInt(4);
     scene().focusedMinion().position = { x: 42, y: 23 };
     wrapper().setProps({ timeDelta: 1 });

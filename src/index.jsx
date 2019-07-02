@@ -41,6 +41,14 @@ if (!module.parent) {
     for (const goal of ["mining", "auto-resource-seeking"]) {
       scene.objects.lab.researched.add(goal);
     }
+    const newResources = new Map();
+    for (const [id, resource] of scene.objects.resources) {
+      newResources.set(id, resource);
+      if (newResources.size >= 5) {
+        break;
+      }
+    }
+    scene.objects.resources = newResources;
   }
   const App = animate(new SceneStepper(config, scene));
   dom.render(<App />, appElement);

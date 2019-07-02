@@ -112,6 +112,13 @@ export class Scene {
   };
 
   interface: () => React.Node = () => {
+    if (this.objects.resources.size === 0) {
+      return (
+        <div id="gameEndSuccess">
+          All resources are mined. Congratulations, you&apos;ve beaten the game!
+        </div>
+      );
+    }
     return (
       <div id="interface" style={{ display: "flex", padding: "0.2em" }}>
         <div style={{ flex: "1 1 0", margin: "0.2em" }}>
