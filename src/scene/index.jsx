@@ -120,9 +120,7 @@ export class Scene {
           {this.focusedMinion().interface()}
           {renderButtons(this.objects.lab.buttons())}
           <hr />
-          <div id="inventory">
-            resources: {Math.round(this.inventory.toNumber() * 100) / 100}
-          </div>
+          <div id="inventory">resources: {this.inventory.format()}</div>
           <hr />
           {this.objects.lab.newResearch()}
           <hr />

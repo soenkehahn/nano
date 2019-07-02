@@ -33,6 +33,13 @@ class _Rational {
 
   toNumber: () => number = () => this.numerator / this.denominator;
 
+  format = () => {
+    const integer = Math.floor(this.toNumber()).toString();
+    let fraction = Math.round((this.toNumber() * 100) % 100).toString();
+    if (fraction.length === 1) fraction = "0" + fraction;
+    return integer + "." + fraction;
+  };
+
   toString: () => string = () => {
     return `(${this.numerator}) % (${this.denominator})`;
   };

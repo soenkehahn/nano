@@ -176,7 +176,7 @@ describe("Scene interface", () => {
         wrapper()
           .find("#inventory")
           .text(),
-      ).toEqual("resources: 42");
+      ).toEqual("resources: 42.00");
     });
 
     it("rounds the inventory to cents", () => {

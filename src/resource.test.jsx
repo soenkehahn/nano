@@ -144,7 +144,7 @@ describe("Resource in scene", () => {
           wrapper()
             .find("#inventory")
             .text(),
-        ).toEqual("resources: 0");
+        ).toEqual("resources: 0.00");
       });
 
       it("increases the inventory resource counter", () => {
@@ -163,7 +163,7 @@ describe("Resource in scene", () => {
           wrapper()
             .find("#inventory")
             .text(),
-        ).toEqual("resources: 1");
+        ).toEqual("resources: 1.00");
       });
 
       test("mining takes time", () => {

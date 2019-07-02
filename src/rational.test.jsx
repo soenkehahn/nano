@@ -196,6 +196,21 @@ describe("toNumber", () => {
   });
 });
 
+describe("format", () => {
+  it("returns a string that rounds to the last 2 digits", () => {
+    expect(typeof rational(1, 3).format()).toEqual("string");
+    expect(rational(1, 3).format()).toEqual("0.33");
+    expect(rational(2, 3).format()).toEqual("0.67");
+  });
+
+  it("shows trailing zeros to always include two digits after the dot", () => {
+    expect(rational(1, 2).format()).toEqual("0.50");
+    expect(fromInt(42).format()).toEqual("42.00");
+    expect(fromInt(123).format()).toEqual("123.00");
+    expect(rational(1, 100).format()).toEqual("0.01");
+  });
+});
+
 describe("plus", () => {
   it("adds integers", () => {
     (expect(fromInt(42).plus(fromInt(5))): any).toEqualRational(fromInt(47));
