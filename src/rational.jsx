@@ -33,9 +33,10 @@ class _Rational {
 
   toNumber: () => number = () => this.numerator / this.denominator;
 
-  format = () => {
-    const integer = Math.floor(this.toNumber()).toString();
-    let fraction = Math.round((this.toNumber() * 100) % 100).toString();
+  format: () => string = () => {
+    const rounded = Math.round(this.toNumber() * 100);
+    const integer = Math.floor(rounded / 100).toString();
+    let fraction = (rounded % 100).toString();
     if (fraction.length === 1) fraction = "0" + fraction;
     return integer + "." + fraction;
   };

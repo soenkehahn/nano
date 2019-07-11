@@ -209,6 +209,10 @@ describe("format", () => {
     expect(fromInt(123).format()).toEqual("123.00");
     expect(rational(1, 100).format()).toEqual("0.01");
   });
+
+  it("displays numbers slightly below integers correctly", () => {
+    expect(rational(4999, 1000).format()).toEqual("5.00");
+  });
 });
 
 describe("plus", () => {
