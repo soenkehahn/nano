@@ -7,6 +7,7 @@ import { Minion } from "../minion";
 import { type Objects, mkObjects } from "../scene/objects";
 import { ReactWrapper, mount } from "enzyme";
 import { type TimeStep } from "../animated";
+import { type Vector } from "../vector";
 import { createElement } from "react";
 import { fromInt, rational } from "../rational";
 
@@ -87,4 +88,11 @@ export function unsafeGet<Key, Value>(map: Map<Key, Value>, key: Key): Value {
     throw new Error(`key error: ${k}`);
   }
   return result;
+}
+
+export function sendMinion(scene: () => Scene, target: Vector) {
+  scene().focusedMinion().status = {
+    tag: "moving",
+    target,
+  };
 }

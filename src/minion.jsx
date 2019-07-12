@@ -63,13 +63,13 @@ export class Minion {
     }
   };
 
-  step: Rational => void = timeDelta => {
-    if (this.status.tag === "moving") {
+  step: (?Rational) => void = timeDelta => {
+    if (timeDelta && this.status.tag === "moving") {
       this.move(timeDelta, this.status.target);
     }
     this.updateCollidingResources();
     this.autoMine();
-    if (this.status.tag === "mining") {
+    if (timeDelta && this.status.tag === "mining") {
       this.mine(timeDelta, this.status.resourceId);
     }
     this.autoSeekResource();
@@ -280,9 +280,22 @@ export class Minions {
     this.minions[this.focus].focused = true;
   };
 
-  step: (Scene, Rational) => void = (scene, rational) => {
+  anyIsIdle: () => boolean = () => {
+    let idle = false;
     for (const minion of this.minions) {
-      minion.step(rational);
+      if (
+        minion.status.tag === "idle" ||
+        minion.status.tag === "waitForMoveTarget"
+      ) {
+        idle = true;
+      }
+    }
+    return idle;
+  };
+
+  step: (Scene, ?Rational) => void = (scene, timeDelta) => {
+    for (const minion of this.minions) {
+      minion.step(timeDelta);
     }
   };
 

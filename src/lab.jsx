@@ -33,28 +33,32 @@ export class Lab {
     this.status = { tag: "researching", goal, completion: fromInt(0) };
   };
 
-  step: Rational => void = timeDelta => {
-    if (this.status.tag === "researching") {
-      const { tag, goal, completion } = this.status;
-      let newCompletion = completion.plus(
-        timeDelta.times(this.config.researchVelocity),
-      );
-      if (newCompletion.gt(fromInt(1))) {
-        newCompletion = fromInt(1);
-      }
-      this.scene.inventory = this.scene.inventory.minus(
-        newCompletion.minus(completion).times(this.config.costs.research[goal]),
-      );
-      if (newCompletion.ge(fromInt(1))) {
-        this.researched.add(goal);
-        this.status = { tag: "idle" };
+  step: (?Rational) => void = timeDelta => {
+    if (timeDelta) {
+      if (this.status.tag === "researching") {
+        const { tag, goal, completion } = this.status;
+        let newCompletion = completion.plus(
+          timeDelta.times(this.config.researchVelocity),
+        );
+        if (newCompletion.gt(fromInt(1))) {
+          newCompletion = fromInt(1);
+        }
+        this.scene.inventory = this.scene.inventory.minus(
+          newCompletion
+            .minus(completion)
+            .times(this.config.costs.research[goal]),
+        );
+        if (newCompletion.ge(fromInt(1))) {
+          this.researched.add(goal);
+          this.status = { tag: "idle" };
+        } else {
+          this.status = { tag, goal, completion: newCompletion };
+        }
+      } else if (this.status.tag === "idle") {
+        return;
       } else {
-        this.status = { tag, goal, completion: newCompletion };
+        (this.status.tag: empty);
       }
-    } else if (this.status.tag === "idle") {
-      return;
-    } else {
-      (this.status.tag: empty);
     }
   };
 

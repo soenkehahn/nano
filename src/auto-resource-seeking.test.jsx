@@ -3,7 +3,7 @@
 import { Resource } from "./resource";
 import { cloneDeep } from "lodash";
 import { fromInt } from "./rational";
-import { setupSceneWrapper, setupTestConfig } from "./test/utils";
+import { sendMinion, setupSceneWrapper, setupTestConfig } from "./test/utils";
 
 const config = setupTestConfig();
 const [wrapper, scene] = setupSceneWrapper(config);
@@ -17,6 +17,7 @@ describe("auto-resource-seeking", () => {
     wrapper()
       .find("#researchAutoResourceSeekingButton")
       .simulate("click");
+    sendMinion(scene, { x: 0, y: 10000 });
     wrapper().setProps({ timeDelta: 1 });
     expect(scene().objects.lab.researched.has("auto-resource-seeking")).toEqual(
       true,

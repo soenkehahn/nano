@@ -3,7 +3,7 @@
 import { Minion, MinionRender } from "./minion";
 import { Resource } from "./resource";
 import { fromInt, rational } from "./rational";
-import { setupSceneWrapper, setupTestConfig } from "./test/utils";
+import { sendMinion, setupSceneWrapper, setupTestConfig } from "./test/utils";
 import { toClickEvent } from "./vector";
 
 const config = setupTestConfig();
@@ -149,6 +149,7 @@ describe("Minions", () => {
     scene().objects.minions.add(
       new Minion(config(), scene(), { x: 100, y: 0 }),
     );
+    sendMinion(scene, { x: 0, y: 100 });
     wrapper().setProps({ timeDelta: 0.1 });
     wrapper()
       .find("svg")
@@ -165,20 +166,17 @@ describe("Minions", () => {
       wrapper()
         .find(MinionRender)
         .map(x => x.props().position),
-    ).toEqual([{ x: 0, y: 0 }, { x: 100, y: 100 }]);
+    ).toEqual([{ x: 0, y: 100 }, { x: 100, y: 100 }]);
   });
 
   it("keeps moving unfocused minions", () => {
     scene().objects.minions.add(
       new Minion(config(), scene(), { x: 100, y: 0 }),
     );
+    const [minionA, minionB] = scene().objects.minions.minions;
+    minionA.status = { tag: "moving", target: { x: 0, y: 100 } };
+    minionB.status = { tag: "moving", target: { x: 100, y: 100 } };
     wrapper().setProps({ timeDelta: 0.1 });
-    wrapper()
-      .find("#moveButton")
-      .simulate("click");
-    wrapper()
-      .find("svg")
-      .simulate("click", toClickEvent({ x: 0, y: 100 }));
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 100, y: 0 }));

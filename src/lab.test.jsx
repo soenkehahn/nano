@@ -4,7 +4,12 @@ import { LabRender } from "./lab";
 import { type Vector, toClickEvent } from "./vector";
 import { cloneDeep } from "lodash";
 import { fromInt, rational } from "./rational";
-import { setupSceneWrapper, setupTestConfig, unsafeGet } from "./test/utils";
+import {
+  sendMinion,
+  setupSceneWrapper,
+  setupTestConfig,
+  unsafeGet,
+} from "./test/utils";
 
 const testConfig = setupTestConfig();
 
@@ -53,6 +58,7 @@ describe("Lab", () => {
       wrapper()
         .find("#researchMiningButton")
         .simulate("click");
+      sendMinion(scene, { x: 0, y: 10000 });
       wrapper().setProps({ timeDelta: 10 });
       expect(
         wrapper()
@@ -102,6 +108,7 @@ describe("Lab", () => {
       wrapper()
         .find("#researchMiningButton")
         .simulate("click");
+      sendMinion(scene, { x: 0, y: 10000 });
       wrapper().setProps({ timeDelta: 3 });
       expect(
         wrapper()
@@ -156,6 +163,7 @@ describe("Lab", () => {
       wrapper()
         .find("#researchAutoMiningButton")
         .simulate("click");
+      sendMinion(scene, { x: 0, y: 10000 });
       wrapper().setProps({ timeDelta: 10 });
       expect(
         wrapper()
@@ -207,6 +215,7 @@ describe("Lab", () => {
       wrapper()
         .find("#researchAutoMiningButton")
         .simulate("click");
+      sendMinion(scene, { x: 0, y: 10000 });
       wrapper().setProps({ timeDelta: 1 });
       expect(scene().inventory.toNumber()).toEqual(4);
       wrapper().setProps({ timeDelta: 4 });
@@ -223,6 +232,7 @@ describe("Lab", () => {
       wrapper()
         .find("#researchAutoMiningButton")
         .simulate("click");
+      sendMinion(scene, { x: 0, y: 10000 });
       wrapper().setProps({ timeDelta: 10 });
       expect(scene().inventory.toNumber()).toEqual(0.9);
     });

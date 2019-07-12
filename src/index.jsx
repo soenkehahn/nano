@@ -9,6 +9,12 @@ import { rational } from "./rational";
 import React from "react";
 import dom from "react-dom";
 
+function setupDevScene(config: Config) {
+  config.velocity *= 5;
+  config.researchVelocity = config.researchVelocity.times(fromInt(10));
+  config.miningVelocity = config.miningVelocity.times(fromInt(10));
+}
+
 if (!module.parent) {
   const appElement = document.getElementById("app");
   if (!appElement) {
@@ -33,22 +39,7 @@ if (!module.parent) {
   const scene = new Scene(config, mkObjects);
   const queryParams = new URLSearchParams(window.location.search);
   if (queryParams.get("dev")) {
-    config.velocity *= 25;
-    config.researchVelocity = config.researchVelocity.times(fromInt(40));
-    config.miningVelocity = config.miningVelocity.times(fromInt(20));
-    config.costs.research["auto-mining"] = fromInt(0);
-    config.costs.research["auto-resource-seeking"] = fromInt(0);
-    for (const goal of ["mining", "auto-resource-seeking"]) {
-      scene.objects.lab.researched.add(goal);
-    }
-    const newResources = new Map();
-    for (const [id, resource] of scene.objects.resources) {
-      newResources.set(id, resource);
-      if (newResources.size >= 5) {
-        break;
-      }
-    }
-    scene.objects.resources = newResources;
+    setupDevScene(config);
   }
   const App = animate(new SceneStepper(config, scene));
   dom.render(<App />, appElement);

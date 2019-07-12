@@ -94,6 +94,8 @@ export class Scene {
   focusedMinion: () => Minion = () => this.objects.minions.focused();
 
   step: Rational => void = timeDelta => {
+    const idle = this.objects.minions.anyIsIdle();
+    timeDelta = idle ? null : timeDelta;
     this.objects.lab.step(timeDelta);
     this.objects.minions.step(this, timeDelta);
   };
