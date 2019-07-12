@@ -42,7 +42,7 @@ export class SceneStepper {
     const timeDelta = props.timeDelta + this.timeDeltaRemainder;
     const n = Math.floor(timeDelta / this.config.stepTimeDelta.toNumber());
     for (let i = 0; i < n; i++) {
-      this.scene.step(this.config.stepTimeDelta);
+      this.scene.step();
     }
     this.timeDeltaRemainder = timeDelta % this.config.stepTimeDelta.toNumber();
   };
@@ -93,11 +93,11 @@ export class Scene {
 
   focusedMinion: () => Minion = () => this.objects.minions.focused();
 
-  step: Rational => void = timeDelta => {
+  step: () => void = () => {
     const idle = this.objects.minions.anyIsIdle();
-    timeDelta = idle ? null : timeDelta;
-    this.objects.lab.step(timeDelta);
-    this.objects.minions.step(this, timeDelta);
+    const args = { paused: idle ? true : false };
+    this.objects.lab.step(args);
+    this.objects.minions.step(this, args);
   };
 
   onClick: Vector => void = target => {

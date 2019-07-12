@@ -4,7 +4,6 @@ import * as React from "react";
 import { type Button, renderButtons } from "./button";
 import { type Config, Scene } from "./scene";
 import { Factory } from "./factory";
-import { type Rational, fromInt } from "./rational";
 import { SvgPane } from "./svgPane";
 import {
   type Vector,
@@ -16,6 +15,7 @@ import {
   scale,
   unit,
 } from "./vector";
+import { fromInt } from "./rational";
 
 type Status =
   | {| tag: "idle" |}
@@ -63,21 +63,22 @@ export class Minion {
     }
   };
 
-  step: (?Rational) => void = timeDelta => {
-    if (timeDelta && this.status.tag === "moving") {
-      this.move(timeDelta, this.status.target);
+  step: ({ paused: boolean }) => void = ({ paused }) => {
+    if (!paused && this.status.tag === "moving") {
+      this.move(this.status.target);
     }
     this.updateCollidingResources();
     this.autoMine();
-    if (timeDelta && this.status.tag === "mining") {
-      this.mine(timeDelta, this.status.resourceId);
+    if (!paused && this.status.tag === "mining") {
+      this.mine(this.status.resourceId);
     }
     this.autoSeekResource();
   };
 
-  move: (Rational, Vector) => void = (timeDelta, target) => {
+  move: Vector => void = target => {
     const distanceLeft = distance(target, this.position);
-    const stepDistance = this.config.velocity * timeDelta.toNumber();
+    const stepDistance =
+      this.config.velocity * this.config.stepTimeDelta.toNumber();
     if (stepDistance < distanceLeft) {
       this.position = add(
         this.position,
@@ -112,11 +113,13 @@ export class Minion {
     }
   };
 
-  mine: (Rational, number) => void = (timeDelta, resourceId) => {
+  mine: number => void = resourceId => {
     const resource = this.scene.objects.resources.get(resourceId);
     if (resource && collides(this, resource)) {
       this.scene.inventory = this.scene.inventory.plus(
-        resource.mine(timeDelta.times(this.config.miningVelocity)),
+        resource.mine(
+          this.config.stepTimeDelta.times(this.config.miningVelocity),
+        ),
       );
       if (resource.status.unitsLeft.equals(fromInt(0))) {
         this.scene.objects.resources.delete(resourceId);
@@ -293,9 +296,9 @@ export class Minions {
     return idle;
   };
 
-  step: (Scene, ?Rational) => void = (scene, timeDelta) => {
+  step: (Scene, { paused: boolean }) => void = (scene, args) => {
     for (const minion of this.minions) {
-      minion.step(timeDelta);
+      minion.step(args);
     }
   };
 

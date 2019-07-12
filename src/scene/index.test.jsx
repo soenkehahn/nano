@@ -3,10 +3,10 @@
 import { Factory } from "../factory";
 import { Lab } from "../lab";
 import { MinionRender } from "../minion";
-import { type Rational, fromInt, rational } from "../rational";
 import { Resource } from "../resource";
 import { Scene, SceneStepper } from "../scene";
 import { createElement } from "react";
+import { fromInt, rational } from "../rational";
 import {
   mockSvgJsdomExtensions,
   setupSceneWrapper,
@@ -19,16 +19,16 @@ import { toClickEvent } from "../vector";
 const config = setupTestConfig();
 
 describe("SceneStepper step function logic", () => {
-  let timeDeltas;
+  let stepCalls: number;
 
   beforeEach(() => {
-    timeDeltas = [];
+    stepCalls = 0;
   });
 
   function mkMockScene(): Scene {
     const scene = new Scene(config(), testObjects);
-    scene.step = (timeDelta: Rational) => {
-      timeDeltas.push(timeDelta);
+    scene.step = () => {
+      stepCalls++;
     };
     return scene;
   }
@@ -40,19 +40,7 @@ describe("SceneStepper step function logic", () => {
       createElement(sceneStepper.draw, { time: 0, timeDelta: 0 }),
     );
     wrapper.setProps({ timeDelta: 10 });
-    expect(timeDeltas.length).toEqual(10);
-  });
-
-  it("calls the step function with fixed timeDeltas", () => {
-    config().stepTimeDelta = rational(1, 2);
-    const sceneStepper = new SceneStepper(config(), mkMockScene());
-    const wrapper = mount(
-      createElement(sceneStepper.draw, { time: 0, timeDelta: 0 }),
-    );
-    wrapper.setProps({ timeDelta: 5 });
-    for (const timeDelta of timeDeltas) {
-      expect(timeDelta.toNumber()).toEqual(0.5);
-    }
+    expect(stepCalls).toEqual(10);
   });
 
   it("saves the remainder of the timeDelta for the next round", () => {
@@ -62,17 +50,17 @@ describe("SceneStepper step function logic", () => {
       createElement(sceneStepper.draw, { time: 0, timeDelta: 0 }),
     );
     wrapper.setProps({ timeDelta: 1 });
-    expect(timeDeltas.length).toEqual(1);
+    expect(stepCalls).toEqual(1);
     wrapper.setProps({ timeDelta: 1 });
-    expect(timeDeltas.length).toEqual(3);
+    expect(stepCalls).toEqual(3);
     wrapper.setProps({ timeDelta: 1 });
-    expect(timeDeltas.length).toEqual(5);
+    expect(stepCalls).toEqual(5);
     wrapper.setProps({ timeDelta: 1 });
-    expect(timeDeltas.length).toEqual(6);
+    expect(stepCalls).toEqual(6);
     wrapper.setProps({ timeDelta: 1 });
-    expect(timeDeltas.length).toEqual(8);
+    expect(stepCalls).toEqual(8);
     wrapper.setProps({ timeDelta: 1 });
-    expect(timeDeltas.length).toEqual(10);
+    expect(stepCalls).toEqual(10);
   });
 });
 
