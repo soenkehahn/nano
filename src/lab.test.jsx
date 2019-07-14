@@ -11,21 +11,21 @@ import {
   unsafeGet,
 } from "./test/utils";
 
-const testConfig = setupTestConfig();
+const config = setupTestConfig();
 
 describe("Lab", () => {
   beforeEach(() => {
-    testConfig().velocity = 1000;
-    testConfig().miningVelocity = fromInt(1);
+    config().velocity = 1000;
+    config().miningVelocity = fromInt(1);
   });
 
-  const [wrapper, scene] = setupSceneWrapper(testConfig);
+  const { wrapper, scene, step } = setupSceneWrapper(config);
 
   beforeEach(() => {
     wrapper()
       .find("svg")
       .simulate("wheel", { clientX: 0, clientY: 0, deltaY: 100 });
-    wrapper().setProps({ timeDelta: 1 });
+    step(1);
   });
 
   it("renders a lab (out of the initial view)", () => {
@@ -44,7 +44,7 @@ describe("Lab", () => {
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent(scene().objects.lab.position));
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       expect(
         wrapper()
           .find("#researchMiningButton")
@@ -59,7 +59,7 @@ describe("Lab", () => {
         .find("#researchMiningButton")
         .simulate("click");
       sendMinion(scene, { x: 0, y: 10000 });
-      wrapper().setProps({ timeDelta: 10 });
+      step(10);
       expect(
         wrapper()
           .find("#newResearch-mining")
@@ -74,11 +74,11 @@ describe("Lab", () => {
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent(scene().objects.lab.position));
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       wrapper()
         .find("#researchMiningButton")
         .simulate("click");
-      wrapper().setProps({ timeDelta: 10 });
+      step(10);
       expect(
         wrapper()
           .find("#researchMiningButton")
@@ -87,14 +87,14 @@ describe("Lab", () => {
     });
 
     test("researching takes time", () => {
-      testConfig().researchVelocity = rational(1, 5);
+      config().researchVelocity = rational(1, 5);
       wrapper()
         .find("#moveButton")
         .simulate("click");
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent(scene().objects.lab.position));
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       expect(
         wrapper()
           .find("#researchMiningButton")
@@ -109,7 +109,7 @@ describe("Lab", () => {
         .find("#researchMiningButton")
         .simulate("click");
       sendMinion(scene, { x: 0, y: 10000 });
-      wrapper().setProps({ timeDelta: 3 });
+      step(3);
       expect(
         wrapper()
           .find("#newResearch-mining")
@@ -125,7 +125,7 @@ describe("Lab", () => {
           .find(LabRender)
           .props().completion,
       ).toEqual(3 / 5);
-      wrapper().setProps({ timeDelta: 3 });
+      step(3);
       expect(
         wrapper()
           .find("#newResearch-mining")
@@ -153,18 +153,18 @@ describe("Lab", () => {
   describe("auto-mining", () => {
     const setMinionPosition = (position: Vector): void => {
       scene().focusedMinion().position = cloneDeep(position);
-      wrapper().setProps({ timeDelta: 0.01 });
+      step(0.01);
     };
 
     it("allows to research auto-mining", () => {
       scene().objects.lab.researched.add("mining");
-      scene().inventory = testConfig().costs.research["auto-mining"];
+      scene().inventory = config().costs.research["auto-mining"];
       setMinionPosition(scene().objects.lab.position);
       wrapper()
         .find("#researchAutoMiningButton")
         .simulate("click");
       sendMinion(scene, { x: 0, y: 10000 });
-      wrapper().setProps({ timeDelta: 10 });
+      step(10);
       expect(
         wrapper()
           .find("#newResearch-auto-mining")
@@ -180,14 +180,14 @@ describe("Lab", () => {
           .exists(),
       ).toEqual(false);
       scene().objects.lab.researched.add("mining");
-      wrapper().setProps({ timeDelta: 0.01 });
+      step(0.01);
       expect(
         wrapper()
           .find("#researchAutoMiningButton")
           .exists(),
       ).toEqual(true);
       scene().objects.lab.researched.add("auto-mining");
-      wrapper().setProps({ timeDelta: 0.01 });
+      step(0.01);
       expect(
         wrapper()
           .find("#researchAutoMiningButton")
@@ -197,8 +197,8 @@ describe("Lab", () => {
 
     it("researching auto-mining costs resources", () => {
       scene().objects.lab.researched.add("mining");
-      testConfig().costs.research["auto-mining"] = fromInt(5);
-      testConfig().researchVelocity = rational(1, 5);
+      config().costs.research["auto-mining"] = fromInt(5);
+      config().researchVelocity = rational(1, 5);
       setMinionPosition(scene().objects.lab.position);
       expect(
         wrapper()
@@ -206,7 +206,7 @@ describe("Lab", () => {
           .props().disabled,
       ).toEqual(true);
       scene().inventory = fromInt(5);
-      wrapper().setProps({ timeDelta: 0.1 });
+      step(0.1);
       expect(
         wrapper()
           .find("#researchAutoMiningButton")
@@ -216,30 +216,30 @@ describe("Lab", () => {
         .find("#researchAutoMiningButton")
         .simulate("click");
       sendMinion(scene, { x: 0, y: 10000 });
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       expect(scene().inventory.toNumber()).toEqual(4);
-      wrapper().setProps({ timeDelta: 4 });
+      step(4);
       expect(scene().inventory.toNumber()).toEqual(0);
     });
 
     it("doesn't overconsume inventory", () => {
       scene().objects.lab.researched.add("mining");
-      testConfig().costs.research["auto-mining"] = rational(1, 10);
-      testConfig().researchVelocity = fromInt(3);
+      config().costs.research["auto-mining"] = rational(1, 10);
+      config().researchVelocity = fromInt(3);
       scene().inventory = fromInt(1);
       setMinionPosition(scene().objects.lab.position);
-      wrapper().setProps({ timeDelta: 0.1 });
+      step(0.1);
       wrapper()
         .find("#researchAutoMiningButton")
         .simulate("click");
       sendMinion(scene, { x: 0, y: 10000 });
-      wrapper().setProps({ timeDelta: 10 });
+      step(10);
       expect(scene().inventory.toNumber()).toEqual(0.9);
     });
 
     it("displays the research cost on the button", () => {
       scene().objects.lab.researched.add("mining");
-      testConfig().costs.research["auto-mining"] = fromInt(42);
+      config().costs.research["auto-mining"] = fromInt(42);
       setMinionPosition(scene().objects.lab.position);
       expect(
         wrapper()
@@ -261,13 +261,13 @@ describe("Lab", () => {
         scene().objects.lab.researched.add("mining");
         scene().objects.lab.researched.add("auto-mining");
         setMinionPosition(unsafeGet(scene().objects.resources, 0).position);
-        wrapper().setProps({ timeDelta: 0.5 });
+        step(0.5);
         expect(scene().focusedMinion().status.tag).toEqual("mining");
       });
 
       it("switches back to the previous status after mining is done", () => {
-        testConfig().velocity = 0.0;
-        testConfig().stepTimeDelta = rational(1, 10);
+        config().velocity = 0.0;
+        config().stepTimeDelta = rational(1, 10);
         scene().objects.lab.researched.add("mining");
         scene().objects.lab.researched.add("auto-mining");
         setMinionPosition(unsafeGet(scene().objects.resources, 0).position);
@@ -275,9 +275,9 @@ describe("Lab", () => {
           tag: "moving",
           target: { x: 100000, y: 0 },
         };
-        wrapper().setProps({ timeDelta: 0.1 });
+        step(0.1);
         expect(scene().focusedMinion().status.tag).toEqual("mining");
-        wrapper().setProps({ timeDelta: 2 });
+        step(2);
         expect(scene().focusedMinion().status.tag).toEqual("moving");
       });
     });

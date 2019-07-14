@@ -10,7 +10,7 @@ import { toClickEvent } from "./vector";
 const config = setupTestConfig();
 
 describe("Resource in scene", () => {
-  const [wrapper, scene] = setupSceneWrapper(config);
+  const { wrapper, scene, step } = setupSceneWrapper(config);
 
   let minionProps: RenderProps;
   let resourceProps: RenderProps;
@@ -21,7 +21,7 @@ describe("Resource in scene", () => {
       [0, new Resource({ x: 100, y: 0 })],
       [1, new Resource({ x: 200, y: 0 })],
     ]);
-    wrapper().setProps({ timeDelta: 1 });
+    step(1);
     minionProps = wrapper()
       .find(MinionRender)
       .props();
@@ -37,7 +37,7 @@ describe("Resource in scene", () => {
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent(resourceProps.position));
-    wrapper().setProps({ timeDelta: 1 });
+    step(1);
     expect(
       wrapper()
         .find("#mineButton")
@@ -62,7 +62,7 @@ describe("Resource in scene", () => {
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent(resourceProps.position));
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       expect(
         wrapper()
           .find(ResourceRender)
@@ -71,7 +71,7 @@ describe("Resource in scene", () => {
       wrapper()
         .find("#mineButton")
         .simulate("click");
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       expect(
         wrapper()
           .find(ResourceRender)
@@ -95,11 +95,11 @@ describe("Resource in scene", () => {
             y: resourceProps.position.y,
           }),
         );
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       wrapper()
         .find("#mineButton")
         .simulate("click");
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       expect(
         wrapper()
           .find(ResourceRender)
@@ -123,7 +123,7 @@ describe("Resource in scene", () => {
             y: resourceProps.position.y,
           }),
         );
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       expect(
         wrapper()
           .find("#mineButton")
@@ -151,11 +151,11 @@ describe("Resource in scene", () => {
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent(resourceProps.position));
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       wrapper()
         .find("#mineButton")
         .simulate("click");
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       expect(
         wrapper()
           .find("#inventory")
@@ -171,11 +171,11 @@ describe("Resource in scene", () => {
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent(resourceProps.position));
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       wrapper()
         .find("#mineButton")
         .simulate("click");
-      wrapper().setProps({ timeDelta: 0.5 });
+      step(0.5);
       expect(
         wrapper()
           .find(ResourceRender)
@@ -197,11 +197,11 @@ describe("Resource in scene", () => {
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent(resourceProps.position));
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       wrapper()
         .find("#mineButton")
         .simulate("click");
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       expect(scene().inventory.toNumber()).toEqual(0.5);
     });
 
@@ -214,11 +214,11 @@ describe("Resource in scene", () => {
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent(resourceProps.position));
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       wrapper()
         .find("#mineButton")
         .simulate("click");
-      wrapper().setProps({ timeDelta: 2 });
+      step(2);
       expect(scene().inventory.toNumber()).toEqual(1);
     });
 
@@ -233,11 +233,11 @@ describe("Resource in scene", () => {
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent(target));
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       wrapper()
         .find("#mineButton")
         .simulate("click");
-      wrapper().setProps({ timeDelta: 3 });
+      step(3);
       expect(
         wrapper()
           .find(ResourceRender)

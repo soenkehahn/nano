@@ -173,7 +173,7 @@ describe("SvgPane", () => {
 describe("drag & minion interaction", () => {
   const testConfig = setupTestConfig();
 
-  const [wrapper] = setupSceneWrapper(testConfig);
+  const { wrapper, step } = setupSceneWrapper(testConfig);
 
   it("disables dragging when selecting a minion target", () => {
     wrapper()
@@ -199,14 +199,14 @@ describe("drag & minion interaction", () => {
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 10, y: 10 }));
-    wrapper().setProps({ timeDelta: 1 });
+    step(1);
     wrapper()
       .find("svg")
       .simulate("mousedown");
     wrapper()
       .find("svg")
       .simulate("mousemove", { movementX: 10, movementY: -5 });
-    wrapper().setProps({ timeDelta: 0.1 });
+    step(0.1);
     (expect(
       wrapper()
         .find("svg")
@@ -218,11 +218,11 @@ describe("drag & minion interaction", () => {
 describe("viewbox optimization", () => {
   const testConfig = setupTestConfig();
 
-  const [wrapper, scene] = setupSceneWrapper(testConfig);
+  const { wrapper, scene, step } = setupSceneWrapper(testConfig);
 
   it("includes objects that are in the viewBox", () => {
     scene().objects.resources = new Map([[0, new Resource({ x: 0, y: 0 })]]);
-    wrapper().setProps({ timeDelta: 1 });
+    step(1);
     expect(
       wrapper()
         .find(ResourceRender)
@@ -232,7 +232,7 @@ describe("viewbox optimization", () => {
 
   it("excludes objects that are not in the viewBox", () => {
     scene().objects.resources = new Map([[0, new Resource({ x: 150, y: 0 })]]);
-    wrapper().setProps({ timeDelta: 1 });
+    step(1);
     expect(
       wrapper()
         .find(ResourceRender)
@@ -242,7 +242,7 @@ describe("viewbox optimization", () => {
 
   it("includes objects that are not in the viewBox, but reach into it", () => {
     scene().objects.resources = new Map([[0, new Resource({ x: 109, y: 0 })]]);
-    wrapper().setProps({ timeDelta: 1 });
+    step(1);
     expect(
       wrapper()
         .find(ResourceRender)

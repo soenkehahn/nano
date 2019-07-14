@@ -77,7 +77,7 @@ describe("SceneStepper step function logic", () => {
 });
 
 describe("Scene interface", () => {
-  const [wrapper, scene] = setupSceneWrapper(config);
+  const { wrapper, scene, update, step } = setupSceneWrapper(config);
 
   it("takes the offset of the svg pane into account", () => {
     mockSvgJsdomExtensions(wrapper().find("svg"), { x: 2, y: 1 });
@@ -87,7 +87,7 @@ describe("Scene interface", () => {
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 10, y: 10 }));
-    wrapper().setProps({ timeDelta: 100 });
+    step(100);
     expect(
       wrapper()
         .find(MinionRender)
@@ -102,7 +102,7 @@ describe("Scene interface", () => {
     wrapper()
       .find("#moveButton")
       .simulate("click");
-    wrapper().setProps({ timeDelta: 1 });
+    step(1);
     expect(
       wrapper()
         .find("#moveButton")
@@ -117,7 +117,7 @@ describe("Scene interface", () => {
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 10, y: 10 }));
-    wrapper().setProps({ timeDelta: 100 });
+    step(100);
     expect(
       wrapper()
         .find("#moveButton")
@@ -130,7 +130,7 @@ describe("Scene interface", () => {
     wrapper()
       .find("#moveButton")
       .simulate("click");
-    wrapper().setProps({ timeDelta: 1 });
+    step(1);
     expect(
       wrapper()
         .find("#moveButton")
@@ -159,7 +159,7 @@ describe("Scene interface", () => {
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent({ x: 10, y: 10 }));
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       expect(
         wrapper()
           .find("#status")
@@ -171,7 +171,7 @@ describe("Scene interface", () => {
   describe("inventory", () => {
     it("shows the inventory", () => {
       scene().inventory = fromInt(42);
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       expect(
         wrapper()
           .find("#inventory")
@@ -181,7 +181,7 @@ describe("Scene interface", () => {
 
     it("rounds the inventory to cents", () => {
       scene().inventory = rational(123456, 100000);
-      wrapper().setProps({ timeDelta: 1 });
+      step(1);
       expect(
         wrapper()
           .find("#inventory")
@@ -192,7 +192,7 @@ describe("Scene interface", () => {
 
   it("shows a game end success message when no resources are left", () => {
     scene().objects.resources = new Map();
-    wrapper().setProps({ timeDelta: 0.1 });
+    update();
     expect(
       wrapper()
         .find("#gameEndSuccess")

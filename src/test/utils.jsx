@@ -58,7 +58,12 @@ export const setupTestConfig: () => () => Config = () => {
 
 export const setupSceneWrapper = (
   testConfig: () => Config,
-): [() => ReactWrapper<(TimeStep) => React.Node>, () => Scene] => {
+): {
+  wrapper: () => ReactWrapper<(TimeStep) => React.Node>,
+  scene: () => Scene,
+  update: () => void,
+  step: (timeDelta: number) => void,
+} => {
   beforeEach(() => {
     Minion.idCounter = 0;
   });
@@ -74,7 +79,21 @@ export const setupSceneWrapper = (
     );
     mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
   });
-  return [() => wrapper, () => scene];
+
+  function update() {
+    wrapper.setProps({ timeDelta: 0.0 });
+  }
+
+  function step(timeDelta: number) {
+    wrapper.setProps({ timeDelta: timeDelta });
+  }
+
+  return {
+    wrapper: () => wrapper,
+    scene: () => scene,
+    update: update,
+    step: step,
+  };
 };
 
 export function testObjects(config: Config, scene: Scene): Objects {
