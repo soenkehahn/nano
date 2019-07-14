@@ -18,7 +18,7 @@ describe("auto-resource-seeking", () => {
       .find("#researchAutoResourceSeekingButton")
       .simulate("click");
     sendMinion(scene, { x: 0, y: 10000 });
-    step(1);
+    step(2);
     expect(scene().objects.lab.researched.has("auto-resource-seeking")).toEqual(
       true,
     );
@@ -55,22 +55,22 @@ describe("auto-resource-seeking", () => {
     });
 
     it("switches from idle to moving", () => {
-      step(1);
+      step(2);
       expect(scene().focusedMinion().status.tag).toEqual("moving");
     });
 
     it("moves to the a resource", () => {
-      step(2.5);
+      step(5);
       expect(scene().focusedMinion().position).toEqual({ x: 100, y: 0 });
     });
 
     it("becomes idle when reaching a resource", () => {
-      step(2.5);
+      step(5);
       expect(scene().focusedMinion().status.tag).toEqual("idle");
     });
 
     it("allows to switch off auto-resource-seeking", () => {
-      step(2.5);
+      step(5);
       wrapper()
         .find("#autoResourceSeekingCheckbox")
         .simulate("change", { target: { checked: false } });
@@ -82,7 +82,7 @@ describe("auto-resource-seeking", () => {
         [1, new Resource({ x: 0, y: 200 })],
         [0, new Resource({ x: 100, y: 0 })],
       ]);
-      step(2.5);
+      step(5);
       expect(scene().focusedMinion().position).toEqual({ x: 100, y: 0 });
     });
   });

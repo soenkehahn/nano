@@ -18,52 +18,6 @@ import { toClickEvent } from "../vector";
 
 const config = setupTestConfig();
 
-describe("SceneStepper step function logic", () => {
-  let stepCalls: number;
-
-  beforeEach(() => {
-    stepCalls = 0;
-  });
-
-  function mkMockScene(): Scene {
-    const scene = new Scene(config(), testObjects);
-    scene.step = () => {
-      stepCalls++;
-    };
-    return scene;
-  }
-
-  it("calls the step function as often as needed to reach the timeDelta", () => {
-    config().stepTimeDelta = fromInt(1);
-    const sceneStepper = new SceneStepper(config(), mkMockScene());
-    const wrapper = mount(
-      createElement(sceneStepper.draw, { time: 0, timeDelta: 0 }),
-    );
-    wrapper.setProps({ timeDelta: 10 });
-    expect(stepCalls).toEqual(10);
-  });
-
-  it("saves the remainder of the timeDelta for the next round", () => {
-    config().stepTimeDelta = rational(6, 10);
-    const sceneStepper = new SceneStepper(config(), mkMockScene());
-    const wrapper = mount(
-      createElement(sceneStepper.draw, { time: 0, timeDelta: 0 }),
-    );
-    wrapper.setProps({ timeDelta: 1 });
-    expect(stepCalls).toEqual(1);
-    wrapper.setProps({ timeDelta: 1 });
-    expect(stepCalls).toEqual(3);
-    wrapper.setProps({ timeDelta: 1 });
-    expect(stepCalls).toEqual(5);
-    wrapper.setProps({ timeDelta: 1 });
-    expect(stepCalls).toEqual(6);
-    wrapper.setProps({ timeDelta: 1 });
-    expect(stepCalls).toEqual(8);
-    wrapper.setProps({ timeDelta: 1 });
-    expect(stepCalls).toEqual(10);
-  });
-});
-
 describe("Scene interface", () => {
   const { wrapper, scene, update, step } = setupSceneWrapper(config);
 
@@ -75,7 +29,7 @@ describe("Scene interface", () => {
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 10, y: 10 }));
-    step(100);
+    step(200);
     expect(
       wrapper()
         .find(MinionRender)
@@ -90,7 +44,7 @@ describe("Scene interface", () => {
     wrapper()
       .find("#moveButton")
       .simulate("click");
-    step(1);
+    step(2);
     expect(
       wrapper()
         .find("#moveButton")
@@ -105,7 +59,7 @@ describe("Scene interface", () => {
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 10, y: 10 }));
-    step(100);
+    step(200);
     expect(
       wrapper()
         .find("#moveButton")
@@ -118,7 +72,7 @@ describe("Scene interface", () => {
     wrapper()
       .find("#moveButton")
       .simulate("click");
-    step(1);
+    step(2);
     expect(
       wrapper()
         .find("#moveButton")
@@ -147,7 +101,7 @@ describe("Scene interface", () => {
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent({ x: 10, y: 10 }));
-      step(1);
+      step(2);
       expect(
         wrapper()
           .find("#status")
@@ -159,7 +113,7 @@ describe("Scene interface", () => {
   describe("inventory", () => {
     it("shows the inventory", () => {
       scene().inventory = fromInt(42);
-      step(1);
+      step(2);
       expect(
         wrapper()
           .find("#inventory")
@@ -169,7 +123,7 @@ describe("Scene interface", () => {
 
     it("rounds the inventory to cents", () => {
       scene().inventory = rational(123456, 100000);
-      step(1);
+      step(2);
       expect(
         wrapper()
           .find("#inventory")

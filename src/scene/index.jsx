@@ -1,13 +1,15 @@
 // @flow
 
 import * as React from "react";
+import * as stepDriver from "../stepDriver";
 import { Minion } from "../minion";
 import { type Objects, insideViewBox } from "./objects";
-import { type Rational, fromInt } from "../rational";
+import { type Rational, fromInt, rational } from "../rational";
 import { SvgPane, type ViewBox } from "../svgPane";
 import { type TimeStep } from "../animated";
 import { type Vector, collides } from "../vector";
 import { renderButtons } from "../button";
+import { print } from "../utils";
 import { some } from "lodash";
 
 export type Config = {|
@@ -36,19 +38,10 @@ export class SceneStepper {
     this.config = config;
     this.scene = scene;
     this.timeDeltaRemainder = 0;
+    stepDriver.start(this.scene, config.stepTimeDelta.times(rational(1, 1000)));
   }
 
-  step: TimeStep => void = props => {
-    const timeDelta = props.timeDelta + this.timeDeltaRemainder;
-    const n = Math.floor(timeDelta / this.config.stepTimeDelta.toNumber());
-    for (let i = 0; i < n; i++) {
-      this.scene.step();
-    }
-    this.timeDeltaRemainder = timeDelta % this.config.stepTimeDelta.toNumber();
-  };
-
   draw: TimeStep => React.Node = props => {
-    this.step(props);
     return this.scene.draw();
   };
 }

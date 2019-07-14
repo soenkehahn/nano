@@ -21,14 +21,14 @@ describe("idle minions", () => {
   it("pauses the game when one minion is idle", () => {
     minionA.status = { tag: "idle" };
     minionB.status = { tag: "moving", target: { x: 100, y: 100 } };
-    step(1);
+    step(2);
     expect(minionB.position).toEqual({ x: 100, y: 0 });
   });
 
   it("doesn't pause the game when no minion is idle", () => {
     minionA.status = { tag: "moving", target: { x: 0, y: 100 } };
     minionB.status = { tag: "moving", target: { x: 100, y: 100 } };
-    step(1);
+    step(2);
     expect([minionA.position, minionB.position]).toEqual([
       { x: 0, y: 1 },
       { x: 100, y: 1 },
@@ -38,7 +38,7 @@ describe("idle minions", () => {
   it("waiting for target input counts as idle", () => {
     minionA.status = { tag: "waitForMoveTarget" };
     minionB.status = { tag: "moving", target: { x: 100, y: 100 } };
-    step(1);
+    step(2);
     expect(minionB.position).toEqual({ x: 100, y: 0 });
   });
 
@@ -49,7 +49,7 @@ describe("idle minions", () => {
       goal: "mining",
       completion: fromInt(0),
     };
-    step(1);
+    step(2);
     expect(scene().objects.lab.status.tag).toEqual("researching");
     expect((scene().objects.lab.status: any).completion.toNumber()).toEqual(0);
   });

@@ -8,7 +8,7 @@ import { toClickEvent } from "./vector";
 
 const config = setupTestConfig();
 
-const { wrapper, scene, step } = setupSceneWrapper(config);
+const { wrapper, scene, update, step } = setupSceneWrapper(config);
 
 describe("Minion", () => {
   it("shows minion in svg context", () => {
@@ -25,7 +25,7 @@ describe("Minion", () => {
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 10, y: 10 }));
-    step(100);
+    step(200);
     expect(
       wrapper()
         .find(MinionRender)
@@ -44,7 +44,7 @@ describe("Minion", () => {
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent({ x: 10, y: 10 }));
-      step(100);
+      step(200);
       expect(
         wrapper()
           .find(MinionRender)
@@ -62,11 +62,11 @@ describe("Minion", () => {
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent({ x: 10, y: 0 }));
-      step(1);
+      step(2);
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent({ x: 20, y: 0 }));
-      step(100);
+      step(200);
       expect(
         wrapper()
           .find(MinionRender)
@@ -81,7 +81,7 @@ describe("Minion", () => {
       wrapper()
         .find("#moveButton")
         .simulate("click");
-      step(1);
+      step(2);
       expect(
         wrapper()
           .find("#status")
@@ -98,7 +98,7 @@ describe("Minion", () => {
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 1, y: 0 }));
-    step(0.5);
+    step();
     expect(
       wrapper()
         .find(MinionRender)
@@ -115,7 +115,7 @@ describe("Minions", () => {
     scene().objects.minions.add(
       new Minion(config(), scene(), { x: 10, y: 10 }),
     );
-    step(0.1);
+    update();
     expect(
       wrapper()
         .find(MinionRender)
@@ -127,7 +127,7 @@ describe("Minions", () => {
     scene().objects.minions.add(
       new Minion(config(), scene(), { x: 100, y: 0 }),
     );
-    step(0.1);
+    update();
     expect(
       wrapper()
         .find(MinionRender)
@@ -136,7 +136,7 @@ describe("Minions", () => {
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 100, y: 0 }));
-    step(0.1);
+    update();
     expect(
       wrapper()
         .find(MinionRender)
@@ -150,18 +150,18 @@ describe("Minions", () => {
       new Minion(config(), scene(), { x: 100, y: 0 }),
     );
     sendMinion(scene, { x: 0, y: 100 });
-    step(0.1);
+    update();
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 100, y: 0 }));
-    step(0.1);
+    update();
     wrapper()
       .find("#moveButton")
       .simulate("click");
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 100, y: 100 }));
-    step(1);
+    step(2);
     expect(
       wrapper()
         .find(MinionRender)
@@ -176,11 +176,11 @@ describe("Minions", () => {
     const [minionA, minionB] = scene().objects.minions.minions;
     minionA.status = { tag: "moving", target: { x: 0, y: 100 } };
     minionB.status = { tag: "moving", target: { x: 100, y: 100 } };
-    step(0.1);
+    update();
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 100, y: 0 }));
-    step(1);
+    step(2);
     expect(
       wrapper()
         .find(MinionRender)
@@ -200,23 +200,23 @@ describe("Minions", () => {
       [0, new Resource({ x: 0, y: 0 })],
       [1, new Resource({ x: 100, y: 0 })],
     ]);
-    step(0.1);
+    step();
     wrapper()
       .find("#mineButton")
       .simulate("click");
-    step(0.5);
+    step(5);
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 100, y: 0 }));
-    step(0.1);
+    step();
     wrapper()
       .find("#mineButton")
       .simulate("click");
-    step(0.1);
+    step();
     expect(
       scene().objects.minions.minions.map(minion => minion.status.tag),
     ).toEqual(["mining", "mining"]);
-    step(1);
+    step(10);
     expect(scene().inventory.toNumber()).toEqual(2);
   });
 
@@ -226,7 +226,7 @@ describe("Minions", () => {
         new Minion(config(), scene(), { x: 0, y: 0 }),
       );
     }
-    step(0.1);
+    update();
     expect(
       wrapper()
         .find("#interface")
@@ -245,7 +245,7 @@ describe("Minions", () => {
 
     it("includes the minion id in the button text", () => {
       scene().focusedMinion().id = 42;
-      step(0.1);
+      update();
       expect(
         wrapper()
           .find("#idleButton-42")
@@ -258,7 +258,7 @@ describe("Minions", () => {
         tag: "moving",
         target: { x: 100, y: 0 },
       };
-      step(0.1);
+      update();
       expect(
         wrapper()
           .find("#idleButton-0")
@@ -271,7 +271,7 @@ describe("Minions", () => {
         scene().objects.minions.add(
           new Minion(config(), scene(), { x: 3, y: 4 }),
         );
-        step(0.1);
+        update();
       });
 
       it("shows an idle button for the unfocused minion", () => {
@@ -293,7 +293,7 @@ describe("Minions", () => {
         wrapper()
           .find("#idleButton-1")
           .simulate("click");
-        step(0.1);
+        update();
         expect(
           wrapper()
             .find("svg")

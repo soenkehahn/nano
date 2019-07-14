@@ -62,7 +62,7 @@ export const setupSceneWrapper = (
   wrapper: () => ReactWrapper<(TimeStep) => React.Node>,
   scene: () => Scene,
   update: () => void,
-  step: (timeDelta: number) => void,
+  step: (steps?: number) => void,
 } => {
   beforeEach(() => {
     Minion.idCounter = 0;
@@ -84,15 +84,18 @@ export const setupSceneWrapper = (
     wrapper.setProps({ timeDelta: 0.0 });
   }
 
-  function step(timeDelta: number) {
-    wrapper.setProps({ timeDelta: timeDelta });
+  function step(steps?: number = 1) {
+    for (let i = 0; i < steps; i++) {
+      scene.step();
+    }
+    wrapper.setProps({});
   }
 
   return {
     wrapper: () => wrapper,
     scene: () => scene,
-    update: update,
-    step: step,
+    update,
+    step,
   };
 };
 
