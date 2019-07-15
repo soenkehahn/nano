@@ -16,6 +16,7 @@ export type Config = {|
   initialSize: Vector,
   zoomVelocity: number,
   stepTimeDelta: Rational,
+  stepsBeforeSpeedup: number,
   velocity: number,
   costs: {
     factory: Rational,
@@ -51,6 +52,10 @@ export class Scene {
   svgPane: SvgPane;
   inventory: Rational;
   objects: Objects;
+  speedupTracker: { currentNumberOfSteps: number, count: number } = {
+    currentNumberOfSteps: 1,
+    count: 0,
+  };
 
   constructor(
     config: Config,
@@ -88,9 +93,23 @@ export class Scene {
 
   step: () => void = () => {
     const idle = this.objects.minions.anyIsIdle();
-    const args = { paused: idle ? true : false };
-    this.objects.lab.step(args);
-    this.objects.minions.step(this, args);
+    if (idle) {
+      const args = { paused: true };
+      this.objects.lab.step(args);
+      this.objects.minions.step(this, args);
+      this.speedupTracker = { currentNumberOfSteps: 1, count: 0 };
+    } else {
+      const args = { paused: false };
+      for (let i = 0; i < this.speedupTracker.currentNumberOfSteps; i++) {
+        this.objects.lab.step(args);
+        this.objects.minions.step(this, args);
+      }
+      this.speedupTracker.count++;
+      if (this.speedupTracker.count >= this.config.stepsBeforeSpeedup) {
+        this.speedupTracker.count = 0;
+        this.speedupTracker.currentNumberOfSteps++;
+      }
+    }
   };
 
   onClick: Vector => void = target => {

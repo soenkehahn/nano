@@ -40,6 +40,7 @@ export const setupTestConfig: () => () => Config = () => {
       initialSize: { x: 200, y: 200 },
       zoomVelocity: 1.1,
       stepTimeDelta: rational(1, 2),
+      stepsBeforeSpeedup: 10000,
       velocity: 1,
       costs: {
         factory: fromInt(3),
