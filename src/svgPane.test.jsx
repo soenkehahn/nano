@@ -10,6 +10,10 @@ import {
   setupSceneWrapper,
   setupTestConfig,
 } from "./test/utils";
+import {
+  setupEventListenerTracker,
+  simulateWheelEvent,
+} from "./test/eventListeners";
 import { toClickEvent } from "./vector";
 
 expect.extend({
@@ -36,6 +40,8 @@ function update(wrapper: ReactWrapper<any>): void {
 }
 
 describe("SvgPane", () => {
+  const eventListenerTracker = setupEventListenerTracker();
+
   let svgPane: SvgPane;
   let wrapper: ReactWrapper<any>;
 
@@ -64,7 +70,11 @@ describe("SvgPane", () => {
 
   describe("zoom", () => {
     it("allows to zoom out with a scroll wheel", () => {
-      wrapper.simulate("wheel", { clientX: 400, clientY: 300, deltaY: 3 });
+      simulateWheelEvent({
+        clientX: 400,
+        clientY: 300,
+        deltaY: 3,
+      });
       update(wrapper);
       expect(wrapper.find("svg").props().viewBox).toEqual(
         [-400, -300, 800, 600].map(x => x * 1.1).join(" "),
@@ -72,7 +82,11 @@ describe("SvgPane", () => {
     });
 
     it("allows to zoom in with a scroll wheel", () => {
-      wrapper.simulate("wheel", { clientX: 400, clientY: 300, deltaY: -3 });
+      simulateWheelEvent({
+        clientX: 400,
+        clientY: 300,
+        deltaY: -3,
+      });
       update(wrapper);
       expect(wrapper.find("svg").props().viewBox).toEqual(
         [-400, -300, 800, 600].map(x => x / 1.1).join(" "),
@@ -80,7 +94,11 @@ describe("SvgPane", () => {
     });
 
     it("zooms in on the mouse position", () => {
-      wrapper.simulate("wheel", { clientX: 600, clientY: 200, deltaY: -3 });
+      simulateWheelEvent({
+        clientX: 600,
+        clientY: 200,
+        deltaY: -3,
+      });
       update(wrapper);
       expect(wrapper.find("svg").props().viewBox).toEqual(
         [
@@ -93,7 +111,11 @@ describe("SvgPane", () => {
     });
 
     it("zooms out the same", () => {
-      wrapper.simulate("wheel", { clientX: 600, clientY: 200, deltaY: 3 });
+      simulateWheelEvent({
+        clientX: 600,
+        clientY: 200,
+        deltaY: 3,
+      });
       update(wrapper);
       expect(wrapper.find("svg").props().viewBox).toEqual(
         [
@@ -106,16 +128,10 @@ describe("SvgPane", () => {
     });
 
     it("disables page scrolling", () => {
-      let called = false;
-      wrapper.simulate("wheel", {
-        clientX: 600,
-        clientY: 200,
-        deltaY: 3,
-        preventDefault: () => {
-          called = true;
-        },
-      });
-      expect(called).toEqual(true);
+      expect(eventListenerTracker.getEventListeners().length).toEqual(1);
+      const eventListener = eventListenerTracker.getEventListeners()[0];
+      expect(eventListener.eventType).toEqual("wheel");
+      expect(eventListener.options).toEqual({ passive: false });
     });
   });
 
@@ -150,7 +166,11 @@ describe("SvgPane", () => {
     });
 
     it("takes zoom factor into account", () => {
-      wrapper.simulate("wheel", { clientX: 400, clientY: 300, deltaY: 3 });
+      simulateWheelEvent({
+        clientX: 400,
+        clientY: 300,
+        deltaY: 3,
+      });
       wrapper.simulate("mousedown");
       wrapper.simulate("mousemove", { movementX: 10, movementY: -5 });
       update(wrapper);

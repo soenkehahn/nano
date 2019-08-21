@@ -10,10 +10,16 @@ import {
   setupTestConfig,
   unsafeGet,
 } from "./test/utils";
+import {
+  setupEventListenerTracker,
+  simulateWheelEvent,
+} from "./test/eventListeners";
 
 const config = setupTestConfig();
 
 describe("Lab", () => {
+  setupEventListenerTracker();
+
   beforeEach(() => {
     config().velocity = 1000;
     config().miningVelocity = fromInt(1);
@@ -22,9 +28,7 @@ describe("Lab", () => {
   const { wrapper, scene, step } = setupSceneWrapper(config);
 
   beforeEach(() => {
-    wrapper()
-      .find("svg")
-      .simulate("wheel", { clientX: 0, clientY: 0, deltaY: 100 });
+    simulateWheelEvent({ clientX: 0, clientY: 0, deltaY: 100 });
     step(1);
   });
 
