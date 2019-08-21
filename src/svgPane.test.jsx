@@ -104,6 +104,19 @@ describe("SvgPane", () => {
         ].join(" "),
       );
     });
+
+    it("disables page scrolling", () => {
+      let called = false;
+      wrapper.simulate("wheel", {
+        clientX: 600,
+        clientY: 200,
+        deltaY: 3,
+        preventDefault: () => {
+          called = true;
+        },
+      });
+      expect(called).toEqual(true);
+    });
   });
 
   describe("mouse drag", () => {
