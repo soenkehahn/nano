@@ -73,6 +73,7 @@ describe("SvgPane", () => {
       simulateWheelEvent({
         clientX: 400,
         clientY: 300,
+        deltaMode: 1,
         deltaY: 3,
       });
       update(wrapper);
@@ -85,6 +86,7 @@ describe("SvgPane", () => {
       simulateWheelEvent({
         clientX: 400,
         clientY: 300,
+        deltaMode: 1,
         deltaY: -3,
       });
       update(wrapper);
@@ -97,6 +99,7 @@ describe("SvgPane", () => {
       simulateWheelEvent({
         clientX: 600,
         clientY: 200,
+        deltaMode: 1,
         deltaY: -3,
       });
       update(wrapper);
@@ -114,6 +117,7 @@ describe("SvgPane", () => {
       simulateWheelEvent({
         clientX: 600,
         clientY: 200,
+        deltaMode: 1,
         deltaY: 3,
       });
       update(wrapper);
@@ -124,6 +128,19 @@ describe("SvgPane", () => {
           800 * 1.1,
           600 * 1.1,
         ].join(" "),
+      );
+    });
+
+    it("takes deltaMode into account", () => {
+      simulateWheelEvent({
+        clientX: 400,
+        clientY: 300,
+        deltaMode: 0,
+        deltaY: 53,
+      });
+      update(wrapper);
+      expect(wrapper.find("svg").props().viewBox).toEqual(
+        [-400, -300, 800, 600].map(x => x * 1.1).join(" "),
       );
     });
 
@@ -169,6 +186,7 @@ describe("SvgPane", () => {
       simulateWheelEvent({
         clientX: 400,
         clientY: 300,
+        deltaMode: 1,
         deltaY: 3,
       });
       wrapper.simulate("mousedown");
