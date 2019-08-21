@@ -28,7 +28,7 @@ describe("Lab", () => {
   const { wrapper, scene, step } = setupSceneWrapper(config);
 
   beforeEach(() => {
-    simulateWheelEvent({ clientX: 0, clientY: 0, deltaY: 100 });
+    simulateWheelEvent({ clientX: 0, clientY: 0, deltaMode: 1, deltaY: 100 });
     step(1);
   });
 

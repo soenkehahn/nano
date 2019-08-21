@@ -35,6 +35,7 @@ export const setupEventListenerTracker = (): {
 export function simulateWheelEvent(options: {|
   clientX: number,
   clientY: number,
+  deltaMode: number,
   deltaY: number,
 |}) {
   document.dispatchEvent(new WheelEvent("wheel", (options: any)));

@@ -11,6 +11,11 @@ type Child = {
   drawSvgElements: (viewBox: ViewBox) => React.Element<"g">,
 };
 
+type WheelEvent = SyntheticMouseEvent<HTMLElement> & {
+  deltaMode: number,
+  deltaY: number,
+};
+
 export class SvgPane {
   width: number;
   height: number;
@@ -68,12 +73,23 @@ export class SvgPane {
     }
   };
 
-  onWheel = (
-    event: SyntheticMouseEvent<HTMLElement> & { deltaY: number },
-  ): void => {
+  getNumberOfScrolls = (event: WheelEvent): number => {
+    if (event.deltaMode === 0) {
+      return event.deltaY / 53;
+    } else if (event.deltaMode === 1) {
+      return event.deltaY / 3;
+    } else {
+      throw "unsupported WheelEvent.deltaMode";
+    }
+  };
+
+  onWheel = (event: WheelEvent): void => {
     if (this.svgRef !== null) {
       const point = this.transformClickEvent(this.svgRef, event);
-      const zoomFactor = Math.pow(this.zoomVelocity, event.deltaY / 3);
+      const zoomFactor = Math.pow(
+        this.zoomVelocity,
+        this.getNumberOfScrolls(event),
+      );
       this.zoomFactor = this.zoomFactor * zoomFactor;
       this.offset = {
         x: (this.offset.x - point.x) * zoomFactor + point.x,
