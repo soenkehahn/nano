@@ -35,6 +35,7 @@ export class SvgPane {
     this.zoomVelocity = zoomVelocity;
     this.zoomFactor = 1.0;
     this.setCenter({ x: 0, y: 0 });
+    document.addEventListener("wheel", (this.onWheel: any), { passive: false });
   }
 
   transformClickEvent = (
@@ -119,7 +120,6 @@ export class SvgPane {
         width={this.width}
         height={this.height}
         viewBox={viewBox}
-        onWheel={this.onWheel}
         onMouseDown={this.onMouseDown}
         onMouseUp={this.onMouseUp}
         onMouseMove={this.onMouseMove}
