@@ -78,6 +78,7 @@ export class SvgPane {
         x: (this.offset.x - point.x) * zoomFactor + point.x,
         y: (this.offset.y - point.y) * zoomFactor + point.y,
       };
+      event.preventDefault();
     }
   };
 
