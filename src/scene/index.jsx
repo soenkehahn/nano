@@ -91,7 +91,7 @@ export class Scene {
 
   focusedMinion: () => Minion = () => this.objects.minions.focused();
 
-  step: () => void = () => {
+  step: () => Promise<void> = async () => {
     const idle = this.objects.minions.anyIsIdle();
     if (idle) {
       const args = { paused: true };
