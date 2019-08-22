@@ -131,7 +131,7 @@ describe("SvgPane", () => {
       );
     });
 
-    it("takes deltaMode into account", () => {
+    it("takes the event's deltaMode into account", () => {
       simulateWheelEvent({
         clientX: 400,
         clientY: 300,
@@ -144,11 +144,30 @@ describe("SvgPane", () => {
       );
     });
 
-    it("disables page scrolling", () => {
-      expect(eventListenerTracker.getEventListeners().length).toEqual(1);
-      const eventListener = eventListenerTracker.getEventListeners()[0];
-      expect(eventListener.eventType).toEqual("wheel");
-      expect(eventListener.options).toEqual({ passive: false });
+    describe("disables page scrolling", () => {
+      it("sets the EventListener to 'passive'", () => {
+        expect(eventListenerTracker.getEventListeners().length).toEqual(1);
+        const eventListener = eventListenerTracker.getEventListeners()[0];
+        expect(eventListener.eventType).toEqual("wheel");
+        expect(eventListener.options).toEqual({ passive: false });
+      });
+
+      it("calls preventDefault on events", () => {
+        let called = false;
+        simulateWheelEvent(
+          {
+            clientX: 600,
+            clientY: 200,
+            deltaMode: 1,
+            deltaY: 3,
+          },
+          () => {
+            called = true;
+          },
+        );
+        update(wrapper);
+        expect(called).toEqual(true);
+      });
     });
   });
 

@@ -32,11 +32,18 @@ export const setupEventListenerTracker = (): {
   return { getEventListeners: () => eventListeners };
 };
 
-export function simulateWheelEvent(options: {|
-  clientX: number,
-  clientY: number,
-  deltaMode: number,
-  deltaY: number,
-|}) {
-  document.dispatchEvent(new WheelEvent("wheel", (options: any)));
+export function simulateWheelEvent(
+  options: {|
+    clientX: number,
+    clientY: number,
+    deltaMode: number,
+    deltaY: number,
+  |},
+  preventDefault?: () => void,
+) {
+  const event = new WheelEvent("wheel", (options: any));
+  if (preventDefault) {
+    (event: any).preventDefault = preventDefault;
+  }
+  document.dispatchEvent(event);
 }
