@@ -58,23 +58,21 @@ describe("pausing", () => {
 
 describe("speeding up", () => {
   beforeEach(() => {
-    config().stepsBeforeSpeedup = 7;
+    config().stepsBeforeSpeedup = 5;
+    config().velocity = 1;
+    config().stepTimeDelta = fromInt(1);
   });
 
-  it("speeds up when the number of steps exceeds Config.speedupCount", () => {
-    sendMinion(scene, { x: 0, y: 100 });
-    step(7);
-    expect(scene().focusedMinion().position.y).toEqual(3.5);
-    step(1);
-    expect(scene().focusedMinion().position.y).toEqual(4.5);
-  });
-
-  it("it speeds up again after the same number of steps", () => {
-    sendMinion(scene, { x: 0, y: 100 });
-    step(14);
-    expect(scene().focusedMinion().position.y).toEqual(3.5 + 7);
-    step(1);
-    expect(scene().focusedMinion().position.y).toEqual(3.5 + 7 + 1.5);
+  it("speeds up linearly when the number of steps exceeds Config.stepsBeforeSpeedup", () => {
+    sendMinion(scene, { x: 0, y: 10000 });
+    const f = x => 1 + (x * 1) / 5;
+    let expectedPosition = 0;
+    for (let t = 0; t < 100; t++) {
+      const numberOfSteps = Math.floor(f(t));
+      expectedPosition += numberOfSteps;
+      step(1);
+      expect(scene().focusedMinion().position.y).toEqual(expectedPosition);
+    }
   });
 
   it("pauses when minions are idle after speeding up", () => {
@@ -94,6 +92,6 @@ describe("speeding up", () => {
     step(10);
     sendMinion(scene, { x: 0, y: 100 });
     step(1);
-    expect(scene().focusedMinion().position.y).toEqual(5);
+    expect(scene().focusedMinion().position.y).toEqual(5.5);
   });
 });
