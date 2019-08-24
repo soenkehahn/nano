@@ -27,11 +27,11 @@ if (!module.parent) {
     stepsBeforeSpeedup: 30,
     velocity: 0.04,
     costs: {
-      factory: fromInt(4),
+      factory: fromInt(3),
       research: {
         mining: fromInt(0),
-        "auto-mining": fromInt(15),
-        "auto-resource-seeking": fromInt(15),
+        "auto-mining": fromInt(10),
+        "auto-resource-seeking": fromInt(10),
       },
     },
     researchVelocity: rational(5, 100000),
