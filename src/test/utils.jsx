@@ -6,7 +6,6 @@ import { type Config, Scene, SceneStepper } from "../scene";
 import { Minion } from "../minion";
 import { type Objects, mkObjects } from "../scene/objects";
 import { ReactWrapper, mount } from "enzyme";
-import { type TimeStep } from "../animated";
 import { type Vector } from "../vector";
 import { createElement } from "react";
 import { fromInt, rational } from "../rational";
@@ -60,7 +59,7 @@ export const setupTestConfig: () => () => Config = () => {
 export const setupSceneWrapper = (
   testConfig: () => Config,
 ): {
-  wrapper: () => ReactWrapper<(TimeStep) => React.Node>,
+  wrapper: () => ReactWrapper<() => React.Node>,
   scene: () => Scene,
   update: () => void,
   step: (steps?: number) => void,
@@ -70,13 +69,13 @@ export const setupSceneWrapper = (
   });
 
   let scene: Scene;
-  let wrapper: ReactWrapper<(TimeStep) => React.Node>;
+  let wrapper: ReactWrapper<() => React.Node>;
 
   beforeEach(() => {
     scene = new Scene(testConfig(), testObjects);
     const sceneStepper = new SceneStepper(testConfig(), scene);
     wrapper = mount(
-      createElement(sceneStepper.draw, { time: 0, timeDelta: 0 }),
+      createElement(() => sceneStepper.draw(), { time: 0, timeDelta: 0 }),
     );
     mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
   });

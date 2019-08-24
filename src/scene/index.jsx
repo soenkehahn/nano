@@ -6,7 +6,6 @@ import { Minion } from "../minion";
 import { type Objects, insideViewBox } from "./objects";
 import { type Rational, fromInt, rational } from "../rational";
 import { SvgPane, type ViewBox } from "../svgPane";
-import { type TimeStep } from "../animated";
 import { type Vector, collides } from "../vector";
 import { renderButtons } from "../button";
 import { print } from "../utils";
@@ -42,7 +41,7 @@ export class SceneStepper {
     stepDriver.start(this.scene, config.stepTimeDelta.times(rational(1, 1000)));
   }
 
-  draw: TimeStep => React.Node = props => {
+  draw: () => React.Node = () => {
     return this.scene.draw();
   };
 }
