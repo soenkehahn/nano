@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from "react";
-import { type Animated, animate } from "./animated";
+import { animate } from "./animated";
 import { createElement } from "react";
 import { mount } from "enzyme";
 import { wait } from "./utils";
@@ -14,7 +14,7 @@ afterEach(() => {
 
 it("re-renders the given object in a loop", async () => {
   let counter = 0;
-  const mock: Animated = {
+  const mock: { draw: () => React.Node } = {
     draw: () => {
       counter += 1;
       return <div />;

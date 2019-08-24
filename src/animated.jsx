@@ -2,9 +2,9 @@
 
 import * as React from "react";
 
-export type Animated = { draw: () => React.Node };
-
-export function animate(animated: Animated): React.AbstractComponent<{||}> {
+export function animate(animated: {
+  draw: () => React.Node,
+}): React.AbstractComponent<{||}> {
   class Wrapper extends React.Component<{||}> {
     mounted: boolean = false;
 

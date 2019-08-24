@@ -16,6 +16,7 @@ module.exports = {
     "no-unused-vars": "error",
     "react/display-name": "off",
     "flowtype/space-after-type-colon": "off",
+    "no-constant-condition": "off",
   },
   settings: { react: { version: "detect" } },
 };

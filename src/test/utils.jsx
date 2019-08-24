@@ -81,14 +81,14 @@ export const setupSceneWrapper = (
   });
 
   function update() {
-    wrapper.setProps({ timeDelta: 0.0 });
+    wrapper.setProps({});
   }
 
   function step(steps?: number = 1) {
     for (let i = 0; i < steps; i++) {
       scene.step();
     }
-    wrapper.setProps({});
+    update();
   }
 
   return {

@@ -64,11 +64,12 @@ describe("speeding up", () => {
   });
 
   it("speeds up exponentially when the number of steps exceeds Config.stepsBeforeSpeedup", () => {
-    sendMinion(scene, { x: 0, y: 100000000 });
-    const f = x => Math.pow(Math.pow(2, 1 / 5), x);
+    sendMinion(scene, { x: 0, y: 1000 });
     let expectedPosition = 0;
     for (let t = 0; t < 25; t++) {
-      const numberOfSteps = Math.floor(f(t));
+      const numberOfSteps = Math.floor(
+        Math.pow(Math.pow(2, 1 / config().stepsBeforeSpeedup), t),
+      );
       expectedPosition += numberOfSteps;
       step(1);
       expect({ time: t, position: scene().focusedMinion().position.y }).toEqual(
