@@ -52,8 +52,7 @@ export class Scene {
   svgPane: SvgPane;
   inventory: Rational;
   objects: Objects;
-  speedupTracker: { currentNumberOfSteps: number, count: number } = {
-    currentNumberOfSteps: 1,
+  speedupTracker: {| count: number |} = {
     count: 0,
   };
 
@@ -97,18 +96,20 @@ export class Scene {
       const args = { paused: true };
       this.objects.lab.step(args);
       this.objects.minions.step(this, args);
-      this.speedupTracker = { currentNumberOfSteps: 1, count: 0 };
+      this.speedupTracker = { count: 0 };
     } else {
       const args = { paused: false };
-      for (let i = 0; i < this.speedupTracker.currentNumberOfSteps; i++) {
+      const numberOfSteps = Math.floor(
+        Math.pow(
+          Math.pow(2, 1 / this.config.stepsBeforeSpeedup),
+          this.speedupTracker.count,
+        ),
+      );
+      for (let i = 0; i < numberOfSteps; i++) {
         this.objects.lab.step(args);
         this.objects.minions.step(this, args);
       }
       this.speedupTracker.count++;
-      if (this.speedupTracker.count >= this.config.stepsBeforeSpeedup) {
-        this.speedupTracker.count = 0;
-        this.speedupTracker.currentNumberOfSteps++;
-      }
     }
   };
 

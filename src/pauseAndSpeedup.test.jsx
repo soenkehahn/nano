@@ -63,15 +63,17 @@ describe("speeding up", () => {
     config().stepTimeDelta = fromInt(1);
   });
 
-  it("speeds up linearly when the number of steps exceeds Config.stepsBeforeSpeedup", () => {
-    sendMinion(scene, { x: 0, y: 10000 });
-    const f = x => 1 + (x * 1) / 5;
+  it("speeds up exponentially when the number of steps exceeds Config.stepsBeforeSpeedup", () => {
+    sendMinion(scene, { x: 0, y: 100000000 });
+    const f = x => Math.pow(Math.pow(2, 1 / 5), x);
     let expectedPosition = 0;
-    for (let t = 0; t < 100; t++) {
+    for (let t = 0; t < 25; t++) {
       const numberOfSteps = Math.floor(f(t));
       expectedPosition += numberOfSteps;
       step(1);
-      expect(scene().focusedMinion().position.y).toEqual(expectedPosition);
+      expect({ time: t, position: scene().focusedMinion().position.y }).toEqual(
+        { time: t, position: expectedPosition },
+      );
     }
   });
 
