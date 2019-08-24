@@ -4,8 +4,7 @@ import { Factory } from "../factory";
 import { Lab } from "../lab";
 import { MinionRender } from "../minion";
 import { Resource } from "../resource";
-import { Scene, SceneStepper } from "../scene";
-import { createElement } from "react";
+import { Scene } from "../scene";
 import { fromInt, rational } from "../rational";
 import {
   mockSvgJsdomExtensions,
@@ -13,7 +12,6 @@ import {
   setupTestConfig,
   testObjects,
 } from "../test/utils";
-import { mount } from "enzyme";
 import { toClickEvent } from "../vector";
 
 const config = setupTestConfig();

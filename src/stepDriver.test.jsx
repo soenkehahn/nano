@@ -1,8 +1,8 @@
 // @flow
 
 import * as stepDriver from "./stepDriver";
+import { rational } from "./rational";
 import { wait } from "./utils";
-import { fromInt, rational } from "./rational";
 
 class Mock {
   count: number = 0;

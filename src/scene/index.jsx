@@ -8,7 +8,6 @@ import { type Rational, fromInt, rational } from "../rational";
 import { SvgPane, type ViewBox } from "../svgPane";
 import { type Vector, collides } from "../vector";
 import { renderButtons } from "../button";
-import { print } from "../utils";
 import { some } from "lodash";
 
 export type Config = {|
