@@ -33,12 +33,12 @@ export class Lab {
     this.status = { tag: "researching", goal, completion: fromInt(0) };
   };
 
-  step: (?Rational) => void = timeDelta => {
-    if (timeDelta) {
+  step: ({ paused: boolean }) => void = ({ paused }) => {
+    if (!paused) {
       if (this.status.tag === "researching") {
         const { tag, goal, completion } = this.status;
         let newCompletion = completion.plus(
-          timeDelta.times(this.config.researchVelocity),
+          this.config.stepTimeDelta.times(this.config.researchVelocity),
         );
         if (newCompletion.gt(fromInt(1))) {
           newCompletion = fromInt(1);

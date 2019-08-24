@@ -24,6 +24,7 @@ if (!module.parent) {
     initialSize: { x: 800, y: 550 },
     zoomVelocity: 1.15,
     stepTimeDelta: rational(1000, 60),
+    stepsBeforeSpeedup: 30,
     velocity: 0.04,
     costs: {
       factory: fromInt(4),

@@ -6,7 +6,6 @@ import { type Config, Scene, SceneStepper } from "../scene";
 import { Minion } from "../minion";
 import { type Objects, mkObjects } from "../scene/objects";
 import { ReactWrapper, mount } from "enzyme";
-import { type TimeStep } from "../animated";
 import { type Vector } from "../vector";
 import { createElement } from "react";
 import { fromInt, rational } from "../rational";
@@ -40,6 +39,7 @@ export const setupTestConfig: () => () => Config = () => {
       initialSize: { x: 200, y: 200 },
       zoomVelocity: 1.1,
       stepTimeDelta: rational(1, 2),
+      stepsBeforeSpeedup: 10000,
       velocity: 1,
       costs: {
         factory: fromInt(3),
@@ -59,40 +59,43 @@ export const setupTestConfig: () => () => Config = () => {
 export const setupSceneWrapper = (
   testConfig: () => Config,
 ): {
-  wrapper: () => ReactWrapper<(TimeStep) => React.Node>,
+  wrapper: () => ReactWrapper<() => React.Node>,
   scene: () => Scene,
   update: () => void,
-  step: (timeDelta: number) => void,
+  step: (steps?: number) => void,
 } => {
   beforeEach(() => {
     Minion.idCounter = 0;
   });
 
   let scene: Scene;
-  let wrapper: ReactWrapper<(TimeStep) => React.Node>;
+  let wrapper: ReactWrapper<() => React.Node>;
 
   beforeEach(() => {
     scene = new Scene(testConfig(), testObjects);
     const sceneStepper = new SceneStepper(testConfig(), scene);
     wrapper = mount(
-      createElement(sceneStepper.draw, { time: 0, timeDelta: 0 }),
+      createElement(() => sceneStepper.draw(), { time: 0, timeDelta: 0 }),
     );
     mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
   });
 
   function update() {
-    wrapper.setProps({ timeDelta: 0.0 });
+    wrapper.setProps({});
   }
 
-  function step(timeDelta: number) {
-    wrapper.setProps({ timeDelta: timeDelta });
+  function step(steps?: number = 1) {
+    for (let i = 0; i < steps; i++) {
+      scene.step();
+    }
+    update();
   }
 
   return {
     wrapper: () => wrapper,
     scene: () => scene,
-    update: update,
-    step: step,
+    update,
+    step,
   };
 };
 

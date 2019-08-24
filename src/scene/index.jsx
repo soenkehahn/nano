@@ -1,11 +1,11 @@
 // @flow
 
 import * as React from "react";
+import * as stepDriver from "../stepDriver";
 import { Minion } from "../minion";
 import { type Objects, insideViewBox } from "./objects";
-import { type Rational, fromInt } from "../rational";
+import { type Rational, fromInt, rational } from "../rational";
 import { SvgPane, type ViewBox } from "../svgPane";
-import { type TimeStep } from "../animated";
 import { type Vector, collides } from "../vector";
 import { renderButtons } from "../button";
 import { some } from "lodash";
@@ -14,6 +14,7 @@ export type Config = {|
   initialSize: Vector,
   zoomVelocity: number,
   stepTimeDelta: Rational,
+  stepsBeforeSpeedup: number,
   velocity: number,
   costs: {
     factory: Rational,
@@ -36,19 +37,10 @@ export class SceneStepper {
     this.config = config;
     this.scene = scene;
     this.timeDeltaRemainder = 0;
+    stepDriver.start(this.scene, config.stepTimeDelta.times(rational(1, 1000)));
   }
 
-  step: TimeStep => void = props => {
-    const timeDelta = props.timeDelta + this.timeDeltaRemainder;
-    const n = Math.floor(timeDelta / this.config.stepTimeDelta.toNumber());
-    for (let i = 0; i < n; i++) {
-      this.scene.step(this.config.stepTimeDelta);
-    }
-    this.timeDeltaRemainder = timeDelta % this.config.stepTimeDelta.toNumber();
-  };
-
-  draw: TimeStep => React.Node = props => {
-    this.step(props);
+  draw: () => React.Node = () => {
     return this.scene.draw();
   };
 }
@@ -58,6 +50,7 @@ export class Scene {
   svgPane: SvgPane;
   inventory: Rational;
   objects: Objects;
+  outerStepsSincePause: number = 0;
 
   constructor(
     config: Config,
@@ -93,11 +86,27 @@ export class Scene {
 
   focusedMinion: () => Minion = () => this.objects.minions.focused();
 
-  step: Rational => void = timeDelta => {
+  step: () => Promise<void> = async () => {
     const idle = this.objects.minions.anyIsIdle();
-    timeDelta = idle ? null : timeDelta;
-    this.objects.lab.step(timeDelta);
-    this.objects.minions.step(this, timeDelta);
+    if (idle) {
+      const args = { paused: true };
+      this.objects.lab.step(args);
+      this.objects.minions.step(this, args);
+      this.outerStepsSincePause = 0;
+    } else {
+      const args = { paused: false };
+      const numberOfSteps = Math.floor(
+        Math.pow(
+          Math.pow(2, 1 / this.config.stepsBeforeSpeedup),
+          this.outerStepsSincePause,
+        ),
+      );
+      for (let i = 0; i < numberOfSteps; i++) {
+        this.objects.lab.step(args);
+        this.objects.minions.step(this, args);
+      }
+      this.outerStepsSincePause++;
+    }
   };
 
   onClick: Vector => void = target => {
