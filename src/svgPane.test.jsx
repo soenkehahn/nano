@@ -54,7 +54,7 @@ describe("SvgPane", () => {
     class Updateable extends React.Component<{||}> {
       render = () =>
         createElement(() =>
-          svgPane.render({
+          svgPane.draw({
             onClick: () => {},
             drawSvgElements: () => <g />,
           }),

@@ -124,7 +124,7 @@ export class SvgPane {
     }
   };
 
-  render: Child => React.Node = child => {
+  draw: Child => React.Node = child => {
     const width = this.width * this.zoomFactor;
     const height = this.height * this.zoomFactor;
     const viewBox = [this.offset.x, this.offset.y, width, height].join(" ");

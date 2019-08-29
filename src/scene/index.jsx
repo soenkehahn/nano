@@ -116,7 +116,7 @@ export class Scene {
   draw: () => React.Node = () => {
     return (
       <div style={{ display: "flex" }}>
-        {this.svgPane.render(this)}
+        {this.svgPane.draw(this)}
         <div style={{ flexGrow: 1 }}>{this.interface()}</div>
       </div>
     );
