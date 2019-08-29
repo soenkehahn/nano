@@ -1,4 +1,7 @@
-ci: check lint test
+ci: setup check lint test
+
+setup:
+  yarn
 
 check:
   flow
