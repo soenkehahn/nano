@@ -74,9 +74,7 @@ export const setupSceneWrapper = (
   beforeEach(() => {
     scene = new Scene(testConfig(), testObjects);
     const sceneStepper = new SceneStepper(testConfig(), scene);
-    wrapper = mount(
-      createElement(() => sceneStepper.draw(), { time: 0, timeDelta: 0 }),
-    );
+    wrapper = mount(createElement(() => sceneStepper.draw(), {}));
     mockSvgJsdomExtensions(wrapper.find("svg"), { x: 0, y: 0 });
   });
 
