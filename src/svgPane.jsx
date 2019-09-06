@@ -124,27 +124,33 @@ export class SvgPane {
     }
   };
 
-  draw: Child => React.Node = child => {
+  draw: (Child, Size) => React.Node = (child, size) => {
+    const center = {
+      x: this.offset.x + (this.zoomFactor * this.width) / 2,
+      y: this.offset.y + (this.zoomFactor * this.height) / 2,
+    };
+    this.width = size.width;
+    this.height = size.height;
+    this.setCenter(center);
     const width = this.width * this.zoomFactor;
     const height = this.height * this.zoomFactor;
     const viewBox = [this.offset.x, this.offset.y, width, height].join(" ");
     return (
       <svg
         ref={svgRef => (this.svgRef = (svgRef: any))}
-        style={{ flexShrink: 0 }}
         onClick={event => this.handleClick(child, event)}
-        width={this.width}
-        height={this.height}
+        width="100%"
+        height="100%"
         viewBox={viewBox}
         onMouseDown={this.onMouseDown}
         onMouseUp={this.onMouseUp}
         onMouseMove={this.onMouseMove}
       >
         <rect
-          x={this.offset.x}
-          y={this.offset.y}
-          width="100%"
-          height="100%"
+          x={this.offset.x - 1}
+          y={this.offset.y - 1}
+          width="101%"
+          height="101%"
           fill="black"
         />
         {child.drawSvgElements({
@@ -155,3 +161,5 @@ export class SvgPane {
     );
   };
 }
+
+export type Size = {| width: number, height: number |};

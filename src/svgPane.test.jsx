@@ -3,7 +3,7 @@
 import * as React from "react";
 import { ReactWrapper, mount } from "enzyme";
 import { Resource, ResourceRender } from "./resource";
-import { SvgPane } from "./svgPane";
+import { type Size, SvgPane } from "./svgPane";
 import { createElement } from "react";
 import {
   mockSvgJsdomExtensions,
@@ -51,21 +51,31 @@ describe("SvgPane", () => {
       height: 600,
       zoomVelocity: 1.1,
     });
-    class Updateable extends React.Component<{||}> {
+    class Updateable extends React.Component<Size> {
       render = () =>
         createElement(() =>
-          svgPane.draw({
-            onClick: () => {},
-            drawSvgElements: () => <g />,
-          }),
+          svgPane.draw(
+            {
+              onClick: () => {},
+              drawSvgElements: () => <g />,
+            },
+            this.props,
+          ),
         );
     }
-    wrapper = mount(<Updateable />);
+    wrapper = mount(<Updateable width={800} height={600} />);
     mockSvgJsdomExtensions(wrapper.find("svg"), { x: 400, y: 300 });
   });
 
   it("sets an initial viewBox", () => {
     expect(wrapper.find("svg").props().viewBox).toEqual("-400 -300 800 600");
+  });
+
+  describe("size", () => {
+    it("recenters the viewbox", () => {
+      wrapper.setProps({ width: 810, height: 610 });
+      expect(wrapper.find("svg").props().viewBox).toEqual("-405 -305 810 610");
+    });
   });
 
   describe("zoom", () => {

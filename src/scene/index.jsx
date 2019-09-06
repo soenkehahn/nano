@@ -5,7 +5,7 @@ import * as stepDriver from "../stepDriver";
 import { Minion } from "../minion";
 import { type Objects, insideViewBox } from "./objects";
 import { type Rational, fromInt, rational } from "../rational";
-import { SvgPane, type ViewBox } from "../svgPane";
+import { type Size, SvgPane, type ViewBox } from "../svgPane";
 import { type Vector, collides } from "../vector";
 import { renderButtons } from "../button";
 import { some } from "lodash";
@@ -40,8 +40,8 @@ export class SceneStepper {
     stepDriver.start(this.scene, config.stepTimeDelta.times(rational(1, 1000)));
   }
 
-  draw: () => React.Node = () => {
-    return this.scene.draw();
+  draw: Size => React.Node = size => {
+    return this.scene.draw(size);
   };
 }
 
@@ -113,12 +113,34 @@ export class Scene {
     this.objects.minions.onClick(target);
   };
 
-  draw: () => React.Node = () => {
+  draw: Size => React.Node = size => {
     return (
-      <div style={{ display: "flex" }}>
-        {this.svgPane.draw(this)}
-        <div style={{ flexGrow: 1 }}>{this.interface()}</div>
-      </div>
+      <>
+        <div
+          style={{
+            position: "absolute",
+            margin: "0",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          {this.svgPane.draw(this, size)}
+        </div>
+        <div
+          style={{ position: "absolute", width: "100%", pointerEvents: "none" }}
+        >
+          <div
+            style={{
+              width: "340px",
+              float: "right",
+              margin: "8px",
+              color: "white",
+            }}
+          >
+            {this.interface()}
+          </div>
+        </div>
+      </>
     );
   };
 

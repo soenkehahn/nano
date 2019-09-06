@@ -6,6 +6,7 @@ import { animate } from "./animated";
 import { fromInt } from "./rational";
 import { mkObjects } from "./scene/objects";
 import { rational } from "./rational";
+import { withSize } from "./utils/withSize";
 import React from "react";
 import dom from "react-dom";
 
@@ -42,6 +43,11 @@ if (!module.parent) {
   if (queryParams.get("dev")) {
     setupDevScene(config);
   }
-  const App = animate(new SceneStepper(config, scene));
-  dom.render(<App />, appElement);
+  const App = withSize(animate(new SceneStepper(config, scene)));
+  dom.render(
+    <div style={{ height: "100%", overflow: "hidden" }}>
+      <App />
+    </div>,
+    appElement,
+  );
 }

@@ -2,10 +2,10 @@
 
 import * as React from "react";
 
-export function animate(animated: {
-  draw: () => React.Node,
-}): React.AbstractComponent<{||}> {
-  class Wrapper extends React.Component<{||}> {
+export function animate<Props: {}>(animated: {
+  draw: Props => React.Node,
+}): React.AbstractComponent<Props> {
+  class Wrapper extends React.Component<Props> {
     mounted: boolean = false;
 
     componentDidMount = () => {
@@ -26,7 +26,7 @@ export function animate(animated: {
       }
     };
 
-    render = animated.draw;
+    render = () => animated.draw(this.props);
   }
   return Wrapper;
 }

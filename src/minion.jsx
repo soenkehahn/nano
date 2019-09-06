@@ -157,7 +157,7 @@ export class Minion {
       <>
         {renderButtons(this.buttons())}
         {this.scene.objects.lab.researched.has("auto-resource-seeking") ? (
-          <label>
+          <label style={{ pointerEvents: "auto" }}>
             <input
               id="autoResourceSeekingCheckbox"
               type="checkbox"

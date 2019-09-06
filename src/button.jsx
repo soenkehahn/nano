@@ -20,6 +20,7 @@ export function renderButtons(buttons: Array<Button>): ?React.Node {
               id={button.id}
               disabled={button.disabled}
               onClick={button.onClick}
+              style={{ pointerEvents: "auto" }}
             >
               {button.text}
             </button>
