@@ -9,7 +9,7 @@ export function withSize(
 ): React.AbstractComponent<{||}> {
   return class WithSize extends React.Component<
     {||},
-    {| size: null | { width: number, height: number } |},
+    {| size: null | {| width: number, height: number |} |},
   > {
     div: null | HTMLDivElement = null;
 

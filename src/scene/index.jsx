@@ -7,6 +7,7 @@ import { type Objects, insideViewBox } from "./objects";
 import { type Rational, fromInt, rational } from "../rational";
 import { type Size, SvgPane, type ViewBox } from "../svgPane";
 import { type Vector, collides } from "../vector";
+import { filter } from "../utils";
 import { renderButtons } from "../button";
 import { some } from "lodash";
 
@@ -194,7 +195,7 @@ export class Scene {
     }
     objects.push(this.objects.lab);
     objects = objects.concat(this.objects.minions.toList());
-    objects = objects.filter(object => insideViewBox(viewBox, object));
+    objects = filter(objects, object => insideViewBox(viewBox, object));
     return <g>{objects.map(x => x.draw())}</g>;
   };
 }

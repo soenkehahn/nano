@@ -19,3 +19,13 @@ type Printable = number | string | { toString: () => string };
 export function print(...x: Array<Printable>) {
   console.log(x.map(f => f.toString()).join(", "));
 }
+
+export function filter<A>(array: Array<A>, predicate: A => boolean): Array<A> {
+  let result: Array<A> = [];
+  for (let element of array) {
+    if (predicate(element)) {
+      result.push(element);
+    }
+  }
+  return result;
+}
