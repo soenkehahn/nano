@@ -1,6 +1,6 @@
 // @flow
 
-import { type Rational } from "./rational";
+import { type Rational } from "../rational";
 
 export function wait(seconds: number | Rational): Promise<void> {
   const milliSeconds =
