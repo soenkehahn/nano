@@ -20,7 +20,7 @@ lint-fix:
 serve:
   parcel src/index.html --no-hmr
 
-deploy-to-docs:
+deploy-to-docs: ci
   rm docs -rf
   parcel build \
     --public-url https://soenkehahn.github.io/nano/ \
