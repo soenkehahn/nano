@@ -18,6 +18,7 @@ describe("mkObjects", () => {
       zoomVelocity: 1.1,
       stepTimeDelta: rational(1, 2),
       stepsBeforeSpeedup: 10000,
+      uiTimeFactor: fromInt(1),
       velocity: fromInt(1),
       costs: {
         factory: fromInt(3),

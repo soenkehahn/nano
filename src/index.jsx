@@ -26,6 +26,7 @@ if (!module.parent) {
     zoomVelocity: 1.15,
     stepTimeDelta: rational(1000, 60),
     stepsBeforeSpeedup: 30,
+    uiTimeFactor: rational(1, 1000000),
     velocity: rational(4, 100),
     costs: {
       factory: fromInt(3),

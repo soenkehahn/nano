@@ -168,6 +168,17 @@ describe("Scene interface", () => {
           .text(),
       ).toEqual("time: 0.00");
     });
+
+    it("multiplies the time with the given uiTimeFactor", () => {
+      config().uiTimeFactor = fromInt(3);
+      sendMinion(scene, { x: 0, y: 1000 });
+      step(1);
+      expect(
+        wrapper()
+          .find("#time")
+          .text(),
+      ).toEqual("time: 1.50");
+    });
   });
 });
 

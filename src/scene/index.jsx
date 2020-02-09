@@ -16,6 +16,7 @@ export type Config = {|
   zoomVelocity: number,
   stepTimeDelta: Rational,
   stepsBeforeSpeedup: number,
+  uiTimeFactor: Rational,
   velocity: Rational,
   costs: {
     factory: Rational,
@@ -170,7 +171,9 @@ export class Scene {
           <hr />
           {this.objects.lab.newResearch()}
           <hr />
-          <div id="time">time: {this.time.format()}</div>
+          <div id="time">
+            time: {this.time.times(this.config.uiTimeFactor).format()}
+          </div>
           <hr />
           <>Use the mouse to drag the map and the scroll wheel to zoom.</>
         </div>
