@@ -21,7 +21,6 @@ export type Config = {|
   costs: {
     factory: Rational,
     research: {
-      mining: Rational,
       "auto-mining": Rational,
       "auto-resource-seeking": Rational,
     },

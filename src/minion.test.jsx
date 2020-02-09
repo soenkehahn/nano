@@ -192,7 +192,6 @@ describe("Minions", () => {
   it("keeps unfocused minions in mining mode", () => {
     config().stepTimeDelta = rational(1, 10);
     config().miningVelocity = fromInt(1);
-    scene().objects.lab.researched.add("mining");
     scene().objects.minions.add(
       new Minion(config(), scene(), { x: 100, y: 0 }),
     );

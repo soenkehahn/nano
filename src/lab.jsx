@@ -7,7 +7,7 @@ import { type Rational, fromInt } from "./rational";
 import { type RenderProps } from "./minion";
 import { TAU, type Vector, add, collides, fromAngle, scale } from "./vector";
 
-type Goal = "mining" | "auto-mining" | "auto-resource-seeking";
+type Goal = "auto-mining" | "auto-resource-seeking";
 
 export class Lab {
   config: Config;
@@ -69,51 +69,37 @@ export class Lab {
       this.scene.focusedMinion().status.tag === "idle" &&
       this.status.tag === "idle"
     ) {
-      if (!this.researched.has("mining")) {
+      if (!this.researched.has("auto-mining")) {
         result.push(
           button({
-            id: "researchMiningButton",
-            text: "research mining",
-            disabled: false,
+            id: "researchAutoMiningButton",
+            text: `research auto-mining (cost: ${this.config.costs.research[
+              "auto-mining"
+            ].toNumber()})`,
+            disabled: this.scene.inventory.lt(
+              this.config.costs.research["auto-mining"],
+            ),
             onClick: () => {
-              this.startResearch("mining");
+              this.startResearch("auto-mining");
             },
           }),
         );
       }
-      if (this.researched.has("mining")) {
-        if (!this.researched.has("auto-mining")) {
-          result.push(
-            button({
-              id: "researchAutoMiningButton",
-              text: `research auto-mining (cost: ${this.config.costs.research[
-                "auto-mining"
-              ].toNumber()})`,
-              disabled: this.scene.inventory.lt(
-                this.config.costs.research["auto-mining"],
-              ),
-              onClick: () => {
-                this.startResearch("auto-mining");
-              },
-            }),
-          );
-        }
-        if (!this.researched.has("auto-resource-seeking")) {
-          result.push(
-            button({
-              id: "researchAutoResourceSeekingButton",
-              text: `research auto-resource-seeking (cost: ${this.config.costs.research[
-                "auto-resource-seeking"
-              ].toNumber()})`,
-              disabled: this.scene.inventory.lt(
-                this.config.costs.research["auto-resource-seeking"],
-              ),
-              onClick: () => {
-                this.startResearch("auto-resource-seeking");
-              },
-            }),
-          );
-        }
+      if (!this.researched.has("auto-resource-seeking")) {
+        result.push(
+          button({
+            id: "researchAutoResourceSeekingButton",
+            text: `research auto-resource-seeking (cost: ${this.config.costs.research[
+              "auto-resource-seeking"
+            ].toNumber()})`,
+            disabled: this.scene.inventory.lt(
+              this.config.costs.research["auto-resource-seeking"],
+            ),
+            onClick: () => {
+              this.startResearch("auto-resource-seeking");
+            },
+          }),
+        );
       }
     }
     return result;

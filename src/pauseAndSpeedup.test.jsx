@@ -47,7 +47,7 @@ describe("pausing", () => {
     scene().focusedMinion().status = { tag: "idle" };
     scene().objects.lab.status = {
       tag: "researching",
-      goal: "mining",
+      goal: "auto-resource-seeking",
       completion: fromInt(0),
     };
     step(2);
@@ -72,9 +72,10 @@ describe("speeding up", () => {
       );
       expectedPosition += numberOfSteps;
       step(1);
-      expect({ time: t, position: scene().focusedMinion().position.y }).toEqual(
-        { time: t, position: expectedPosition },
-      );
+      expect({
+        time: t,
+        position: scene().focusedMinion().position.y,
+      }).toEqual({ time: t, position: expectedPosition });
     }
   });
 

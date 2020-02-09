@@ -12,7 +12,6 @@ const { wrapper, scene, update, step } = setupSceneWrapper(config);
 describe("auto-resource-seeking", () => {
   it("allows to research auto-resource-seeking", () => {
     scene().inventory = fromInt(100);
-    scene().objects.lab.researched.add("mining");
     scene().focusedMinion().position = cloneDeep(scene().objects.lab.position);
     update();
     wrapper()
@@ -26,7 +25,6 @@ describe("auto-resource-seeking", () => {
   });
 
   it("renders a button that triggers auto-resource-seeking", () => {
-    scene().objects.lab.researched.add("mining");
     expect(
       wrapper()
         .find("#autoResourceSeekingButton-0")
@@ -83,7 +81,6 @@ describe("auto-resource-seeking", () => {
     });
 
     it("after mining the resource stays idle", () => {
-      scene().objects.lab.researched.add("mining");
       step(5);
       update();
       wrapper()

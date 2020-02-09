@@ -42,6 +42,7 @@ describe("Lab", () => {
 
   describe("mining", () => {
     it("allows to research mining", () => {
+      scene().inventory = fromInt(20);
       wrapper()
         .find("#moveButton-0")
         .simulate("click");
@@ -51,27 +52,28 @@ describe("Lab", () => {
       step(2);
       expect(
         wrapper()
-          .find("#researchMiningButton")
+          .find("#researchAutoResourceSeekingButton")
           .exists(),
       ).toEqual(true);
       expect(
         wrapper()
-          .find("#newResearch-mining")
+          .find("#newResearch-auto-resource-seeking")
           .exists(),
       ).toEqual(false);
       wrapper()
-        .find("#researchMiningButton")
+        .find("#researchAutoResourceSeekingButton")
         .simulate("click");
       sendMinion(scene, { x: 0, y: 10000 });
       step(20);
       expect(
         wrapper()
-          .find("#newResearch-mining")
+          .find("#newResearch-auto-resource-seeking")
           .text(),
-      ).toEqual("mining");
+      ).toEqual("auto-resource-seeking");
     });
 
     it("disallows researching when already researched", () => {
+      scene().inventory = fromInt(20);
       wrapper()
         .find("#moveButton-0")
         .simulate("click");
@@ -80,18 +82,19 @@ describe("Lab", () => {
         .simulate("click", toClickEvent(scene().objects.lab.position));
       step(2);
       wrapper()
-        .find("#researchMiningButton")
+        .find("#researchAutoResourceSeekingButton")
         .simulate("click");
       step(20);
       expect(
         wrapper()
-          .find("#researchMiningButton")
+          .find("#researchAutoResourceSeekingButton")
           .exists(),
       ).toEqual(false);
     });
 
     test("researching takes time", () => {
       config().researchVelocity = rational(1, 5);
+      scene().inventory = fromInt(20);
       wrapper()
         .find("#moveButton-0")
         .simulate("click");
@@ -101,7 +104,7 @@ describe("Lab", () => {
       step(2);
       expect(
         wrapper()
-          .find("#researchMiningButton")
+          .find("#researchAutoResourceSeekingButton")
           .exists(),
       ).toEqual(true);
       expect(
@@ -110,7 +113,7 @@ describe("Lab", () => {
           .props().completion,
       ).toEqual(null);
       wrapper()
-        .find("#researchMiningButton")
+        .find("#researchAutoResourceSeekingButton")
         .simulate("click");
       sendMinion(scene, { x: 0, y: 10000 });
       step(6);
@@ -121,7 +124,7 @@ describe("Lab", () => {
       ).toEqual(false);
       expect(
         wrapper()
-          .find("#researchMiningButton")
+          .find("#researchAutoResourceSeekingButton")
           .exists(),
       ).toEqual(false);
       expect(
@@ -132,9 +135,9 @@ describe("Lab", () => {
       step(6);
       expect(
         wrapper()
-          .find("#newResearch-mining")
+          .find("#newResearch-auto-resource-seeking")
           .text(),
-      ).toEqual("mining");
+      ).toEqual("auto-resource-seeking");
       expect(
         wrapper()
           .find(LabRender)
@@ -161,7 +164,6 @@ describe("Lab", () => {
     };
 
     it("allows to research auto-mining", () => {
-      scene().objects.lab.researched.add("mining");
       scene().inventory = config().costs.research["auto-mining"];
       setMinionPosition(scene().objects.lab.position);
       wrapper()
@@ -176,31 +178,7 @@ describe("Lab", () => {
       ).toEqual("auto-mining");
     });
 
-    test("auto-mining depends on mining", () => {
-      setMinionPosition(scene().objects.lab.position);
-      expect(
-        wrapper()
-          .find("#researchAutoMiningButton")
-          .exists(),
-      ).toEqual(false);
-      scene().objects.lab.researched.add("mining");
-      update();
-      expect(
-        wrapper()
-          .find("#researchAutoMiningButton")
-          .exists(),
-      ).toEqual(true);
-      scene().objects.lab.researched.add("auto-mining");
-      update();
-      expect(
-        wrapper()
-          .find("#researchAutoMiningButton")
-          .exists(),
-      ).toEqual(false);
-    });
-
     it("researching auto-mining costs resources", () => {
-      scene().objects.lab.researched.add("mining");
       config().costs.research["auto-mining"] = fromInt(5);
       config().researchVelocity = rational(1, 5);
       setMinionPosition(scene().objects.lab.position);
@@ -227,7 +205,6 @@ describe("Lab", () => {
     });
 
     it("doesn't overconsume inventory", () => {
-      scene().objects.lab.researched.add("mining");
       config().costs.research["auto-mining"] = rational(1, 10);
       config().researchVelocity = fromInt(3);
       scene().inventory = fromInt(1);
@@ -242,7 +219,6 @@ describe("Lab", () => {
     });
 
     it("displays the research cost on the button", () => {
-      scene().objects.lab.researched.add("mining");
       config().costs.research["auto-mining"] = fromInt(42);
       setMinionPosition(scene().objects.lab.position);
       expect(
@@ -254,7 +230,6 @@ describe("Lab", () => {
 
     describe("when auto-mining is not researched", () => {
       it("doesn't switch to mining when colliding with a resource", () => {
-        scene().objects.lab.researched.add("mining");
         setMinionPosition(scene().objects.lab.position);
         expect(scene().focusedMinion().status.tag).toEqual("idle");
       });
@@ -262,7 +237,6 @@ describe("Lab", () => {
 
     describe("when auto-mining is researched", () => {
       it("switches to mining when colliding with a resource", () => {
-        scene().objects.lab.researched.add("mining");
         scene().objects.lab.researched.add("auto-mining");
         setMinionPosition(unsafeGet(scene().objects.resources, 0).position);
         step();
@@ -272,7 +246,6 @@ describe("Lab", () => {
       it("switches back to the previous status after mining is done", () => {
         config().velocity = fromInt(0);
         config().stepTimeDelta = rational(1, 10);
-        scene().objects.lab.researched.add("mining");
         scene().objects.lab.researched.add("auto-mining");
         setMinionPosition(unsafeGet(scene().objects.resources, 0).position);
         scene().focusedMinion().status = {

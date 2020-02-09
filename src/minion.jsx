@@ -157,10 +157,7 @@ export class Minion {
   buttons: () => Array<Item> = () => {
     const result: Array<Item> = [];
 
-    if (
-      this.scene.objects.lab.researched.has("mining") &&
-      this.collidingResources.length > 0
-    ) {
+    if (this.collidingResources.length > 0) {
       const resourceId = this.collidingResources[0];
       result.push(
         button({

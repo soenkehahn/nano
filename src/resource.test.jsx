@@ -30,31 +30,7 @@ describe("Resource in scene", () => {
       .props();
   });
 
-  it("doesn't deplete a resource when mining is not researched", () => {
-    wrapper()
-      .find("#moveButton-0")
-      .simulate("click");
-    wrapper()
-      .find("svg")
-      .simulate("click", toClickEvent(resourceProps.position));
-    step(2);
-    expect(
-      wrapper()
-        .find("#mineButton")
-        .exists(),
-    ).toEqual(false);
-    expect(
-      wrapper()
-        .find(ResourceRender)
-        .exists(),
-    ).toEqual(true);
-  });
-
   describe("when mining is researched", () => {
-    beforeEach(() => {
-      scene().objects.lab.researched.add("mining");
-    });
-
     it("allows to mine a resource when colliding (same position) with a minion", () => {
       wrapper()
         .find("#moveButton-0")
