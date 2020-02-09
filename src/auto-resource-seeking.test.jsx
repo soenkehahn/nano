@@ -24,34 +24,33 @@ describe("auto-resource-seeking", () => {
     );
   });
 
-  it("renders a checkbox that enables auto-resource-seeking per minion", () => {
+  it("renders a button that triggers auto-resource-seeking", () => {
     scene().objects.lab.researched.add("mining");
     expect(
       wrapper()
-        .find("#autoResourceSeekingCheckbox")
+        .find("#autoResourceSeekingButton")
         .exists(),
     ).toEqual(false);
     scene().objects.lab.researched.add("auto-resource-seeking");
     update();
-    expect(
-      wrapper()
-        .find("#autoResourceSeekingCheckbox")
-        .exists(),
-    ).toEqual(true);
     wrapper()
-      .find("#autoResourceSeekingCheckbox")
-      .simulate("change", { target: { checked: true } });
-    expect(scene().focusedMinion().autoResourceSeeking).toEqual(true);
+      .find("#autoResourceSeekingButton")
+      .simulate("click");
+    expect(scene().focusedMinion().status.tag).toEqual("moving");
   });
 
   describe("when switching on auto-resource-seeking for a minion", () => {
     beforeEach(() => {
       config().velocity = fromInt(50);
       scene().objects.lab.researched.add("auto-resource-seeking");
-      scene().focusedMinion().autoResourceSeeking = true;
       scene().objects.resources = new Map([
         [0, new Resource({ x: 100, y: 0 })],
+        [1, new Resource({ x: 1000, y: 0 })],
       ]);
+      update();
+      wrapper()
+        .find("#autoResourceSeekingButton")
+        .simulate("click");
     });
 
     it("switches from idle to moving", () => {
@@ -69,12 +68,15 @@ describe("auto-resource-seeking", () => {
       expect(scene().focusedMinion().status.tag).toEqual("idle");
     });
 
-    it("allows to switch off auto-resource-seeking", () => {
+    it("after mining the resource stays idle", () => {
+      scene().objects.lab.researched.add("mining");
       step(5);
+      update();
       wrapper()
-        .find("#autoResourceSeekingCheckbox")
-        .simulate("change", { target: { checked: false } });
-      expect(scene().focusedMinion().autoResourceSeeking).toEqual(false);
+        .find("#mineButton")
+        .simulate("click");
+      step(1);
+      expect(scene().focusedMinion().status.tag).toEqual("idle");
     });
 
     it("seeks the closest resource", () => {

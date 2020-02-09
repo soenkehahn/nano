@@ -33,7 +33,6 @@ export class Minion {
   radius: number = 10;
   status: Status = { tag: "idle" };
   collidingResources: Array<number> = [];
-  autoResourceSeeking: boolean = false;
 
   constructor(config: Config, scene: Scene, position: Vector) {
     this.config = config;
@@ -72,7 +71,6 @@ export class Minion {
     if (!paused && this.status.tag === "mining") {
       this.mine(this.status.resourceId);
     }
-    this.autoSeekResource();
   };
 
   move: Vector => void = target => {
@@ -132,20 +130,18 @@ export class Minion {
   };
 
   autoSeekResource: () => void = () => {
-    if (this.autoResourceSeeking && this.status.tag === "idle") {
-      let minDistance = Number.MAX_VALUE;
-      let closestResource = null;
-      for (const resource of this.scene.objects.resources.values()) {
-        const dist = distance(this.position, resource.position);
-        if (dist < minDistance) {
-          minDistance = dist;
-          closestResource = resource;
-        }
+    let minDistance = Number.MAX_VALUE;
+    let closestResource = null;
+    for (const resource of this.scene.objects.resources.values()) {
+      const dist = distance(this.position, resource.position);
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestResource = resource;
       }
-      if (closestResource) {
-        if (!equals(this.position, closestResource.position)) {
-          this.status = { tag: "moving", target: closestResource.position };
-        }
+    }
+    if (closestResource) {
+      if (!equals(this.position, closestResource.position)) {
+        this.status = { tag: "moving", target: closestResource.position };
       }
     }
   };
@@ -159,14 +155,14 @@ export class Minion {
         {renderButtons(this.buttons())}
         {this.scene.objects.lab.researched.has("auto-resource-seeking") ? (
           <label style={{ pointerEvents: "auto" }}>
-            <input
-              id="autoResourceSeekingCheckbox"
-              type="checkbox"
-              checked={this.autoResourceSeeking}
-              onChange={event => {
-                this.autoResourceSeeking = event.target.checked;
+            <button
+              id="autoResourceSeekingButton"
+              onClick={() => {
+                this.autoSeekResource();
               }}
-            />
+            >
+              auto-seek
+            </button>
             auto-resource-seeking
           </label>
         ) : null}
