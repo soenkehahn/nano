@@ -1,5 +1,6 @@
 // @flow
 
+import * as React from "react";
 import { type Rational } from "../rational";
 
 export function wait(seconds: number | Rational): Promise<void> {
@@ -28,4 +29,10 @@ export function filter<A>(array: Array<A>, predicate: A => boolean): Array<A> {
     }
   }
   return result;
+}
+
+export function when(condition: boolean, node: () => React.Node): ?React.Node {
+  if (condition) {
+    return node();
+  }
 }

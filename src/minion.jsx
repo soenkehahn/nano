@@ -16,6 +16,7 @@ import {
   unit,
 } from "./vector";
 import { fromInt } from "./rational";
+import { when } from "./utils";
 
 type Status =
   | {| tag: "idle" |}
@@ -301,25 +302,32 @@ export class Minions {
     }
   };
 
-  idleButtons: SvgPane => Array<Item> = svgPane => {
+  minionUIs: SvgPane => Array<Item> = svgPane => {
     const result: Array<Item> = [];
     for (let i = 0; i < this.minions.length; i++) {
       const minion = this.minions[i];
-      if (minion.status.tag === "idle") {
-        result.push({
-          id: `minion-ui-${minion.id}`,
-          node: (
-            <div>
+      const id = `minion-ui-${minion.id}`;
+      result.push({
+        id,
+        node: (
+          <div id={id}>
+            minion #{minion.id}
+            <br />
+            status: {minion.status.tag}
+            {when(minion.status.tag === "idle", () => (
               <button
-                id={`idleButton-${minion.id}`}
+                id={`focusButton-${minion.id}`}
                 onClick={() => {
                   this.setFocus(i);
                   svgPane.setCenter(minion.position);
                 }}
-              >{`minion #${minion.id}`}</button>
-              {minion.scene.objects.lab.researched.has(
-                "auto-resource-seeking",
-              ) ? (
+              >
+                focus
+              </button>
+            ))}
+            {when(
+              minion.scene.objects.lab.researched.has("auto-resource-seeking"),
+              () => (
                 <button
                   id={`autoResourceSeekingButton-${minion.id}`}
                   onClick={() => {
@@ -328,11 +336,11 @@ export class Minions {
                 >
                   auto-seek
                 </button>
-              ) : null}
-            </div>
-          ),
-        });
-      }
+              ),
+            )}
+          </div>
+        ),
+      });
     }
     return result;
   };

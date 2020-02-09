@@ -180,8 +180,8 @@ export class Scene {
         <div style={{ flex: "1 1 0", margin: "0.2em" }}>
           minions: {this.objects.minions.minions.length}
           <hr />
-          idle:
-          {renderList(this.objects.minions.idleButtons(this.svgPane))}
+          minions:
+          {renderList(this.objects.minions.minionUIs(this.svgPane))}
         </div>
       </div>
     );

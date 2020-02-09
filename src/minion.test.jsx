@@ -220,6 +220,39 @@ describe("Minions", () => {
     expect(scene().inventory.toNumber()).toEqual(2);
   });
 
+  it("includes the minion id in the ui text", () => {
+    scene().focusedMinion().id = 42;
+    update();
+    expect(
+      wrapper()
+        .find("#minion-ui-42")
+        .text(),
+    ).toContain("minion #42");
+  });
+
+  it("shows the status of a minion", () => {
+    expect(
+      wrapper()
+        .find("#minion-ui-0")
+        .text(),
+    ).toContain("status: idle");
+  });
+
+  it("shows the status of moving minions", () => {
+    wrapper()
+      .find("#moveButton")
+      .simulate("click");
+    wrapper()
+      .find("svg")
+      .simulate("click", toClickEvent({ x: 1, y: 0 }));
+    step();
+    expect(
+      wrapper()
+        .find("#minion-ui-0")
+        .text(),
+    ).toContain("status: moving");
+  });
+
   it("shows the number of minions", () => {
     for (let i = 0; i < 22; i++) {
       scene().objects.minions.add(
@@ -234,36 +267,13 @@ describe("Minions", () => {
     ).toContain("minions: 23");
   });
 
-  describe("idle buttons", () => {
-    it("shows a idle button for an idle minion", () => {
+  describe("focus buttons", () => {
+    it("shows a focus button", () => {
       expect(
         wrapper()
-          .find("#idleButton-0")
+          .find("#focusButton-0")
           .exists(),
       ).toEqual(true);
-    });
-
-    it("includes the minion id in the button text", () => {
-      scene().focusedMinion().id = 42;
-      update();
-      expect(
-        wrapper()
-          .find("#idleButton-42")
-          .text(),
-      ).toEqual("minion #42");
-    });
-
-    it("hides the idle button when the minion is moving", () => {
-      scene().focusedMinion().status = {
-        tag: "moving",
-        target: { x: 100, y: 0 },
-      };
-      update();
-      expect(
-        wrapper()
-          .find("#idleButton-0")
-          .exists(),
-      ).toEqual(false);
     });
 
     describe("when there are two minions", () => {
@@ -274,24 +284,24 @@ describe("Minions", () => {
         update();
       });
 
-      it("shows an idle button for the unfocused minion", () => {
+      it("shows a focus button for the unfocused minion", () => {
         expect(
           wrapper()
-            .find("#idleButton-1")
+            .find("#focusButton-1")
             .exists(),
         ).toEqual(true);
       });
 
       it("allows to switch focus to the unfocused minion", () => {
         wrapper()
-          .find("#idleButton-1")
+          .find("#focusButton-1")
           .simulate("click");
         expect(scene().focusedMinion().id).toEqual(1);
       });
 
       it("centers the view on the new focused minion", () => {
         wrapper()
-          .find("#idleButton-1")
+          .find("#focusButton-1")
           .simulate("click");
         update();
         expect(
