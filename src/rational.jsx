@@ -7,21 +7,27 @@ export const rational: (number, number) => Rational = (
   if (denominator == 0) {
     throw "division by zero";
   }
-  return new _Rational(numerator, denominator).normalize();
+  if (numerator === 0) {
+    return new _Rational(0, 1);
+  }
+  const gcd = getGcd(Math.abs(numerator), Math.abs(denominator));
+  return new _Rational(
+    (numerator * Math.sign(denominator)) / gcd,
+    Math.abs(denominator) / gcd,
+  );
 };
 
-export const fromInt: number => Rational = n => rational(n, 1);
-
 const getGcd: (number, number) => number = (a, b) => {
-  while (a !== b) {
-    if (a > b) {
-      a -= b;
-    } else if (b > a) {
-      b -= a;
-    }
+  let r;
+  while (b != 0) {
+    r = a % b;
+    a = b;
+    b = r;
   }
   return a;
 };
+
+export const fromInt: number => Rational = n => rational(n, 1);
 
 export type Rational = _Rational;
 
@@ -46,17 +52,6 @@ class _Rational {
 
   toString: () => string = () => {
     return `(${this.numerator}) % (${this.denominator})`;
-  };
-
-  normalize: () => Rational = () => {
-    if (this.numerator === 0) {
-      return new _Rational(0, 1);
-    }
-    const gcd = getGcd(Math.abs(this.numerator), Math.abs(this.denominator));
-    return new _Rational(
-      (this.numerator * Math.sign(this.denominator)) / gcd,
-      Math.abs(this.denominator) / gcd,
-    );
   };
 
   equals: Rational => boolean = other => {
