@@ -1,5 +1,6 @@
 // @flow
 
+import { Minion } from "./minion";
 import { Resource } from "./resource";
 import { cloneDeep } from "lodash";
 import { fromInt } from "./rational";
@@ -28,15 +29,28 @@ describe("auto-resource-seeking", () => {
     scene().objects.lab.researched.add("mining");
     expect(
       wrapper()
-        .find("#autoResourceSeekingButton")
+        .find("#autoResourceSeekingButton-0")
         .exists(),
     ).toEqual(false);
     scene().objects.lab.researched.add("auto-resource-seeking");
     update();
     wrapper()
-      .find("#autoResourceSeekingButton")
+      .find("#autoResourceSeekingButton-0")
       .simulate("click");
     expect(scene().focusedMinion().status.tag).toEqual("moving");
+  });
+
+  it("renders one button per minion", () => {
+    scene().objects.lab.researched.add("auto-resource-seeking");
+    scene().objects.minions.add(
+      new Minion(config(), scene(), { x: 10, y: 10 }),
+    );
+    update();
+    expect(
+      wrapper()
+        .find("#autoResourceSeekingButton-1")
+        .exists(),
+    ).toEqual(true);
   });
 
   describe("when switching on auto-resource-seeking for a minion", () => {
@@ -49,7 +63,7 @@ describe("auto-resource-seeking", () => {
       ]);
       update();
       wrapper()
-        .find("#autoResourceSeekingButton")
+        .find("#autoResourceSeekingButton-0")
         .simulate("click");
     });
 

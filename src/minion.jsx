@@ -150,24 +150,7 @@ export class Minion {
     if (this.status.tag !== "idle") {
       return null;
     }
-    return (
-      <>
-        {renderList(this.buttons())}
-        {this.scene.objects.lab.researched.has("auto-resource-seeking") ? (
-          <label style={{ pointerEvents: "auto" }}>
-            <button
-              id="autoResourceSeekingButton"
-              onClick={() => {
-                this.autoSeekResource();
-              }}
-            >
-              auto-seek
-            </button>
-            auto-resource-seeking
-          </label>
-        ) : null}
-      </>
-    );
+    return renderList(this.buttons());
   };
 
   buttons: () => Array<Item> = () => {
@@ -323,17 +306,32 @@ export class Minions {
     for (let i = 0; i < this.minions.length; i++) {
       const minion = this.minions[i];
       if (minion.status.tag === "idle") {
-        result.push(
-          button({
-            text: `minion #${minion.id}`,
-            onClick: () => {
-              this.setFocus(i);
-              svgPane.setCenter(minion.position);
-            },
-            id: `idleButton-${minion.id}`,
-            disabled: false,
-          }),
-        );
+        result.push({
+          id: `minion-ui-${minion.id}`,
+          node: (
+            <div>
+              <button
+                id={`idleButton-${minion.id}`}
+                onClick={() => {
+                  this.setFocus(i);
+                  svgPane.setCenter(minion.position);
+                }}
+              >{`minion #${minion.id}`}</button>
+              {minion.scene.objects.lab.researched.has(
+                "auto-resource-seeking",
+              ) ? (
+                <button
+                  id={`autoResourceSeekingButton-${minion.id}`}
+                  onClick={() => {
+                    minion.autoSeekResource();
+                  }}
+                >
+                  auto-seek
+                </button>
+              ) : null}
+            </div>
+          ),
+        });
       }
     }
     return result;

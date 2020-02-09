@@ -30,7 +30,6 @@ export function button(button: {
       <button
         id={button.id}
         disabled={button.disabled}
-        style={{ pointerEvents: "auto" }}
         onClick={button.onClick}
       >
         {button.text}
