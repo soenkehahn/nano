@@ -4,6 +4,9 @@ export const rational: (number, number) => Rational = (
   numerator,
   denominator,
 ) => {
+  if (denominator == 0) {
+    throw "division by zero";
+  }
   return new _Rational(numerator, denominator).normalize();
 };
 
@@ -105,6 +108,13 @@ class _Rational {
     return rational(
       this.numerator * other.numerator,
       this.denominator * other.denominator,
+    );
+  };
+
+  over: Rational => Rational = other => {
+    return rational(
+      this.numerator * other.denominator,
+      this.denominator * other.numerator,
     );
   };
 }

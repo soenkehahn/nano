@@ -289,3 +289,36 @@ describe("times", () => {
     );
   });
 });
+
+describe("over", () => {
+  it("divides integers", () => {
+    (expect(fromInt(42).over(fromInt(2))): any).toEqualRational(fromInt(21));
+  });
+
+  it("divides rationals", () => {
+    (expect(rational(2, 3).over(rational(5, 7))): any).toEqualRational(
+      rational(14, 15),
+    );
+    (expect(rational(1, 2).over(rational(1, 3))): any).toEqualRational(
+      rational(3, 2),
+    );
+  });
+
+  it("reduces results", () => {
+    (expect(rational(2, 3).over(rational(4, 3))): any).toEqualRational(
+      rational(1, 2),
+    );
+  });
+
+  it("can return 0", () => {
+    (expect(rational(0, 2).over(rational(23, 42))): any).toEqualRational(
+      fromInt(0),
+    );
+  });
+
+  it("throws an exception for divisions by 0", () => {
+    expect(() => {
+      fromInt(1).over(fromInt(0));
+    }).toThrow("division by zero");
+  });
+});
