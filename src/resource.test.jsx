@@ -32,7 +32,7 @@ describe("Resource in scene", () => {
 
   it("doesn't deplete a resource when mining is not researched", () => {
     wrapper()
-      .find("#moveButton")
+      .find("#moveButton-0")
       .simulate("click");
     wrapper()
       .find("svg")
@@ -57,7 +57,7 @@ describe("Resource in scene", () => {
 
     it("allows to mine a resource when colliding (same position) with a minion", () => {
       wrapper()
-        .find("#moveButton")
+        .find("#moveButton-0")
         .simulate("click");
       wrapper()
         .find("svg")
@@ -81,7 +81,7 @@ describe("Resource in scene", () => {
 
     it("depletes a resource when colliding slightly with a minion", () => {
       wrapper()
-        .find("#moveButton")
+        .find("#moveButton-0")
         .simulate("click");
       wrapper()
         .find("svg")
@@ -109,7 +109,7 @@ describe("Resource in scene", () => {
 
     it("doesn't allow to mine when near a minion", () => {
       wrapper()
-        .find("#moveButton")
+        .find("#moveButton-0")
         .simulate("click");
       wrapper()
         .find("svg")
@@ -146,7 +146,7 @@ describe("Resource in scene", () => {
 
     it("increases the inventory resource counter", () => {
       wrapper()
-        .find("#moveButton")
+        .find("#moveButton-0")
         .simulate("click");
       wrapper()
         .find("svg")
@@ -166,7 +166,7 @@ describe("Resource in scene", () => {
     test("mining takes time", () => {
       config().miningVelocity = rational(1, 2);
       wrapper()
-        .find("#moveButton")
+        .find("#moveButton-0")
         .simulate("click");
       wrapper()
         .find("svg")
@@ -192,7 +192,7 @@ describe("Resource in scene", () => {
       config().miningVelocity = rational(1, 2);
       config().stepTimeDelta = rational(1, 10);
       wrapper()
-        .find("#moveButton")
+        .find("#moveButton-0")
         .simulate("click");
       wrapper()
         .find("svg")
@@ -209,7 +209,7 @@ describe("Resource in scene", () => {
       config().miningVelocity = rational(1, 2);
       config().stepTimeDelta = rational(1, 100);
       wrapper()
-        .find("#moveButton")
+        .find("#moveButton-0")
         .simulate("click");
       wrapper()
         .find("svg")
@@ -226,7 +226,7 @@ describe("Resource in scene", () => {
       config().miningVelocity = rational(1, 2);
       config().stepTimeDelta = rational(1, 10);
       wrapper()
-        .find("#moveButton")
+        .find("#moveButton-0")
         .simulate("click");
       const target = cloneDeep(resourceProps.position);
       target.x += Resource.initialRadius + scene().focusedMinion().radius - 1;
@@ -245,7 +245,7 @@ describe("Resource in scene", () => {
       ).toEqual(9);
       expect(
         wrapper()
-          .find("#moveButton")
+          .find("#moveButton-0")
           .exists(),
       ).toEqual(true);
     });

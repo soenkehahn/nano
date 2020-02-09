@@ -39,7 +39,7 @@ describe("Minion", () => {
   describe("after pressing 'move'", () => {
     it("allows to set the minion coordinates with a mouse click", async () => {
       wrapper()
-        .find("#moveButton")
+        .find("#moveButton-0")
         .simulate("click");
       wrapper()
         .find("svg")
@@ -57,7 +57,7 @@ describe("Minion", () => {
 
     it("doesn't allow to change the minion target while it's underway", async () => {
       wrapper()
-        .find("#moveButton")
+        .find("#moveButton-0")
         .simulate("click");
       wrapper()
         .find("svg")
@@ -79,7 +79,7 @@ describe("Minion", () => {
 
     it("shows a message about to click on the map", async () => {
       wrapper()
-        .find("#moveButton")
+        .find("#moveButton-0")
         .simulate("click");
       step(2);
       expect(
@@ -93,7 +93,7 @@ describe("Minion", () => {
   it("minions need time to move around", () => {
     scene().focusedMinion().position = { x: 0, y: 0 };
     wrapper()
-      .find("#moveButton")
+      .find("#moveButton-0")
       .simulate("click");
     wrapper()
       .find("svg")
@@ -156,7 +156,7 @@ describe("Minions", () => {
       .simulate("click", toClickEvent({ x: 100, y: 0 }));
     update();
     wrapper()
-      .find("#moveButton")
+      .find("#moveButton-1")
       .simulate("click");
     wrapper()
       .find("svg")
@@ -240,7 +240,7 @@ describe("Minions", () => {
 
   it("shows the status of moving minions", () => {
     wrapper()
-      .find("#moveButton")
+      .find("#moveButton-0")
       .simulate("click");
     wrapper()
       .find("svg")
@@ -309,6 +309,19 @@ describe("Minions", () => {
             .find("svg")
             .props().viewBox,
         ).toEqual("-97 -96 200 200");
+      });
+
+      it("shows two move buttons", () => {
+        expect(
+          wrapper()
+            .find("#moveButton-0")
+            .exists(),
+        ).toEqual(true);
+        expect(
+          wrapper()
+            .find("#moveButton-1")
+            .exists(),
+        ).toEqual(true);
       });
     });
   });

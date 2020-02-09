@@ -257,7 +257,7 @@ describe("drag & minion interaction", () => {
 
   it("disables dragging when selecting a minion target", () => {
     wrapper()
-      .find("#moveButton")
+      .find("#moveButton-0")
       .simulate("click");
     wrapper()
       .find("svg")
@@ -274,7 +274,7 @@ describe("drag & minion interaction", () => {
 
   it("enables dragging afterwards", () => {
     wrapper()
-      .find("#moveButton")
+      .find("#moveButton-0")
       .simulate("click");
     wrapper()
       .find("svg")

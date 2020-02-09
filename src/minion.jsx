@@ -157,18 +157,6 @@ export class Minion {
   buttons: () => Array<Item> = () => {
     const result: Array<Item> = [];
 
-    result.push(
-      button({
-        id: "moveButton",
-        text: "move",
-        disabled: false,
-        onClick: () => {
-          SvgPane.draggingEnabled = false;
-          this.status = { tag: "waitForMoveTarget" };
-        },
-      }),
-    );
-
     if (
       this.scene.objects.lab.researched.has("mining") &&
       this.collidingResources.length > 0
@@ -315,15 +303,26 @@ export class Minions {
             <br />
             status: {minion.status.tag}
             {when(minion.status.tag === "idle", () => (
-              <button
-                id={`focusButton-${minion.id}`}
-                onClick={() => {
-                  this.setFocus(i);
-                  svgPane.setCenter(minion.position);
-                }}
-              >
-                focus
-              </button>
+              <>
+                <button
+                  id={`focusButton-${minion.id}`}
+                  onClick={() => {
+                    this.setFocus(i);
+                    svgPane.setCenter(minion.position);
+                  }}
+                >
+                  focus
+                </button>
+                <button
+                  id={`moveButton-${minion.id}`}
+                  onClick={() => {
+                    SvgPane.draggingEnabled = false;
+                    minion.status = { tag: "waitForMoveTarget" };
+                  }}
+                >
+                  move
+                </button>
+              </>
             ))}
             {when(
               minion.scene.objects.lab.researched.has("auto-resource-seeking"),
