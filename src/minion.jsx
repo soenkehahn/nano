@@ -1,9 +1,9 @@
 // @flow
 
 import * as React from "react";
-import { type Button, renderButtons } from "./button";
 import { type Config, Scene } from "./scene";
 import { Factory } from "./factory";
+import { type Item, button, renderList } from "./lists";
 import { SvgPane } from "./svgPane";
 import {
   type Vector,
@@ -152,7 +152,7 @@ export class Minion {
     }
     return (
       <>
-        {renderButtons(this.buttons())}
+        {renderList(this.buttons())}
         {this.scene.objects.lab.researched.has("auto-resource-seeking") ? (
           <label style={{ pointerEvents: "auto" }}>
             <button
@@ -170,32 +170,36 @@ export class Minion {
     );
   };
 
-  buttons: () => Array<Button> = () => {
-    const result: Array<Button> = [];
+  buttons: () => Array<Item> = () => {
+    const result: Array<Item> = [];
 
-    result.push({
-      id: "moveButton",
-      text: "move",
-      disabled: false,
-      onClick: () => {
-        SvgPane.draggingEnabled = false;
-        this.status = { tag: "waitForMoveTarget" };
-      },
-    });
+    result.push(
+      button({
+        id: "moveButton",
+        text: "move",
+        disabled: false,
+        onClick: () => {
+          SvgPane.draggingEnabled = false;
+          this.status = { tag: "waitForMoveTarget" };
+        },
+      }),
+    );
 
     if (
       this.scene.objects.lab.researched.has("mining") &&
       this.collidingResources.length > 0
     ) {
       const resourceId = this.collidingResources[0];
-      result.push({
-        id: `mineButton`,
-        text: "mine",
-        disabled: false,
-        onClick: () => {
-          this.status = { tag: "mining", resourceId };
-        },
-      });
+      result.push(
+        button({
+          id: `mineButton`,
+          text: "mine",
+          disabled: false,
+          onClick: () => {
+            this.status = { tag: "mining", resourceId };
+          },
+        }),
+      );
     }
 
     if (
@@ -205,14 +209,16 @@ export class Minion {
         getRadius: () => Factory.radius,
       })
     ) {
-      result.push({
-        id: "buildButton",
-        text: "build",
-        disabled: false,
-        onClick: () => {
-          Factory.construct(this.config, this.scene, this.position);
-        },
-      });
+      result.push(
+        button({
+          id: "buildButton",
+          text: "build",
+          disabled: false,
+          onClick: () => {
+            Factory.construct(this.config, this.scene, this.position);
+          },
+        }),
+      );
     }
 
     return result;
@@ -312,20 +318,22 @@ export class Minions {
     }
   };
 
-  idleButtons: SvgPane => Array<Button> = svgPane => {
-    const result: Array<Button> = [];
+  idleButtons: SvgPane => Array<Item> = svgPane => {
+    const result: Array<Item> = [];
     for (let i = 0; i < this.minions.length; i++) {
       const minion = this.minions[i];
       if (minion.status.tag === "idle") {
-        result.push({
-          text: `minion #${minion.id}`,
-          onClick: () => {
-            this.setFocus(i);
-            svgPane.setCenter(minion.position);
-          },
-          id: `idleButton-${minion.id}`,
-          disabled: false,
-        });
+        result.push(
+          button({
+            text: `minion #${minion.id}`,
+            onClick: () => {
+              this.setFocus(i);
+              svgPane.setCenter(minion.position);
+            },
+            id: `idleButton-${minion.id}`,
+            disabled: false,
+          }),
+        );
       }
     }
     return result;

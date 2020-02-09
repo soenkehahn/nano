@@ -8,7 +8,7 @@ import { type Rational, fromInt, rational } from "../rational";
 import { type Size, SvgPane, type ViewBox } from "../svgPane";
 import { type Vector, collides } from "../vector";
 import { filter } from "../utils";
-import { renderButtons } from "../button";
+import { renderList } from "../lists";
 import { some } from "lodash";
 
 export type Config = {|
@@ -165,7 +165,7 @@ export class Scene {
           {this.activeCommand()}
           available commands:
           {this.focusedMinion().interface()}
-          {renderButtons(this.objects.lab.buttons())}
+          {renderList(this.objects.lab.buttons())}
           <hr />
           <div id="inventory">resources: {this.inventory.format()}</div>
           <hr />
@@ -181,7 +181,7 @@ export class Scene {
           minions: {this.objects.minions.minions.length}
           <hr />
           idle:
-          {renderButtons(this.objects.minions.idleButtons(this.svgPane))}
+          {renderList(this.objects.minions.idleButtons(this.svgPane))}
         </div>
       </div>
     );
