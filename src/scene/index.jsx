@@ -49,9 +49,10 @@ export class SceneStepper {
 export class Scene {
   config: Config;
   svgPane: SvgPane;
-  inventory: Rational;
-  objects: Objects;
   outerStepsSincePause: number = 0;
+  time: Rational = fromInt(0);
+  objects: Objects;
+  inventory: Rational;
 
   constructor(
     config: Config,
@@ -91,8 +92,7 @@ export class Scene {
     const idle = this.objects.minions.anyIsIdle();
     if (idle) {
       const args = { paused: true };
-      this.objects.lab.step(args);
-      this.objects.minions.step(this, args);
+      this.innerStep(args);
       this.outerStepsSincePause = 0;
     } else {
       const args = { paused: false };
@@ -103,11 +103,16 @@ export class Scene {
         ),
       );
       for (let i = 0; i < numberOfSteps; i++) {
-        this.objects.lab.step(args);
-        this.objects.minions.step(this, args);
+        this.time = this.time.plus(this.config.stepTimeDelta);
+        this.innerStep(args);
       }
       this.outerStepsSincePause++;
     }
+  };
+
+  innerStep: ({ paused: boolean }) => void = args => {
+    this.objects.lab.step(args);
+    this.objects.minions.step(this, args);
   };
 
   onClick: Vector => void = target => {
@@ -164,6 +169,8 @@ export class Scene {
           <div id="inventory">resources: {this.inventory.format()}</div>
           <hr />
           {this.objects.lab.newResearch()}
+          <hr />
+          <div id="time">time: {this.time.format()}</div>
           <hr />
           <>Use the mouse to drag the map and the scroll wheel to zoom.</>
         </div>

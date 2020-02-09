@@ -8,6 +8,7 @@ import { Scene } from "../scene";
 import { fromInt, rational } from "../rational";
 import {
   mockSvgJsdomExtensions,
+  sendMinion,
   setupSceneWrapper,
   setupTestConfig,
   testObjects,
@@ -138,6 +139,35 @@ describe("Scene interface", () => {
         .find("#gameEndSuccess")
         .exists(),
     ).toEqual(true);
+  });
+
+  describe("time", () => {
+    it("shows the current game time at start", () => {
+      expect(
+        wrapper()
+          .find("#time")
+          .text(),
+      ).toEqual("time: 0.00");
+    });
+
+    it("time progresses when no minion is idle", () => {
+      sendMinion(scene, { x: 0, y: 1000 });
+      step(1);
+      expect(
+        wrapper()
+          .find("#time")
+          .text(),
+      ).toEqual("time: 0.50");
+    });
+
+    it("if time is paused it doesn't progress", () => {
+      step(1);
+      expect(
+        wrapper()
+          .find("#time")
+          .text(),
+      ).toEqual("time: 0.00");
+    });
   });
 });
 
