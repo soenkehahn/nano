@@ -11,7 +11,7 @@ import React from "react";
 import dom from "react-dom";
 
 function setupDevScene(config: Config) {
-  config.velocity *= 5;
+  config.velocity = config.velocity.times(fromInt(5));
   config.researchVelocity = config.researchVelocity.times(fromInt(10));
   config.miningVelocity = config.miningVelocity.times(fromInt(10));
 }
@@ -26,7 +26,7 @@ if (!module.parent) {
     zoomVelocity: 1.15,
     stepTimeDelta: rational(1000, 60),
     stepsBeforeSpeedup: 30,
-    velocity: 0.04,
+    velocity: rational(4, 100),
     costs: {
       factory: fromInt(3),
       research: {

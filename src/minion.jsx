@@ -77,8 +77,9 @@ export class Minion {
 
   move: Vector => void = target => {
     const distanceLeft = distance(target, this.position);
-    const stepDistance =
-      this.config.velocity * this.config.stepTimeDelta.toNumber();
+    const stepDistance = this.config.velocity
+      .times(this.config.stepTimeDelta)
+      .toNumber();
     if (stepDistance < distanceLeft) {
       this.position = add(
         this.position,

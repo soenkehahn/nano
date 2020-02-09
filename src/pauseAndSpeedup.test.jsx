@@ -59,7 +59,7 @@ describe("pausing", () => {
 describe("speeding up", () => {
   beforeEach(() => {
     config().stepsBeforeSpeedup = 5;
-    config().velocity = 1;
+    config().velocity = fromInt(1);
     config().stepTimeDelta = fromInt(1);
   });
 

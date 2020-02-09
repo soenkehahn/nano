@@ -46,7 +46,7 @@ describe("auto-resource-seeking", () => {
 
   describe("when switching on auto-resource-seeking for a minion", () => {
     beforeEach(() => {
-      config().velocity = 50;
+      config().velocity = fromInt(50);
       scene().objects.lab.researched.add("auto-resource-seeking");
       scene().focusedMinion().autoResourceSeeking = true;
       scene().objects.resources = new Map([

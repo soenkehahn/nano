@@ -3,7 +3,7 @@
 import { MinionRender, type RenderProps } from "./minion";
 import { Resource, ResourceRender } from "./resource";
 import { cloneDeep } from "lodash";
-import { rational } from "./rational";
+import { fromInt, rational } from "./rational";
 import { setupSceneWrapper, setupTestConfig } from "./test/utils";
 import { toClickEvent } from "./vector";
 
@@ -16,7 +16,7 @@ describe("Resource in scene", () => {
   let resourceProps: RenderProps;
 
   beforeEach(() => {
-    config().velocity = 99999999999999;
+    config().velocity = fromInt(1000);
     scene().objects.resources = new Map([
       [0, new Resource({ x: 100, y: 0 })],
       [1, new Resource({ x: 200, y: 0 })],

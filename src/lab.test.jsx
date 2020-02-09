@@ -21,7 +21,7 @@ describe("Lab", () => {
   setupEventListenerTracker();
 
   beforeEach(() => {
-    config().velocity = 1000;
+    config().velocity = fromInt(1000);
     config().miningVelocity = fromInt(1);
   });
 
@@ -270,7 +270,7 @@ describe("Lab", () => {
       });
 
       it("switches back to the previous status after mining is done", () => {
-        config().velocity = 0.0;
+        config().velocity = fromInt(0);
         config().stepTimeDelta = rational(1, 10);
         scene().objects.lab.researched.add("mining");
         scene().objects.lab.researched.add("auto-mining");

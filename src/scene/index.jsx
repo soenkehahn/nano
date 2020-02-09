@@ -16,7 +16,7 @@ export type Config = {|
   zoomVelocity: number,
   stepTimeDelta: Rational,
   stepsBeforeSpeedup: number,
-  velocity: number,
+  velocity: Rational,
   costs: {
     factory: Rational,
     research: {

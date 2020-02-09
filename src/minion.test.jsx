@@ -145,7 +145,7 @@ describe("Minions", () => {
   });
 
   it("allows to move the focused minion", () => {
-    config().velocity = 100;
+    config().velocity = fromInt(100);
     scene().objects.minions.add(
       new Minion(config(), scene(), { x: 100, y: 0 }),
     );
