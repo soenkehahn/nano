@@ -274,9 +274,20 @@ export class Minions {
     }
   };
 
+  getWaitingForMoveTarget: void => null | Minion = () => {
+    let result = null;
+    for (const minion of this.minions) {
+      if (minion.status.tag == "waitForMoveTarget") {
+        result = minion;
+      }
+    }
+    return result;
+  };
+
   onClick: Vector => void = clickedPoint => {
-    if (this.focused().status.tag === "waitForMoveTarget") {
-      this.focused().onClick(clickedPoint);
+    const waitingForMoveTarget = this.getWaitingForMoveTarget();
+    if (waitingForMoveTarget) {
+      waitingForMoveTarget.onClick(clickedPoint);
     } else {
       const clicked = this.minions.findIndex(minion =>
         collides(minion, { position: clickedPoint, getRadius: () => 0 }),

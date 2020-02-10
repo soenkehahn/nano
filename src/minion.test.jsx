@@ -144,7 +144,7 @@ describe("Minions", () => {
     ).toEqual([false, true]);
   });
 
-  it("allows to move the focused minion", () => {
+  it("allows to move the second minion", () => {
     config().velocity = fromInt(100);
     scene().objects.minions.add(
       new Minion(config(), scene(), { x: 100, y: 0 }),
@@ -321,6 +321,28 @@ describe("Minions", () => {
             .find("#moveButton-1")
             .exists(),
         ).toEqual(true);
+      });
+
+      it("allows to move two minions at the same time", () => {
+        config().velocity = fromInt(100);
+        wrapper()
+          .find("#moveButton-0")
+          .simulate("click");
+        wrapper()
+          .find("svg")
+          .simulate("click", toClickEvent({ x: 100, y: 100 }));
+        wrapper()
+          .find("#moveButton-1")
+          .simulate("click");
+        wrapper()
+          .find("svg")
+          .simulate("click", toClickEvent({ x: -100, y: 100 }));
+        step(3);
+        expect(
+          wrapper()
+            .find(MinionRender)
+            .map(x => x.props().position),
+        ).toEqual([{ x: 100, y: 100 }, { x: -100, y: 100 }]);
       });
     });
   });
