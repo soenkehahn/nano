@@ -176,10 +176,7 @@ export class Scene {
           <>Use the mouse to drag the map and the scroll wheel to zoom.</>
         </div>
         <div style={{ flex: "1 1 0", margin: "0.2em" }}>
-          minions: {this.objects.minions.minions.length}
-          <hr />
-          minions:
-          {renderList(this.objects.minions.minionUIs(this.svgPane))}
+          {this.objects.minions.minionUIs(this.svgPane)}
         </div>
       </div>
     );

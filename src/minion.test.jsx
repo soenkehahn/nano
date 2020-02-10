@@ -252,20 +252,6 @@ describe("Minions", () => {
     ).toContain("status: moving");
   });
 
-  it("shows the number of minions", () => {
-    for (let i = 0; i < 22; i++) {
-      scene().objects.minions.add(
-        new Minion(config(), scene(), { x: 0, y: 0 }),
-      );
-    }
-    update();
-    expect(
-      wrapper()
-        .find("#interface")
-        .text(),
-    ).toContain("minions: 23");
-  });
-
   describe("focus buttons", () => {
     it("shows a focus button", () => {
       expect(

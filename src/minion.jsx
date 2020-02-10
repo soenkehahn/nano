@@ -3,7 +3,6 @@
 import * as React from "react";
 import { type Config, Scene } from "./scene";
 import { Factory } from "./factory";
-import { type Item, button } from "./lists";
 import { SvgPane } from "./svgPane";
 import {
   type Vector,
@@ -15,8 +14,9 @@ import {
   scale,
   unit,
 } from "./vector";
+import { button } from "./lists";
 import { fromInt } from "./rational";
-import { when } from "./utils";
+import { sepBy, when } from "./utils";
 
 type Status =
   | {| tag: "idle" |}
@@ -252,15 +252,13 @@ export class Minions {
     }
   };
 
-  minionUIs: SvgPane => Array<Item> = svgPane => {
-    const result: Array<Item> = [];
-    for (let i = 0; i < this.minions.length; i++) {
-      const minion = this.minions[i];
-      const id = `minion-ui-${minion.id}`;
-      result.push({
-        id,
-        node: (
-          <div id={id}>
+  minionUIs: SvgPane => React.Node = svgPane => {
+    return sepBy(
+      <hr />,
+      this.minions.map((minion, i) => {
+        const id = `minion-ui-${minion.id}`;
+        return (
+          <div id={id} key={i}>
             minion #{minion.id}
             <br />
             status: {minion.status.tag}
@@ -344,9 +342,8 @@ export class Minions {
               ),
             )}
           </div>
-        ),
-      });
-    }
-    return result;
+        );
+      }),
+    );
   };
 }
