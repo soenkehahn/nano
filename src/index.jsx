@@ -32,8 +32,8 @@ if (!module.parent) {
       factory: fromInt(3),
       research: {
         mining: fromInt(0),
-        "auto-mining": fromInt(10),
-        "auto-resource-seeking": fromInt(10),
+        "auto-mining": fromInt(5),
+        "auto-resource-seeking": fromInt(5),
       },
     },
     researchVelocity: rational(5, 100000),
