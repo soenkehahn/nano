@@ -252,98 +252,105 @@ export class Minions {
     }
   };
 
-  minionUIs: SvgPane => React.Node = svgPane => {
-    return sepBy(
-      <hr />,
-      this.minions.map((minion, i) => {
-        const id = `minion-ui-${minion.id}`;
-        return (
-          <div id={id} key={i}>
-            minion #{minion.id}
-            <br />
-            status: {minion.status.tag}
-            {when(minion.status.tag === "idle", () => (
-              <>
-                <br />
-                <button
-                  id={`focusButton-${minion.id}`}
-                  onClick={() => {
-                    this.setFocus(i);
-                    svgPane.setCenter(minion.position);
-                  }}
-                >
-                  focus
-                </button>
-                <br />
-                <button
-                  id={`moveButton-${minion.id}`}
-                  onClick={() => {
-                    SvgPane.draggingEnabled = false;
-                    minion.status = { tag: "waitForMoveTarget" };
-                  }}
-                >
-                  move
-                </button>
-                {when(minion.collidingResources.length > 0, () => {
-                  const resourceId = minion.collidingResources[0];
-                  return (
-                    <>
-                      <br />
-                      <button
-                        id={`mineButton-${minion.id}`}
-                        onClick={() => {
-                          minion.status = { tag: "mining", resourceId };
-                        }}
-                      >
-                        mine
-                      </button>
-                    </>
-                  );
-                })}
-                {when(
-                  minion.scene.inventory.ge(minion.config.costs.factory) &&
-                    !minion.scene.collides({
-                      position: minion.position,
-                      getRadius: () => Factory.radius,
-                    }),
-                  () => {
+  minionUIs: SvgPane => React.Node = svgPane => (
+    <>
+      minions:
+      <hr />
+      {sepBy(
+        <hr />,
+        this.minions.map((minion, i) => {
+          const id = `minion-ui-${minion.id}`;
+          return (
+            <div id={id} key={i}>
+              status: {minion.status.tag}
+              {when(minion.status.tag === "idle", () => (
+                <>
+                  <br />
+                  <button
+                    id={`focusButton-${minion.id}`}
+                    onClick={() => {
+                      this.setFocus(i);
+                      svgPane.setCenter(minion.position);
+                    }}
+                  >
+                    focus
+                  </button>
+                  <br />
+                  <button
+                    id={`moveButton-${minion.id}`}
+                    onClick={() => {
+                      SvgPane.draggingEnabled = false;
+                      minion.status = { tag: "waitForMoveTarget" };
+                    }}
+                  >
+                    move
+                  </button>
+                  {when(minion.collidingResources.length > 0, () => {
+                    const resourceId = minion.collidingResources[0];
                     return (
                       <>
                         <br />
                         <button
-                          id={`buildButton-${minion.id}`}
+                          id={`mineButton-${minion.id}`}
                           onClick={() => {
-                            Factory.construct(
-                              minion.config,
-                              minion.scene,
-                              minion.position,
-                            );
+                            minion.status = { tag: "mining", resourceId };
                           }}
                         >
-                          build
+                          mine
                         </button>
                       </>
                     );
-                  },
-                )}
-              </>
-            ))}
-            {when(
-              minion.scene.objects.lab.researched.has("auto-resource-seeking"),
-              () => (
-                <button
-                  id={`autoResourceSeekingButton-${minion.id}`}
-                  onClick={() => {
-                    minion.autoSeekResource();
-                  }}
-                >
-                  auto-seek
-                </button>
-              ),
-            )}
-          </div>
-        );
-      }),
-    );
-  };
+                  })}
+                  {when(
+                    minion.scene.inventory.ge(minion.config.costs.factory) &&
+                      !minion.scene.collides({
+                        position: minion.position,
+                        getRadius: () => Factory.radius,
+                      }),
+                    () => {
+                      return (
+                        <>
+                          <br />
+                          <button
+                            id={`buildButton-${minion.id}`}
+                            onClick={() => {
+                              Factory.construct(
+                                minion.config,
+                                minion.scene,
+                                minion.position,
+                              );
+                            }}
+                          >
+                            build
+                          </button>
+                        </>
+                      );
+                    },
+                  )}
+                </>
+              ))}
+              {when(
+                minion.scene.objects.lab.researched.has(
+                  "auto-resource-seeking",
+                ),
+                () => (
+                  <>
+                    <br />
+                    <button
+                      id={`autoResourceSeekingButton-${minion.id}`}
+                      onClick={() => {
+                        minion.autoSeekResource();
+                      }}
+                    >
+                      auto-seek
+                    </button>
+                  </>
+                ),
+              )}
+            </div>
+          );
+        }),
+      )}
+    </>
+  );
 }

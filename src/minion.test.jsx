@@ -219,16 +219,6 @@ describe("Minions", () => {
     expect(scene().inventory.toNumber()).toEqual(2);
   });
 
-  it("includes the minion id in the ui text", () => {
-    scene().focusedMinion().id = 42;
-    update();
-    expect(
-      wrapper()
-        .find("#minion-ui-42")
-        .text(),
-    ).toContain("minion #42");
-  });
-
   it("shows the status of a minion", () => {
     expect(
       wrapper()
