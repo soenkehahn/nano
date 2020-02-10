@@ -201,7 +201,7 @@ describe("Minions", () => {
     ]);
     step();
     wrapper()
-      .find("#mineButton")
+      .find("#mineButton-0")
       .simulate("click");
     step(5);
     wrapper()
@@ -209,7 +209,7 @@ describe("Minions", () => {
       .simulate("click", toClickEvent({ x: 100, y: 0 }));
     step();
     wrapper()
-      .find("#mineButton")
+      .find("#mineButton-1")
       .simulate("click");
     step();
     expect(

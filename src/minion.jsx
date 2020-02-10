@@ -156,21 +156,6 @@ export class Minion {
 
   buttons: () => Array<Item> = () => {
     const result: Array<Item> = [];
-
-    if (this.collidingResources.length > 0) {
-      const resourceId = this.collidingResources[0];
-      result.push(
-        button({
-          id: `mineButton`,
-          text: "mine",
-          disabled: false,
-          onClick: () => {
-            this.status = { tag: "mining", resourceId };
-          },
-        }),
-      );
-    }
-
     if (
       this.scene.inventory.ge(this.config.costs.factory) &&
       !this.scene.collides({
@@ -321,6 +306,7 @@ export class Minions {
                 >
                   focus
                 </button>
+                <br />
                 <button
                   id={`moveButton-${minion.id}`}
                   onClick={() => {
@@ -330,6 +316,22 @@ export class Minions {
                 >
                   move
                 </button>
+                {when(minion.collidingResources.length > 0, () => {
+                  const resourceId = minion.collidingResources[0];
+                  return (
+                    <>
+                      <br />
+                      <button
+                        id={`mineButton-${minion.id}`}
+                        onClick={() => {
+                          minion.status = { tag: "mining", resourceId };
+                        }}
+                      >
+                        mine
+                      </button>
+                    </>
+                  );
+                })}
               </>
             ))}
             {when(

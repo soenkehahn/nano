@@ -84,7 +84,7 @@ describe("auto-resource-seeking", () => {
       step(5);
       update();
       wrapper()
-        .find("#mineButton")
+        .find("#mineButton-0")
         .simulate("click");
       step(1);
       expect(scene().focusedMinion().status.tag).toEqual("idle");
