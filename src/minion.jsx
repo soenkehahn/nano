@@ -3,7 +3,7 @@
 import * as React from "react";
 import { type Config, Scene } from "./scene";
 import { Factory } from "./factory";
-import { type Item, button, renderList } from "./lists";
+import { type Item, button } from "./lists";
 import { SvgPane } from "./svgPane";
 import {
   type Vector,
@@ -147,37 +147,6 @@ export class Minion {
     }
   };
 
-  interface: () => ?React.Node = () => {
-    if (this.status.tag !== "idle") {
-      return null;
-    }
-    return renderList(this.buttons());
-  };
-
-  buttons: () => Array<Item> = () => {
-    const result: Array<Item> = [];
-    if (
-      this.scene.inventory.ge(this.config.costs.factory) &&
-      !this.scene.collides({
-        position: this.position,
-        getRadius: () => Factory.radius,
-      })
-    ) {
-      result.push(
-        button({
-          id: "buildButton",
-          text: "build",
-          disabled: false,
-          onClick: () => {
-            Factory.construct(this.config, this.scene, this.position);
-          },
-        }),
-      );
-    }
-
-    return result;
-  };
-
   draw: () => React.Node = () => {
     return (
       <MinionRender
@@ -297,6 +266,7 @@ export class Minions {
             status: {minion.status.tag}
             {when(minion.status.tag === "idle", () => (
               <>
+                <br />
                 <button
                   id={`focusButton-${minion.id}`}
                   onClick={() => {
@@ -332,6 +302,32 @@ export class Minions {
                     </>
                   );
                 })}
+                {when(
+                  minion.scene.inventory.ge(minion.config.costs.factory) &&
+                    !minion.scene.collides({
+                      position: minion.position,
+                      getRadius: () => Factory.radius,
+                    }),
+                  () => {
+                    return (
+                      <>
+                        <br />
+                        <button
+                          id={`buildButton-${minion.id}`}
+                          onClick={() => {
+                            Factory.construct(
+                              minion.config,
+                              minion.scene,
+                              minion.position,
+                            );
+                          }}
+                        >
+                          build
+                        </button>
+                      </>
+                    );
+                  },
+                )}
               </>
             ))}
             {when(

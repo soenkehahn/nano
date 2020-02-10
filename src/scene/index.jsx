@@ -163,7 +163,6 @@ export class Scene {
         <div style={{ flex: "1 1 0", margin: "0.2em" }}>
           {this.activeCommand()}
           available commands:
-          {this.focusedMinion().interface()}
           {renderList(this.objects.lab.buttons())}
           <hr />
           <div id="inventory">resources: {this.inventory.format()}</div>

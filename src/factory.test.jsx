@@ -16,7 +16,7 @@ describe("Factory", () => {
     step(2);
     expect(
       wrapper()
-        .find("#buildButton")
+        .find("#buildButton-0")
         .exists(),
     ).toEqual(false);
   });
@@ -27,11 +27,11 @@ describe("Factory", () => {
     step(2);
     expect(
       wrapper()
-        .find("#buildButton")
+        .find("#buildButton-0")
         .exists(),
     ).toEqual(true);
     wrapper()
-      .find("#buildButton")
+      .find("#buildButton-0")
       .simulate("click");
     step(200);
     expect(
@@ -47,7 +47,7 @@ describe("Factory", () => {
     scene().focusedMinion().position = { x: 10, y: 12 };
     update();
     wrapper()
-      .find("#buildButton")
+      .find("#buildButton-0")
       .simulate("click");
     update();
     expect(
@@ -68,7 +68,7 @@ describe("Factory", () => {
       update();
       expect(
         wrapper()
-          .find("#buildButton")
+          .find("#buildButton-0")
           .exists(),
       ).toEqual(false);
     });
@@ -79,7 +79,7 @@ describe("Factory", () => {
     scene().inventory = fromInt(4);
     step(2);
     wrapper()
-      .find("#buildButton")
+      .find("#buildButton-0")
       .simulate("click");
     step(2);
     expect(scene().inventory.toNumber()).toEqual(1);
@@ -91,7 +91,7 @@ describe("Factory", () => {
     scene().focusedMinion().position = { x: 42, y: 23 };
     step(2);
     wrapper()
-      .find("#buildButton")
+      .find("#buildButton-0")
       .simulate("click");
     step(2);
     expect(wrapper().find(MinionRender).length).toEqual(2);
