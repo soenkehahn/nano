@@ -157,6 +157,98 @@ export class Minion {
       />
     );
   };
+
+  drawUI: (SvgPane, Minions, number) => React.Node = (svgPane, parent, i) => {
+    const id = `minion-ui-${this.id}`;
+    return (
+      <div id={id} key={i}>
+        status: {this.status.tag}
+        {when(this.status.tag === "idle", () => (
+          <>
+            <br />
+            <button
+              id={`focusButton-${this.id}`}
+              onClick={() => {
+                parent.setFocus(i);
+                svgPane.setCenter(this.position);
+              }}
+            >
+              focus
+            </button>
+            <br />
+            <button
+              id={`moveButton-${this.id}`}
+              onClick={() => {
+                SvgPane.draggingEnabled = false;
+                this.status = { tag: "waitForMoveTarget" };
+              }}
+            >
+              move
+            </button>
+            {when(this.collidingResources.length > 0, () => {
+              const resourceId = this.collidingResources[0];
+              return (
+                <>
+                  <br />
+                  <button
+                    id={`mineButton-${this.id}`}
+                    onClick={() => {
+                      this.status = { tag: "mining", resourceId };
+                    }}
+                  >
+                    mine
+                  </button>
+                </>
+              );
+            })}
+            {when(
+              this.scene.inventory.ge(this.config.costs.factory) &&
+                !this.scene.collides({
+                  position: this.position,
+
+                  getRadius: () => Factory.radius,
+                }),
+              () => {
+                return (
+                  <>
+                    <br />
+                    <button
+                      id={`buildButton-${this.id}`}
+                      onClick={() => {
+                        Factory.construct(
+                          this.config,
+                          this.scene,
+                          this.position,
+                        );
+                      }}
+                    >
+                      build
+                    </button>
+                  </>
+                );
+              },
+            )}
+          </>
+        ))}
+        {when(
+          this.scene.objects.lab.researched.has("auto-resource-seeking"),
+          () => (
+            <>
+              <br />
+              <button
+                id={`autoResourceSeekingButton-${this.id}`}
+                onClick={() => {
+                  this.autoSeekResource();
+                }}
+              >
+                auto-seek
+              </button>
+            </>
+          ),
+        )}
+      </div>
+    );
+  };
 }
 
 export type RenderProps = {| position: Vector, radius: number |};
@@ -252,104 +344,13 @@ export class Minions {
     }
   };
 
-  minionUIs: SvgPane => React.Node = svgPane => (
+  drawUI: SvgPane => React.Node = svgPane => (
     <>
       minions:
       <hr />
       {sepBy(
         <hr />,
-        this.minions.map((minion, i) => {
-          const id = `minion-ui-${minion.id}`;
-          return (
-            <div id={id} key={i}>
-              status: {minion.status.tag}
-              {when(minion.status.tag === "idle", () => (
-                <>
-                  <br />
-                  <button
-                    id={`focusButton-${minion.id}`}
-                    onClick={() => {
-                      this.setFocus(i);
-                      svgPane.setCenter(minion.position);
-                    }}
-                  >
-                    focus
-                  </button>
-                  <br />
-                  <button
-                    id={`moveButton-${minion.id}`}
-                    onClick={() => {
-                      SvgPane.draggingEnabled = false;
-                      minion.status = { tag: "waitForMoveTarget" };
-                    }}
-                  >
-                    move
-                  </button>
-                  {when(minion.collidingResources.length > 0, () => {
-                    const resourceId = minion.collidingResources[0];
-                    return (
-                      <>
-                        <br />
-                        <button
-                          id={`mineButton-${minion.id}`}
-                          onClick={() => {
-                            minion.status = { tag: "mining", resourceId };
-                          }}
-                        >
-                          mine
-                        </button>
-                      </>
-                    );
-                  })}
-                  {when(
-                    minion.scene.inventory.ge(minion.config.costs.factory) &&
-                      !minion.scene.collides({
-                        position: minion.position,
-                        getRadius: () => Factory.radius,
-                      }),
-                    () => {
-                      return (
-                        <>
-                          <br />
-                          <button
-                            id={`buildButton-${minion.id}`}
-                            onClick={() => {
-                              Factory.construct(
-                                minion.config,
-                                minion.scene,
-                                minion.position,
-                              );
-                            }}
-                          >
-                            build
-                          </button>
-                        </>
-                      );
-                    },
-                  )}
-                </>
-              ))}
-              {when(
-                minion.scene.objects.lab.researched.has(
-                  "auto-resource-seeking",
-                ),
-                () => (
-                  <>
-                    <br />
-                    <button
-                      id={`autoResourceSeekingButton-${minion.id}`}
-                      onClick={() => {
-                        minion.autoSeekResource();
-                      }}
-                    >
-                      auto-seek
-                    </button>
-                  </>
-                ),
-              )}
-            </div>
-          );
-        }),
+        this.minions.map((minion, i) => minion.drawUI(svgPane, this, i)),
       )}
     </>
   );
