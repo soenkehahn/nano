@@ -142,17 +142,11 @@ export class SvgPane {
         width="100%"
         height="100%"
         viewBox={viewBox}
+        style={{ backgroundColor: "black" }}
         onMouseDown={this.onMouseDown}
         onMouseUp={this.onMouseUp}
         onMouseMove={this.onMouseMove}
       >
-        <rect
-          x={this.offset.x - 1}
-          y={this.offset.y - 1}
-          width="101%"
-          height="101%"
-          fill="black"
-        />
         {child.drawSvgElements({
           offset: this.offset,
           size: scale({ x: this.width, y: this.height }, this.zoomFactor),
