@@ -51,7 +51,7 @@ describe("auto-resource-seeking", () => {
     ).toEqual(true);
   });
 
-  describe("when switching on auto-resource-seeking for a minion", () => {
+  describe("when triggering auto-resource-seeking for a minion", () => {
     beforeEach(() => {
       config().velocity = fromInt(50);
       scene().objects.lab.researched.add("auto-resource-seeking");
@@ -97,6 +97,42 @@ describe("auto-resource-seeking", () => {
       ]);
       step(5);
       expect(scene().focusedMinion().position).toEqual({ x: 100, y: 0 });
+    });
+  });
+
+  describe("when switching on auto-resource-seeking for a minion permanently", () => {
+    it("does auto-seek a resource", () => {
+      config().velocity = fromInt(500);
+      scene().objects.lab.researched.add("auto-resource-seeking");
+      update();
+      wrapper()
+        .find("#autoResourceSeekingCheckbox-0")
+        .simulate("change", { target: { checked: true } });
+      step(10);
+      wrapper()
+        .find("#mineButton-0")
+        .simulate("click");
+      step(10);
+      expect(scene().objects.resources.size).toEqual(1);
+    });
+
+    it("keeps auto-seeking resources after the first one", () => {
+      config().velocity = fromInt(500);
+      scene().objects.lab.researched.add("auto-resource-seeking");
+      update();
+      wrapper()
+        .find("#autoResourceSeekingCheckbox-0")
+        .simulate("change", { target: { checked: true } });
+      step(10);
+      wrapper()
+        .find("#mineButton-0")
+        .simulate("click");
+      step(10);
+      wrapper()
+        .find("#mineButton-0")
+        .simulate("click");
+      step(10);
+      expect(scene().objects.resources).toEqual(new Map());
     });
   });
 });

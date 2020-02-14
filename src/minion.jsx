@@ -33,6 +33,8 @@ export class Minion {
   focused: boolean = false;
   radius: number = 10;
   status: Status = { tag: "idle" };
+  autoSeekingChecked: boolean = false;
+
   collidingResources: Array<number> = [];
 
   constructor(config: Config, scene: Scene, position: Vector) {
@@ -68,6 +70,7 @@ export class Minion {
       this.move(this.status.target);
     }
     this.updateCollidingResources();
+    this.autoSeek();
     this.autoMine();
     if (!paused && this.status.tag === "mining") {
       this.mine(this.status.resourceId);
@@ -95,6 +98,33 @@ export class Minion {
     for (const [resourceId, resource] of this.scene.objects.resources) {
       if (collides(this, resource)) {
         this.collidingResources.push(resourceId);
+      }
+    }
+  };
+
+  autoSeek: () => void = () => {
+    if (
+      this.status.tag == "idle" &&
+      this.autoSeekingChecked &&
+      this.collidingResources.length == 0
+    ) {
+      this.targetClosestResource();
+    }
+  };
+
+  targetClosestResource: () => void = () => {
+    let minDistance = Number.MAX_VALUE;
+    let closestResource = null;
+    for (const resource of this.scene.objects.resources.values()) {
+      const dist = distance(this.position, resource.position);
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestResource = resource;
+      }
+    }
+    if (closestResource) {
+      if (!equals(this.position, closestResource.position)) {
+        this.status = { tag: "moving", target: closestResource.position };
       }
     }
   };
@@ -127,23 +157,6 @@ export class Minion {
       }
     } else {
       this.status = this.status.autoMiningSuccessor || { tag: "idle" };
-    }
-  };
-
-  autoSeekResource: () => void = () => {
-    let minDistance = Number.MAX_VALUE;
-    let closestResource = null;
-    for (const resource of this.scene.objects.resources.values()) {
-      const dist = distance(this.position, resource.position);
-      if (dist < minDistance) {
-        minDistance = dist;
-        closestResource = resource;
-      }
-    }
-    if (closestResource) {
-      if (!equals(this.position, closestResource.position)) {
-        this.status = { tag: "moving", target: closestResource.position };
-      }
     }
   };
 
@@ -228,24 +241,33 @@ export class Minion {
                 );
               },
             )}
+            {when(
+              this.scene.objects.lab.researched.has("auto-resource-seeking"),
+              () => (
+                <>
+                  <br />
+                  <button
+                    id={`autoResourceSeekingButton-${this.id}`}
+                    onClick={() => {
+                      this.targetClosestResource();
+                    }}
+                  >
+                    <input
+                      id={`autoResourceSeekingCheckbox-${this.id}`}
+                      type="checkbox"
+                      checked={this.autoSeekingChecked}
+                      onChange={event => {
+                        event.stopPropagation();
+                        this.autoSeekingChecked = event.target.checked;
+                      }}
+                    />
+                    auto-seek
+                  </button>
+                </>
+              ),
+            )}
           </>
         ))}
-        {when(
-          this.scene.objects.lab.researched.has("auto-resource-seeking"),
-          () => (
-            <>
-              <br />
-              <button
-                id={`autoResourceSeekingButton-${this.id}`}
-                onClick={() => {
-                  this.autoSeekResource();
-                }}
-              >
-                auto-seek
-              </button>
-            </>
-          ),
-        )}
       </div>
     );
   };
