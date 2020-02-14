@@ -190,7 +190,7 @@ describe("Resource in scene", () => {
     ).toEqual(7.5);
     expect(
       wrapper()
-        .find("#status")
+        .find("#minion-ui-0")
         .text(),
     ).toEqual("status: mining...");
   });

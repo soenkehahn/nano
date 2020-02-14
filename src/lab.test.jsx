@@ -57,7 +57,7 @@ describe("Lab", () => {
       ).toEqual(true);
       expect(
         wrapper()
-          .find("#newResearch-auto-resource-seeking")
+          .find("#researched-auto-resource-seeking")
           .exists(),
       ).toEqual(false);
       wrapper()
@@ -67,7 +67,7 @@ describe("Lab", () => {
       step(20);
       expect(
         wrapper()
-          .find("#newResearch-auto-resource-seeking")
+          .find("#researched-auto-resource-seeking")
           .text(),
       ).toEqual("auto-resource-seeking");
     });
@@ -119,7 +119,7 @@ describe("Lab", () => {
       step(6);
       expect(
         wrapper()
-          .find("#newResearch-mining")
+          .find("#researched-mining")
           .exists(),
       ).toEqual(false);
       expect(
@@ -135,7 +135,7 @@ describe("Lab", () => {
       step(6);
       expect(
         wrapper()
-          .find("#newResearch-auto-resource-seeking")
+          .find("#researched-auto-resource-seeking")
           .text(),
       ).toEqual("auto-resource-seeking");
       expect(
@@ -153,7 +153,7 @@ describe("Lab", () => {
         tag: "moving",
         target: { x: 100, y: 0 },
       };
-      expect(scene().objects.lab.buttons()).toEqual([]);
+      expect(scene().objects.lab.buttons()).toEqual(null);
     });
   });
 
@@ -173,7 +173,7 @@ describe("Lab", () => {
       step(20);
       expect(
         wrapper()
-          .find("#newResearch-auto-mining")
+          .find("#researched-auto-mining")
           .text(),
       ).toEqual("auto-mining");
     });

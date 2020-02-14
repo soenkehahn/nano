@@ -59,7 +59,7 @@ export class Minion {
     else if (this.status.tag === "mining") return "status: mining...";
     else if (this.status.tag === "waitForMoveTarget")
       return "click on the map to set the target";
-    else if (this.status.tag === "idle") return null;
+    else if (this.status.tag === "idle") return "status: idle";
     else {
       (this.status.tag: empty);
     }
@@ -175,7 +175,7 @@ export class Minion {
     const id = `minion-ui-${this.id}`;
     return (
       <div id={id} key={i}>
-        status: {this.status.tag}
+        {this.getStatus()}
         {when(this.status.tag === "idle", () => (
           <>
             <br />
@@ -366,14 +366,9 @@ export class Minions {
     }
   };
 
-  drawUI: SvgPane => React.Node = svgPane => (
-    <>
-      minions:
-      <hr />
-      {sepBy(
-        <hr />,
-        this.minions.map((minion, i) => minion.drawUI(svgPane, this, i)),
-      )}
-    </>
-  );
+  drawUI: SvgPane => React.Node = svgPane =>
+    sepBy(
+      <hr />,
+      this.minions.map((minion, i) => minion.drawUI(svgPane, this, i)),
+    );
 }

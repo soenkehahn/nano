@@ -51,4 +51,13 @@ describe("sepBy", () => {
   it("returns null for zero elements", () => {
     expect(sepBy(<hr />, [])).toEqual(null);
   });
+
+  it("discards nulls", () => {
+    function test(a: Array<?React.Node>, b: Array<?React.Node>) {
+      assertEqual(sepBy(<hr />, a), sepBy(<hr />, b));
+    }
+    test(["a", null, "b"], ["a", "b"]);
+    test([null, "a", "b"], ["a", "b"]);
+    test(["a", "b", null], ["a", "b"]);
+  });
 });

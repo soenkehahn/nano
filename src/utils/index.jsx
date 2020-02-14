@@ -39,17 +39,21 @@ export function when(condition: boolean, node: () => React.Node): ?React.Node {
 
 export function sepBy(
   separator: React.Node,
-  elements: Array<React.Node>,
+  elements: Array<?React.Node>,
 ): React.Node {
   if (elements.length == 0) {
     return null;
   }
   const result = [];
+  let first = true;
   elements.forEach((element, i) => {
-    if (i != 0) {
-      result.push(<div key={`sep-${i}`}>{separator}</div>);
+    if (element !== null) {
+      if (!first) {
+        result.push(<div key={`sep-${i}`}>{separator}</div>);
+      }
+      first = false;
+      result.push(<div key={i}>{element}</div>);
     }
-    result.push(<div key={i}>{element}</div>);
   });
   return result;
 }

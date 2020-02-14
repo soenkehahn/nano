@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { type Config, Scene } from "./scene";
-import { type Item, button } from "./lists";
+import { type Item, button, renderList } from "./lists";
 import { type Rational, fromInt } from "./rational";
 import { type RenderProps } from "./minion";
 import { TAU, type Vector, add, collides, fromAngle, scale } from "./vector";
@@ -62,7 +62,7 @@ export class Lab {
     }
   };
 
-  buttons: () => Array<Item> = () => {
+  buttons: () => ?React.Node = () => {
     const result: Array<Item> = [];
     if (
       collides(this, this.scene.focusedMinion()) &&
@@ -102,22 +102,33 @@ export class Lab {
         );
       }
     }
-    return result;
+    if (result.length == 0) {
+      return null;
+    } else {
+      return renderList(result);
+    }
   };
 
-  newResearch: () => React.Node = () => (
-    <div style={{ height: "10em" }}>
-      Research:
-      {Array.from(this.researched).map(goal => {
-        const id = `newResearch-${goal}`;
-        return (
-          <div key={id} id={id}>
-            {goal}
-          </div>
-        );
-      })}
-    </div>
-  );
+  researchedUI: () => React.Node = () => {
+    const array = Array.from(this.researched);
+    if (array.length == 0) {
+      return null;
+    } else {
+      return (
+        <div style={{ height: "10em" }}>
+          researched:
+          {array.map(goal => {
+            const id = `researched-${goal}`;
+            return (
+              <div key={id} id={id}>
+                {goal}
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+  };
 
   draw: () => React.Node = () => (
     <LabRender

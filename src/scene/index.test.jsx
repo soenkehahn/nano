@@ -85,14 +85,6 @@ describe("Scene interface", () => {
   });
 
   describe("active command", () => {
-    it("initially shows no active command", () => {
-      expect(
-        wrapper()
-          .find("#status")
-          .exists(),
-      ).toEqual(false);
-    });
-
     it("shows the active command", () => {
       wrapper()
         .find("#moveButton-0")
@@ -103,7 +95,7 @@ describe("Scene interface", () => {
       step(2);
       expect(
         wrapper()
-          .find("#status")
+          .find("#minion-ui-0")
           .text(),
       ).toEqual("status: moving...");
     });

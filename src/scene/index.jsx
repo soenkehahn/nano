@@ -7,8 +7,7 @@ import { type Objects, insideViewBox } from "./objects";
 import { type Rational, fromInt, rational } from "../rational";
 import { type Size, SvgPane, type ViewBox } from "../svgPane";
 import { type Vector, collides } from "../vector";
-import { filter } from "../utils";
-import { renderList } from "../lists";
+import { filter, sepBy } from "../utils";
 import { some } from "lodash";
 
 export type Config = {|
@@ -161,31 +160,25 @@ export class Scene {
     return (
       <div id="interface" style={{ display: "flex", padding: "0.2em" }}>
         <div style={{ flex: "1 1 0", margin: "0.2em" }}>
-          {this.activeCommand()}
-          available commands:
-          {renderList(this.objects.lab.buttons())}
-          <hr />
-          <div id="inventory">resources: {this.inventory.format()}</div>
-          <hr />
-          {this.objects.lab.newResearch()}
-          <hr />
-          <div id="time">
-            time: {this.time.times(this.config.uiTimeFactor).format()}
-          </div>
-          <hr />
-          <>Use the mouse to drag the map and the scroll wheel to zoom.</>
+          {sepBy(<hr />, [
+            this.objects.lab.buttons(),
+            this.objects.lab.researchedUI(),
+          ])}
         </div>
         <div style={{ flex: "1 1 0", margin: "0.2em" }}>
-          {this.objects.minions.drawUI(this.svgPane)}
+          {sepBy(<hr />, [
+            <>Use the mouse to drag the map and the scroll wheel to zoom.</>,
+            <div key="time" id="time">
+              time: {this.time.times(this.config.uiTimeFactor).format()}
+            </div>,
+            <div key="inventory" id="inventory">
+              resources: {this.inventory.format()}
+            </div>,
+            this.objects.minions.drawUI(this.svgPane),
+          ])}
         </div>
       </div>
     );
-  };
-
-  activeCommand: () => null | React.Node = () => {
-    const status = this.focusedMinion().getStatus();
-    if (status === null) return null;
-    else return <div id="status">{status}</div>;
   };
 
   drawSvgElements: ViewBox => React.Element<"g"> = viewBox => {

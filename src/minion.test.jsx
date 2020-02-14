@@ -84,7 +84,7 @@ describe("Minion", () => {
       step(2);
       expect(
         wrapper()
-          .find("#status")
+          .find("#minion-ui-0")
           .text(),
       ).toEqual("click on the map to set the target");
     });
