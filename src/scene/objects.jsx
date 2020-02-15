@@ -5,7 +5,7 @@ import { type Config, Scene } from "./index";
 import { Factory } from "./factory";
 import { Lab } from "./lab";
 import { Minion, Minions } from "./minion";
-import { Resource } from "../resource";
+import { Resource } from "./resource";
 import { type Vector, collides, scale, vectorLength } from "../vector";
 import { type ViewBox } from "../svgPane";
 import { every } from "lodash";

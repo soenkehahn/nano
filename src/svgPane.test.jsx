@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ReactWrapper, mount } from "enzyme";
-import { Resource, ResourceRender } from "./resource";
+import { Resource, ResourceRender } from "./scene/resource";
 import { type Size, SvgPane } from "./svgPane";
 import { createElement } from "react";
 import {

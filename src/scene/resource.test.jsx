@@ -1,11 +1,11 @@
 // @flow
 
-import { Minion, MinionRender, type RenderProps } from "./scene/minion";
+import { Minion, MinionRender, type RenderProps } from "./minion";
 import { Resource, ResourceRender } from "./resource";
 import { cloneDeep } from "lodash";
-import { fromInt, rational } from "./rational";
-import { setupSceneWrapper, setupTestConfig } from "./test/utils";
-import { toClickEvent } from "./vector";
+import { fromInt, rational } from "../rational";
+import { setupSceneWrapper, setupTestConfig } from "../test/utils";
+import { toClickEvent } from "../vector";
 
 const config = setupTestConfig();
 

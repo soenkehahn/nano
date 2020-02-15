@@ -1,7 +1,7 @@
 // @flow
 
 import { Minion } from "./scene/minion";
-import { Resource } from "./resource";
+import { Resource } from "./scene/resource";
 import { cloneDeep } from "lodash";
 import { fromInt } from "./rational";
 import { sendMinion, setupSceneWrapper, setupTestConfig } from "./test/utils";
