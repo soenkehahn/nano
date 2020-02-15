@@ -1,8 +1,10 @@
 // @flow
 
 import { type Config, Scene } from "./index";
+import { Resource } from "./resource";
 import { type ViewBox } from "../web/svgPane";
 import {
+  addResource,
   findRandom,
   inBiggerVicinity,
   inside,
@@ -10,6 +12,7 @@ import {
   mkObjects,
 } from "./objects";
 import { fromInt, rational } from "../data/rational";
+import { setupSceneWrapper, setupTestConfig } from "../test/utils";
 
 describe("mkObjects", () => {
   it("has multiple resources", () => {
@@ -34,6 +37,35 @@ describe("mkObjects", () => {
     expect(new Scene(config, mkObjects).objects.resources.size).toBeGreaterThan(
       5,
     );
+  });
+});
+
+describe("addResource", () => {
+  const config = setupTestConfig();
+  const { scene } = setupSceneWrapper(config);
+  let objects;
+
+  beforeEach(() => {
+    objects = scene().objects;
+    objects.resources = new Map();
+    objects.resourceCounter = 0;
+    addResource(objects, new Resource({ x: 0, y: 1 }));
+    addResource(objects, new Resource({ x: 0, y: 2 }));
+  });
+
+  it("adds resources starting with key 0", () => {
+    expect(objects.resources.size).toEqual(2);
+    expect((objects.resources.get(0): any).position).toEqual({ x: 0, y: 1 });
+    expect((objects.resources.get(1): any).position).toEqual({ x: 0, y: 2 });
+  });
+
+  it("doesn't reuse keys", () => {
+    objects.resources.delete(0);
+    addResource(objects, new Resource({ x: 0, y: 3 }));
+    expect(objects.resources.size).toEqual(2);
+    expect(objects.resources.get(0)).toEqual(undefined);
+    expect((objects.resources.get(1): any).position).toEqual({ x: 0, y: 2 });
+    expect((objects.resources.get(2): any).position).toEqual({ x: 0, y: 3 });
   });
 });
 

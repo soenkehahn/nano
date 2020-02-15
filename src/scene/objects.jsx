@@ -9,12 +9,12 @@ import { Resource } from "./resource";
 import { type Vector, collides, scale, vectorLength } from "../data/vector";
 import { type ViewBox } from "../web/svgPane";
 import { every } from "lodash";
-import { iife } from "../utils";
 
 export type Objects = {
   minions: Minions,
   lab: Lab,
   resources: Map<number, Resource>,
+  resourceCounter: number,
   factories: Array<Factory>,
 };
 
@@ -38,33 +38,33 @@ export function mkObjects(
     ),
   );
 
-  const resources = iife(() => {
-    const resources: Map<number, Resource> = new Map();
-    let counter = 0;
-    const closeResource = new Resource(
-      findRandom(scale, v => inside(config.initialSize, v)),
-    );
-    resources.set(counter++, closeResource);
-    for (let i = 0; i < numberOfResources; i++) {
-      const position = findRandom(
-        scale,
-        v =>
-          vectorLength(v) < config.initialSize.x * 2.6 &&
-          every(minions.toList(), minion => !collides(minion, new Resource(v))),
-      );
-      resources.set(counter++, new Resource(position));
-    }
-    return resources;
-  });
-
-  const factories = [];
-
-  return {
+  const objects = {
     minions,
     lab,
-    resources,
-    factories,
+    resources: new Map(),
+    resourceCounter: 0,
+    factories: [],
   };
+
+  const closeResource = new Resource(
+    findRandom(scale, v => inside(config.initialSize, v)),
+  );
+  addResource(objects, closeResource);
+  for (let i = 0; i < numberOfResources; i++) {
+    const position = findRandom(
+      scale,
+      v =>
+        vectorLength(v) < config.initialSize.x * 2.6 &&
+        every(minions.toList(), minion => !collides(minion, new Resource(v))),
+    );
+    addResource(objects, new Resource(position));
+  }
+
+  return objects;
+}
+
+export function addResource(objects: Objects, resource: Resource): void {
+  objects.resources.set(objects.resourceCounter++, resource);
 }
 
 export function findRandom(

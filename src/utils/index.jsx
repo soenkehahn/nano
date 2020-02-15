@@ -11,10 +11,6 @@ export function wait(seconds: number | Rational): Promise<void> {
   });
 }
 
-export function iife<A>(fun: () => A): A {
-  return fun();
-}
-
 type Printable = number | string | { toString: () => string };
 
 export function print(...x: Array<Printable>) {
