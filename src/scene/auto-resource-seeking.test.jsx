@@ -1,10 +1,10 @@
 // @flow
 
-import { Minion } from "./scene/minion";
-import { Resource } from "./scene/resource";
+import { Minion } from "./minion";
+import { Resource } from "./resource";
 import { cloneDeep } from "lodash";
-import { fromInt } from "./rational";
-import { sendMinion, setupSceneWrapper, setupTestConfig } from "./test/utils";
+import { fromInt } from "../rational";
+import { sendMinion, setupSceneWrapper, setupTestConfig } from "../test/utils";
 
 const config = setupTestConfig();
 const { wrapper, scene, update, step } = setupSceneWrapper(config);
