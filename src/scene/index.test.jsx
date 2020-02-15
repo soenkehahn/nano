@@ -123,14 +123,18 @@ describe("Scene interface", () => {
     });
   });
 
-  it("shows a game end success message when no resources are left", () => {
-    scene().objects.resources = new Map();
-    update();
-    expect(
-      wrapper()
-        .find("#gameEndSuccess")
-        .exists(),
-    ).toEqual(true);
+  describe("when no resources are left", () => {
+    it("shows a game end message including the reached time", () => {
+      scene().objects.resources = new Map();
+      config().uiTimeFactor = rational(1, 100);
+      scene().time = rational(42, 100).over(config().uiTimeFactor);
+      update();
+      expect(
+        wrapper()
+          .find("#gameEndSuccess")
+          .text(),
+      ).toContain("survived for 0.42 time units");
+    });
   });
 
   describe("time", () => {

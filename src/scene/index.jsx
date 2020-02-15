@@ -153,7 +153,10 @@ export class Scene {
     if (this.objects.resources.size === 0) {
       return (
         <div id="gameEndSuccess">
-          All resources are mined. Congratulations, you&apos;ve beaten the game!
+          Congratulations, you&apos;ve survived for{" "}
+          {this.time.times(this.config.uiTimeFactor).format()} time units!
+          <br />
+          Game Over!
         </div>
       );
     }
