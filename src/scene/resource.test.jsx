@@ -3,7 +3,7 @@
 import { Minion, MinionRender, type RenderProps } from "./minion";
 import { Resource, ResourceRender } from "./resource";
 import { cloneDeep } from "lodash";
-import { fromInt, rational } from "../rational";
+import { fromInt, rational } from "../data/rational";
 import { setupSceneWrapper, setupTestConfig } from "../test/utils";
 import { toClickEvent } from "../vector";
 

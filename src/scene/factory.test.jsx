@@ -3,7 +3,7 @@
 import { Factory, FactoryRender } from "./factory";
 import { MinionRender } from "./minion";
 import { Resource } from "./resource";
-import { fromInt, rational } from "../rational";
+import { fromInt, rational } from "../data/rational";
 import { setupSceneWrapper, setupTestConfig } from "../test/utils";
 
 const testConfig = setupTestConfig();

@@ -15,7 +15,7 @@ import {
   unit,
 } from "../vector";
 import { button } from "../lists";
-import { fromInt } from "../rational";
+import { fromInt } from "../data/rational";
 import { sepBy, when } from "../utils";
 
 type Status =

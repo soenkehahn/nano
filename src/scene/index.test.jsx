@@ -5,7 +5,7 @@ import { Lab } from "./lab";
 import { MinionRender } from "./minion";
 import { Resource } from "./resource";
 import { Scene } from "../scene";
-import { fromInt, rational } from "../rational";
+import { fromInt, rational } from "../data/rational";
 import {
   mockSvgJsdomExtensions,
   sendMinion,

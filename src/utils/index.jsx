@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from "react";
-import { type Rational } from "../rational";
+import { type Rational } from "../data/rational";
 
 export function wait(seconds: number | Rational): Promise<void> {
   const milliSeconds =

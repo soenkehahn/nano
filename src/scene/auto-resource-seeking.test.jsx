@@ -3,7 +3,7 @@
 import { Minion } from "./minion";
 import { Resource } from "./resource";
 import { cloneDeep } from "lodash";
-import { fromInt } from "../rational";
+import { fromInt } from "../data/rational";
 import { sendMinion, setupSceneWrapper, setupTestConfig } from "../test/utils";
 
 const config = setupTestConfig();

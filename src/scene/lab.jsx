@@ -3,7 +3,7 @@
 import * as React from "react";
 import { type Config, Scene } from ".";
 import { type Item, button, renderList } from "../lists";
-import { type Rational, fromInt } from "../rational";
+import { type Rational, fromInt } from "../data/rational";
 import { type RenderProps } from "./minion";
 import { TAU, type Vector, add, collides, fromAngle, scale } from "../vector";
 

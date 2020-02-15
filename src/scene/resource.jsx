@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from "react";
-import { type Rational, fromInt } from "../rational";
+import { type Rational, fromInt } from "../data/rational";
 import { type RenderProps } from "./minion";
 import { type Vector } from "../vector";
 

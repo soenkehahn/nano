@@ -9,7 +9,7 @@ import {
   insideViewBox,
   mkObjects,
 } from "./objects";
-import { fromInt, rational } from "../rational";
+import { fromInt, rational } from "../data/rational";
 
 describe("mkObjects", () => {
   it("has multiple resources", () => {

@@ -3,7 +3,7 @@
 import { LabRender } from "./lab";
 import { type Vector, toClickEvent } from "../vector";
 import { cloneDeep } from "lodash";
-import { fromInt, rational } from "../rational";
+import { fromInt, rational } from "../data/rational";
 import {
   sendMinion,
   setupSceneWrapper,

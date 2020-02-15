@@ -1,6 +1,6 @@
 // @flow
 
-import { type Rational } from "./rational";
+import { type Rational } from "./data/rational";
 import { wait } from "./utils";
 
 export function start(

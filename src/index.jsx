@@ -3,9 +3,8 @@
 import "regenerator-runtime/runtime";
 import { type Config, Scene, SceneStepper } from "./scene";
 import { animate } from "./animated";
-import { fromInt } from "./rational";
+import { fromInt, rational } from "./data/rational";
 import { mkObjects } from "./scene/objects";
-import { rational } from "./rational";
 import { withSize } from "./utils/withSize";
 import React from "react";
 import dom from "react-dom";

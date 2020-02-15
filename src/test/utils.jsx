@@ -8,7 +8,7 @@ import { type Objects, mkObjects } from "../scene/objects";
 import { ReactWrapper, mount } from "enzyme";
 import { type Vector } from "../vector";
 import { createElement } from "react";
-import { fromInt, rational } from "../rational";
+import { fromInt, rational } from "../data/rational";
 
 export function mockSvgJsdomExtensions(
   svgWrapper: ReactWrapper<any>,

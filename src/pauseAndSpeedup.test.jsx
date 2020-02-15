@@ -2,7 +2,7 @@
 
 import { Minion } from "./scene/minion";
 import { cloneDeep } from "lodash";
-import { fromInt } from "./rational";
+import { fromInt } from "./data/rational";
 import { sendMinion, setupSceneWrapper, setupTestConfig } from "./test/utils";
 
 const config = setupTestConfig();
