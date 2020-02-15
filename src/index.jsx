@@ -31,7 +31,6 @@ if (!module.parent) {
       factory: fromInt(3),
       seeding: fromInt(13),
       research: {
-        mining: fromInt(0),
         "auto-mining": fromInt(5),
         "auto-resource-seeking": fromInt(5),
       },

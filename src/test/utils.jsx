@@ -46,7 +46,6 @@ export const setupTestConfig: () => () => Config = () => {
         factory: fromInt(3),
         seeding: fromInt(3),
         research: {
-          mining: fromInt(0),
           "auto-mining": fromInt(10),
           "auto-resource-seeking": fromInt(10),
         },

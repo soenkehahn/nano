@@ -17,19 +17,19 @@ export type Config = {|
   stepsBeforeSpeedup: number,
   uiTimeFactor: Rational,
   velocity: Rational,
-  costs: {
+  costs: {|
     factory: Rational,
     seeding: Rational,
-    research: {
+    research: {|
       "auto-mining": Rational,
       "auto-resource-seeking": Rational,
-    },
-  },
+    |},
+  |},
   researchVelocity: Rational,
   miningVelocity: Rational,
-  seeding: {
+  seeding: {|
     resources: number,
-  },
+  |},
 |};
 
 export class SceneStepper {
