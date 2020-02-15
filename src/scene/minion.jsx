@@ -3,7 +3,7 @@
 import * as React from "react";
 import { type Config, Scene } from ".";
 import { Factory } from "./factory";
-import { SvgPane } from "../svgPane";
+import { SvgPane } from "../web/svgPane";
 import {
   type Vector,
   add,
@@ -14,7 +14,7 @@ import {
   scale,
   unit,
 } from "../data/vector";
-import { button } from "../lists";
+import { button } from "../web/lists";
 import { fromInt } from "../data/rational";
 import { sepBy, when } from "../utils";
 

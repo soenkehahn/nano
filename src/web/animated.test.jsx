@@ -5,7 +5,7 @@ import { type Size } from "./svgPane";
 import { animate } from "./animated";
 import { createElement } from "react";
 import { mount } from "enzyme";
-import { wait } from "./utils";
+import { wait } from "../utils";
 
 let wrapper;
 

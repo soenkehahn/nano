@@ -2,19 +2,19 @@
 
 import * as React from "react";
 import { ReactWrapper, mount } from "enzyme";
-import { Resource, ResourceRender } from "./scene/resource";
+import { Resource, ResourceRender } from "../scene/resource";
 import { type Size, SvgPane } from "./svgPane";
 import { createElement } from "react";
 import {
   mockSvgJsdomExtensions,
   setupSceneWrapper,
   setupTestConfig,
-} from "./test/utils";
+} from "../test/utils";
 import {
   setupEventListenerTracker,
   simulateWheelEvent,
-} from "./test/eventListeners";
-import { toClickEvent } from "./data/vector";
+} from "../test/eventListeners";
+import { toClickEvent } from "../data/vector";
 
 expect.extend({
   toBeCloseToViewBox(viewBox, expected) {

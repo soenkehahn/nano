@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from "react";
-import * as jsdomExtensions from "../jsdomExtensions/svg";
+import * as jsdomExtensions from "../web/svg";
 import { type Config, Scene } from "../scene";
 import { Minion } from "../scene/minion";
 import { type Objects, mkObjects } from "../scene/objects";

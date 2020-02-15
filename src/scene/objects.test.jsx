@@ -1,7 +1,7 @@
 // @flow
 
 import { type Config, Scene } from "./index";
-import { type ViewBox } from "../svgPane";
+import { type ViewBox } from "../web/svgPane";
 import {
   findRandom,
   inBiggerVicinity,

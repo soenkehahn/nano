@@ -7,7 +7,7 @@ import { Lab } from "./lab";
 import { Minion, Minions } from "./minion";
 import { Resource } from "./resource";
 import { type Vector, collides, scale, vectorLength } from "../data/vector";
-import { type ViewBox } from "../svgPane";
+import { type ViewBox } from "../web/svgPane";
 import { every } from "lodash";
 import { iife } from "../utils";
 

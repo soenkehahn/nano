@@ -2,7 +2,7 @@
 
 import "regenerator-runtime/runtime";
 import { type Config, Scene, SceneStepper } from "./scene";
-import { animate } from "./animated";
+import { animate } from "./web/animated";
 import { fromInt, rational } from "./data/rational";
 import { mkObjects } from "./scene/objects";
 import { withSize } from "./utils/withSize";
