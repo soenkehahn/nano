@@ -3,7 +3,7 @@
 import * as vector from "../vector";
 import { type Config, Scene } from "./index";
 import { Factory } from "./factory";
-import { Lab } from "../lab";
+import { Lab } from "./lab";
 import { Minion, Minions } from "./minion";
 import { Resource } from "../resource";
 import { type Vector, collides, scale, vectorLength } from "../vector";

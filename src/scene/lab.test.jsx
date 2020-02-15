@@ -1,19 +1,19 @@
 // @flow
 
 import { LabRender } from "./lab";
-import { type Vector, toClickEvent } from "./vector";
+import { type Vector, toClickEvent } from "../vector";
 import { cloneDeep } from "lodash";
-import { fromInt, rational } from "./rational";
+import { fromInt, rational } from "../rational";
 import {
   sendMinion,
   setupSceneWrapper,
   setupTestConfig,
   unsafeGet,
-} from "./test/utils";
+} from "../test/utils";
 import {
   setupEventListenerTracker,
   simulateWheelEvent,
-} from "./test/eventListeners";
+} from "../test/eventListeners";
 
 const config = setupTestConfig();
 

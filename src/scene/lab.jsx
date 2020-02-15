@@ -1,11 +1,11 @@
 // @flow
 
 import * as React from "react";
-import { type Config, Scene } from "./scene";
-import { type Item, button, renderList } from "./lists";
-import { type Rational, fromInt } from "./rational";
-import { type RenderProps } from "./scene/minion";
-import { TAU, type Vector, add, collides, fromAngle, scale } from "./vector";
+import { type Config, Scene } from ".";
+import { type Item, button, renderList } from "../lists";
+import { type Rational, fromInt } from "../rational";
+import { type RenderProps } from "./minion";
+import { TAU, type Vector, add, collides, fromAngle, scale } from "../vector";
 
 type Goal = "auto-mining" | "auto-resource-seeking";
 
