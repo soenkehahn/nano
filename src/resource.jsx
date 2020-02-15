@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { type Rational, fromInt } from "./rational";
-import { type RenderProps } from "./minion";
+import { type RenderProps } from "./scene/minion";
 import { type Vector } from "./vector";
 
 export class Resource {

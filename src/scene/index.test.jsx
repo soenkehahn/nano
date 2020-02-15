@@ -2,7 +2,7 @@
 
 import { Factory } from "../factory";
 import { Lab } from "../lab";
-import { MinionRender } from "../minion";
+import { MinionRender } from "./minion";
 import { Resource } from "../resource";
 import { Scene } from "../scene";
 import { fromInt, rational } from "../rational";

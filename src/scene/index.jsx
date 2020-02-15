@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as stepDriver from "../stepDriver";
-import { Minion } from "../minion";
+import { Minion } from "../scene/minion";
 import { type Objects, insideViewBox } from "./objects";
 import { type Rational, fromInt, rational } from "../rational";
 import { type Size, SvgPane, type ViewBox } from "../svgPane";

@@ -1,9 +1,9 @@
 // @flow
 
 import * as React from "react";
-import { type Config, Scene } from "./scene";
-import { Factory } from "./factory";
-import { SvgPane } from "./svgPane";
+import { type Config, Scene } from ".";
+import { Factory } from "../factory";
+import { SvgPane } from "../svgPane";
 import {
   type Vector,
   add,
@@ -13,10 +13,10 @@ import {
   equals,
   scale,
   unit,
-} from "./vector";
-import { button } from "./lists";
-import { fromInt } from "./rational";
-import { sepBy, when } from "./utils";
+} from "../vector";
+import { button } from "../lists";
+import { fromInt } from "../rational";
+import { sepBy, when } from "../utils";
 
 type Status =
   | {| tag: "idle" |}

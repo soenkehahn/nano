@@ -1,6 +1,6 @@
 // @flow
 
-import { Minion } from "./minion";
+import { Minion } from "./scene/minion";
 import { Resource } from "./resource";
 import { cloneDeep } from "lodash";
 import { fromInt } from "./rational";

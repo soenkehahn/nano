@@ -1,7 +1,7 @@
 // @flow
 
 import { Factory, FactoryRender } from "./factory";
-import { MinionRender } from "./minion";
+import { MinionRender } from "./scene/minion";
 import { Resource } from "./resource";
 import { fromInt, rational } from "./rational";
 import { setupSceneWrapper, setupTestConfig } from "./test/utils";

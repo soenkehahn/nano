@@ -1,6 +1,6 @@
 // @flow
 
-import { Minion, MinionRender, type RenderProps } from "./minion";
+import { Minion, MinionRender, type RenderProps } from "./scene/minion";
 import { Resource, ResourceRender } from "./resource";
 import { cloneDeep } from "lodash";
 import { fromInt, rational } from "./rational";

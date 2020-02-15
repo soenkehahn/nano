@@ -1,10 +1,10 @@
 // @flow
 
 import { Minion, MinionRender } from "./minion";
-import { Resource } from "./resource";
-import { fromInt, rational } from "./rational";
-import { sendMinion, setupSceneWrapper, setupTestConfig } from "./test/utils";
-import { toClickEvent } from "./vector";
+import { Resource } from "../resource";
+import { fromInt, rational } from "../rational";
+import { sendMinion, setupSceneWrapper, setupTestConfig } from "../test/utils";
+import { toClickEvent } from "../vector";
 
 const config = setupTestConfig();
 
