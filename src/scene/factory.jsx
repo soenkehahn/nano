@@ -1,9 +1,9 @@
 // @flow
 
 import * as React from "react";
-import { type Config, Scene } from "./scene";
-import { Minion, type RenderProps } from "./scene/minion";
-import { type Vector } from "./vector";
+import { type Config, Scene } from ".";
+import { Minion, type RenderProps } from "./minion";
+import { type Vector } from "../vector";
 
 let counter = 0;
 

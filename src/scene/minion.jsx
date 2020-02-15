@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { type Config, Scene } from ".";
-import { Factory } from "../factory";
+import { Factory } from "./factory";
 import { SvgPane } from "../svgPane";
 import {
   type Vector,

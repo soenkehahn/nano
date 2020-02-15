@@ -1,6 +1,6 @@
 // @flow
 
-import { Factory } from "../factory";
+import { Factory } from "./factory";
 import { Lab } from "../lab";
 import { MinionRender } from "./minion";
 import { Resource } from "../resource";
