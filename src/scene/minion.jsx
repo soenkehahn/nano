@@ -3,6 +3,7 @@
 import * as React from "react";
 import { type Config, Scene } from ".";
 import { Factory } from "./factory";
+import { Resource } from "./resource";
 import { SvgPane } from "../web/svgPane";
 import {
   type Vector,
@@ -14,9 +15,11 @@ import {
   scale,
   unit,
 } from "../data/vector";
+import { addResource, findRandom } from "./objects";
 import { button } from "../web/lists";
 import { fromInt } from "../data/rational";
 import { sepBy, when } from "../utils";
+import { vectorLength } from "../data/vector";
 
 type Status =
   | {| tag: "idle" |}
@@ -160,6 +163,19 @@ export class Minion {
     }
   };
 
+  seed: () => void = () => {
+    for (let i = 0; i < 11; i++) {
+      const position = add(
+        this.position,
+        findRandom(1000, v => vectorLength(v) < 300),
+      );
+      addResource(this.scene.objects, new Resource(position));
+    }
+    this.scene.inventory = this.scene.inventory.minus(
+      this.config.costs.seeding,
+    );
+  };
+
   draw: () => React.Node = () => {
     return (
       <MinionRender
@@ -248,9 +264,7 @@ export class Minion {
                   <br />
                   <button
                     id={`autoResourceSeekingButton-${this.id}`}
-                    onClick={() => {
-                      this.targetClosestResource();
-                    }}
+                    onClick={this.targetClosestResource}
                   >
                     <input
                       id={`autoResourceSeekingCheckbox-${this.id}`}
@@ -266,6 +280,14 @@ export class Minion {
                 </>
               ),
             )}
+            {when(this.scene.inventory.ge(this.config.costs.seeding), () => (
+              <>
+                <br />
+                <button id={`seedButton-${this.id}`} onClick={this.seed}>
+                  seed
+                </button>
+              </>
+            ))}
           </>
         ))}
       </div>

@@ -44,6 +44,7 @@ export const setupTestConfig: () => () => Config = () => {
       velocity: fromInt(1),
       costs: {
         factory: fromInt(3),
+        seeding: fromInt(3),
         research: {
           mining: fromInt(0),
           "auto-mining": fromInt(10),
