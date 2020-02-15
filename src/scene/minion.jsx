@@ -167,7 +167,7 @@ export class Minion {
 
   seed: () => void = () => {
     if (this.scene.inventory.ge(this.config.costs.seeding)) {
-      for (let i = 0; i < 11; i++) {
+      for (let i = 0; i < this.config.seeding.resources; i++) {
         const position = add(
           this.position,
           findRandom(1000, v => vectorLength(v) < 300),

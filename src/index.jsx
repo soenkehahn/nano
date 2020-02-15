@@ -38,6 +38,9 @@ if (!module.parent) {
     },
     researchVelocity: rational(5, 100000),
     miningVelocity: rational(5, 100000),
+    seeding: {
+      resources: 12,
+    },
   };
   const scene = new Scene(config, mkObjects);
   const queryParams = new URLSearchParams(window.location.search);

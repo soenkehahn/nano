@@ -14,6 +14,7 @@ function formatVector(vector: Vector) {
 describe("seeding", () => {
   beforeEach(() => {
     config().costs.seeding = fromInt(10);
+    config().seeding.resources = 7;
   });
 
   describe("when there's not enough resources", () => {
@@ -32,7 +33,7 @@ describe("seeding", () => {
 
   describe("when there's enough resources", () => {
     beforeEach(() => {
-      scene().inventory = fromInt(11);
+      scene().inventory = config().costs.seeding.plus(fromInt(1));
       update();
     });
 
@@ -40,7 +41,7 @@ describe("seeding", () => {
       wrapper()
         .find("#seedButton-0")
         .simulate("click");
-      expect(scene().objects.resources.size).toEqual(13);
+      expect(scene().objects.resources.size).toEqual(9);
     });
 
     it("removes the cost for seeding from the inventory", () => {
@@ -60,7 +61,7 @@ describe("seeding", () => {
             formatVector(x.position),
           ),
         ).size,
-      ).toEqual(13);
+      ).toEqual(9);
     });
 
     it("adds resources close to the current minion", () => {
@@ -89,7 +90,7 @@ describe("seeding", () => {
           .find("#autoSeedingCheckbox-0")
           .simulate("change", { target: { checked: true } });
         step();
-        expect(scene().objects.resources.size).toEqual(13);
+        expect(scene().objects.resources.size).toEqual(9);
       });
     });
 
@@ -113,7 +114,7 @@ describe("seeding", () => {
         step();
         scene().inventory = fromInt(10);
         step();
-        expect(scene().objects.resources.size).toEqual(13);
+        expect(scene().objects.resources.size).toEqual(9);
       });
 
       it("triggers seeding multiple times", () => {
@@ -125,7 +126,7 @@ describe("seeding", () => {
         step();
         scene().inventory = fromInt(10);
         step();
-        expect(scene().objects.resources.size).toEqual(24);
+        expect(scene().objects.resources.size).toEqual(16);
       });
     });
   });

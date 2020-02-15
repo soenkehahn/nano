@@ -34,6 +34,9 @@ describe("mkObjects", () => {
       },
       researchVelocity: fromInt(1),
       miningVelocity: fromInt(1000),
+      seeding: {
+        resources: 4,
+      },
     };
     expect(new Scene(config, mkObjects).objects.resources.size).toBeGreaterThan(
       5,

@@ -53,6 +53,9 @@ export const setupTestConfig: () => () => Config = () => {
       },
       researchVelocity: fromInt(1),
       miningVelocity: fromInt(1000),
+      seeding: {
+        resources: 4,
+      },
     };
   });
   return () => config;

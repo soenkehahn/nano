@@ -27,6 +27,9 @@ export type Config = {|
   },
   researchVelocity: Rational,
   miningVelocity: Rational,
+  seeding: {
+    resources: number,
+  },
 |};
 
 export class SceneStepper {
