@@ -226,7 +226,7 @@ export class Minion {
                   <>
                     <br />
                     <button
-                      id={`buildButton-${this.id}`}
+                      id={`buildMinionButton-${this.id}`}
                       onClick={() => {
                         Factory.construct(
                           this.config,
@@ -235,7 +235,7 @@ export class Minion {
                         );
                       }}
                     >
-                      build
+                      build minion
                     </button>
                   </>
                 );

@@ -79,7 +79,7 @@ describe("Scene interface", () => {
     ).toEqual(false);
     expect(
       wrapper()
-        .find("#buildButton")
+        .find("#buildMinionButton")
         .exists(),
     ).toEqual(false);
   });
