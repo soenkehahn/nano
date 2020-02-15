@@ -107,53 +107,6 @@ export class Minion {
     }
   };
 
-  autoSeed: () => void = () => {
-    if (this.autoSeedingChecked) {
-      this.seed();
-    }
-  };
-
-  autoSeek: () => void = () => {
-    if (
-      this.status.tag == "idle" &&
-      this.autoSeekingChecked &&
-      this.collidingResources.length == 0
-    ) {
-      this.targetClosestResource();
-    }
-  };
-
-  targetClosestResource: () => void = () => {
-    let minDistance = Number.MAX_VALUE;
-    let closestResource = null;
-    for (const resource of this.scene.objects.resources.values()) {
-      const dist = distance(this.position, resource.position);
-      if (dist < minDistance) {
-        minDistance = dist;
-        closestResource = resource;
-      }
-    }
-    if (closestResource) {
-      if (!equals(this.position, closestResource.position)) {
-        this.status = { tag: "moving", target: closestResource.position };
-      }
-    }
-  };
-
-  autoMine: () => void = () => {
-    if (
-      (this.status.tag === "moving" || this.status.tag === "idle") &&
-      this.scene.objects.lab.researched.has("auto-mining") &&
-      this.collidingResources.length > 0
-    ) {
-      this.status = {
-        tag: "mining",
-        resourceId: this.collidingResources[0],
-        autoMiningSuccessor: this.status,
-      };
-    }
-  };
-
   mine: number => void = resourceId => {
     const resource = this.scene.objects.resources.get(resourceId);
     if (resource && collides(this, resource)) {
@@ -171,6 +124,47 @@ export class Minion {
     }
   };
 
+  autoMine: () => void = () => {
+    if (
+      (this.status.tag === "moving" || this.status.tag === "idle") &&
+      this.scene.objects.lab.researched.has("auto-mining") &&
+      this.collidingResources.length > 0
+    ) {
+      this.status = {
+        tag: "mining",
+        resourceId: this.collidingResources[0],
+        autoMiningSuccessor: this.status,
+      };
+    }
+  };
+
+  seek: () => void = () => {
+    let minDistance = Number.MAX_VALUE;
+    let closestResource = null;
+    for (const resource of this.scene.objects.resources.values()) {
+      const dist = distance(this.position, resource.position);
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestResource = resource;
+      }
+    }
+    if (closestResource) {
+      if (!equals(this.position, closestResource.position)) {
+        this.status = { tag: "moving", target: closestResource.position };
+      }
+    }
+  };
+
+  autoSeek: () => void = () => {
+    if (
+      this.status.tag == "idle" &&
+      this.autoSeekingChecked &&
+      this.collidingResources.length == 0
+    ) {
+      this.seek();
+    }
+  };
+
   seed: () => void = () => {
     if (this.scene.inventory.ge(this.config.costs.seeding)) {
       for (let i = 0; i < 11; i++) {
@@ -183,6 +177,12 @@ export class Minion {
       this.scene.inventory = this.scene.inventory.minus(
         this.config.costs.seeding,
       );
+    }
+  };
+
+  autoSeed: () => void = () => {
+    if (this.autoSeedingChecked) {
+      this.seed();
     }
   };
 
@@ -274,7 +274,7 @@ export class Minion {
                   <br />
                   <button
                     id={`autoResourceSeekingButton-${this.id}`}
-                    onClick={this.targetClosestResource}
+                    onClick={this.seek}
                   >
                     <input
                       id={`autoResourceSeekingCheckbox-${this.id}`}
