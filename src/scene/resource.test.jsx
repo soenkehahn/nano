@@ -5,7 +5,7 @@ import { Resource, ResourceRender } from "./resource";
 import { cloneDeep } from "lodash";
 import { fromInt, rational } from "../data/rational";
 import { setupSceneWrapper, setupTestConfig } from "../test/utils";
-import { toClickEvent } from "../vector";
+import { toClickEvent } from "../data/vector";
 
 const config = setupTestConfig();
 

@@ -1,7 +1,7 @@
 // @flow
 
 import { LabRender } from "./lab";
-import { type Vector, toClickEvent } from "../vector";
+import { type Vector, toClickEvent } from "../data/vector";
 import { cloneDeep } from "lodash";
 import { fromInt, rational } from "../data/rational";
 import {

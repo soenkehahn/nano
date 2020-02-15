@@ -13,7 +13,7 @@ import {
   equals,
   scale,
   unit,
-} from "../vector";
+} from "../data/vector";
 import { button } from "../lists";
 import { fromInt } from "../data/rational";
 import { sepBy, when } from "../utils";

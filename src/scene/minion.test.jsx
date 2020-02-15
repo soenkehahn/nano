@@ -4,7 +4,7 @@ import { Minion, MinionRender } from "./minion";
 import { Resource } from "./resource";
 import { fromInt, rational } from "../data/rational";
 import { sendMinion, setupSceneWrapper, setupTestConfig } from "../test/utils";
-import { toClickEvent } from "../vector";
+import { toClickEvent } from "../data/vector";
 
 const config = setupTestConfig();
 

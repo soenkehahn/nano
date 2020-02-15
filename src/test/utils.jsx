@@ -6,7 +6,7 @@ import { type Config, Scene } from "../scene";
 import { Minion } from "../scene/minion";
 import { type Objects, mkObjects } from "../scene/objects";
 import { ReactWrapper, mount } from "enzyme";
-import { type Vector } from "../vector";
+import { type Vector } from "../data/vector";
 import { createElement } from "react";
 import { fromInt, rational } from "../data/rational";
 

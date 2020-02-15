@@ -5,7 +5,14 @@ import { type Config, Scene } from ".";
 import { type Item, button, renderList } from "../lists";
 import { type Rational, fromInt } from "../data/rational";
 import { type RenderProps } from "./minion";
-import { TAU, type Vector, add, collides, fromAngle, scale } from "../vector";
+import {
+  TAU,
+  type Vector,
+  add,
+  collides,
+  fromAngle,
+  scale,
+} from "../data/vector";
 
 type Goal = "auto-mining" | "auto-resource-seeking";
 

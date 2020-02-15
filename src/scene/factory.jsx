@@ -3,7 +3,7 @@
 import * as React from "react";
 import { type Config, Scene } from ".";
 import { Minion, type RenderProps } from "./minion";
-import { type Vector } from "../vector";
+import { type Vector } from "../data/vector";
 
 let counter = 0;
 

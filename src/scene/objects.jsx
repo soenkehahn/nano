@@ -1,12 +1,12 @@
 // @flow
 
-import * as vector from "../vector";
+import * as vector from "../data/vector";
 import { type Config, Scene } from "./index";
 import { Factory } from "./factory";
 import { Lab } from "./lab";
 import { Minion, Minions } from "./minion";
 import { Resource } from "./resource";
-import { type Vector, collides, scale, vectorLength } from "../vector";
+import { type Vector, collides, scale, vectorLength } from "../data/vector";
 import { type ViewBox } from "../svgPane";
 import { every } from "lodash";
 import { iife } from "../utils";

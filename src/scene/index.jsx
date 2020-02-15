@@ -6,7 +6,7 @@ import { Minion } from "../scene/minion";
 import { type Objects, insideViewBox } from "./objects";
 import { type Rational, fromInt, rational } from "../data/rational";
 import { type Size, SvgPane, type ViewBox } from "../svgPane";
-import { type Vector, collides } from "../vector";
+import { type Vector, collides } from "../data/vector";
 import { filter, sepBy } from "../utils";
 import { some } from "lodash";
 

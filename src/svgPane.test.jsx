@@ -14,7 +14,7 @@ import {
   setupEventListenerTracker,
   simulateWheelEvent,
 } from "./test/eventListeners";
-import { toClickEvent } from "./vector";
+import { toClickEvent } from "./data/vector";
 
 expect.extend({
   toBeCloseToViewBox(viewBox, expected) {

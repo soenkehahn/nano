@@ -13,7 +13,7 @@ import {
   setupTestConfig,
   testObjects,
 } from "../test/utils";
-import { toClickEvent } from "../vector";
+import { toClickEvent } from "../data/vector";
 
 const config = setupTestConfig();
 

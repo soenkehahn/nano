@@ -3,7 +3,7 @@
 import * as React from "react";
 import { type Rational, fromInt } from "../data/rational";
 import { type RenderProps } from "./minion";
-import { type Vector } from "../vector";
+import { type Vector } from "../data/vector";
 
 export class Resource {
   static keyCounter: number = 0;

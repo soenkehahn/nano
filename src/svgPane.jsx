@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as jsdomExtensions from "./jsdomExtensions/svg";
-import { type Vector, scale } from "./vector";
+import { type Vector, scale } from "./data/vector";
 
 export type ViewBox = {| offset: Vector, size: Vector |};
 
