@@ -1079,6 +1079,7 @@ declare var fdescribe: typeof describe;
 declare var xit: typeof it;
 /** A disabled individual test */
 declare var xtest: typeof it;
+declare var pending: () => void;
 
 type JestPrettyFormatColors = {
   comment: { close: string, open: string },
