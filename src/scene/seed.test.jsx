@@ -5,7 +5,7 @@ import { fromInt } from "../data/rational";
 import { setupSceneWrapper, setupTestConfig } from "../test/utils";
 
 const config = setupTestConfig();
-const { wrapper, scene, update } = setupSceneWrapper(config);
+const { wrapper, step, scene, update } = setupSceneWrapper(config);
 
 function formatVector(vector: Vector) {
   return `{x: ${vector.x}, y: ${vector.y}}`;
@@ -25,8 +25,8 @@ describe("seeding", () => {
       expect(
         wrapper()
           .find("#seedButton-0")
-          .exists(),
-      ).toEqual(false);
+          .props().disabled,
+      ).toEqual(true);
     });
   });
 
@@ -74,6 +74,59 @@ describe("seeding", () => {
           distance(scene().focusedMinion().position, resource.position),
         ).toBeLessThan(300);
       }
+    });
+  });
+
+  describe("auto-seeding", () => {
+    describe("when there's enough resources", () => {
+      beforeEach(() => {
+        scene().inventory = fromInt(11);
+        update();
+      });
+
+      it("triggers seeding", () => {
+        wrapper()
+          .find("#autoSeedingCheckbox-0")
+          .simulate("change", { target: { checked: true } });
+        step();
+        expect(scene().objects.resources.size).toEqual(13);
+      });
+    });
+
+    describe("when there's not enough resources", () => {
+      beforeEach(() => {
+        scene().inventory = fromInt(2);
+      });
+
+      it("doesn't do anything at first", () => {
+        wrapper()
+          .find("#autoSeedingCheckbox-0")
+          .simulate("change", { target: { checked: true } });
+        step();
+        expect(scene().objects.resources.size).toEqual(2);
+      });
+
+      it("triggers seeding once there's enough resources", () => {
+        wrapper()
+          .find("#autoSeedingCheckbox-0")
+          .simulate("change", { target: { checked: true } });
+        step();
+        scene().inventory = fromInt(10);
+        step();
+        expect(scene().objects.resources.size).toEqual(13);
+      });
+
+      it("triggers seeding multiple times", () => {
+        wrapper()
+          .find("#autoSeedingCheckbox-0")
+          .simulate("change", { target: { checked: true } });
+        step();
+        scene().inventory = fromInt(10);
+        step();
+        scene().inventory = fromInt(10);
+        step();
+        expect(scene().objects.resources.size).toEqual(24);
+      });
     });
   });
 });

@@ -37,6 +37,7 @@ export class Minion {
   radius: number = 10;
   status: Status = { tag: "idle" };
   autoSeekingChecked: boolean = false;
+  autoSeedingChecked: boolean = false;
 
   collidingResources: Array<number> = [];
 
@@ -73,6 +74,7 @@ export class Minion {
       this.move(this.status.target);
     }
     this.updateCollidingResources();
+    this.autoSeed();
     this.autoSeek();
     this.autoMine();
     if (!paused && this.status.tag === "mining") {
@@ -102,6 +104,12 @@ export class Minion {
       if (collides(this, resource)) {
         this.collidingResources.push(resourceId);
       }
+    }
+  };
+
+  autoSeed: () => void = () => {
+    if (this.autoSeedingChecked) {
+      this.seed();
     }
   };
 
@@ -164,16 +172,18 @@ export class Minion {
   };
 
   seed: () => void = () => {
-    for (let i = 0; i < 11; i++) {
-      const position = add(
-        this.position,
-        findRandom(1000, v => vectorLength(v) < 300),
+    if (this.scene.inventory.ge(this.config.costs.seeding)) {
+      for (let i = 0; i < 11; i++) {
+        const position = add(
+          this.position,
+          findRandom(1000, v => vectorLength(v) < 300),
+        );
+        addResource(this.scene.objects, new Resource(position));
+      }
+      this.scene.inventory = this.scene.inventory.minus(
+        this.config.costs.seeding,
       );
-      addResource(this.scene.objects, new Resource(position));
     }
-    this.scene.inventory = this.scene.inventory.minus(
-      this.config.costs.seeding,
-    );
   };
 
   draw: () => React.Node = () => {
@@ -280,14 +290,26 @@ export class Minion {
                 </>
               ),
             )}
-            {when(this.scene.inventory.ge(this.config.costs.seeding), () => (
-              <>
-                <br />
-                <button id={`seedButton-${this.id}`} onClick={this.seed}>
-                  seed
-                </button>
-              </>
-            ))}
+            <br />
+            <>
+              <input
+                id={`autoSeedingCheckbox-${this.id}`}
+                type="checkbox"
+                checked={this.autoSeedingChecked}
+                disabled={false}
+                onChange={event => {
+                  event.stopPropagation();
+                  this.autoSeedingChecked = event.target.checked;
+                }}
+              />
+              <button
+                id={`seedButton-${this.id}`}
+                disabled={!this.scene.inventory.ge(this.config.costs.seeding)}
+                onClick={this.seed}
+              >
+                seed
+              </button>
+            </>
           </>
         ))}
       </div>

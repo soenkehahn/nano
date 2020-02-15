@@ -29,7 +29,7 @@ if (!module.parent) {
     velocity: rational(4, 100),
     costs: {
       factory: fromInt(3),
-      seeding: fromInt(7),
+      seeding: fromInt(13),
       research: {
         mining: fromInt(0),
         "auto-mining": fromInt(5),
