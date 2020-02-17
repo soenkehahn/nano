@@ -1,5 +1,6 @@
 // @flow
 
+import { IdMap } from "../data/IdMap";
 import { Minion } from "./minion";
 import { Resource } from "./resource";
 import { cloneDeep } from "lodash";
@@ -55,9 +56,9 @@ describe("auto-resource-seeking", () => {
     beforeEach(() => {
       config().velocity = fromInt(50);
       scene().objects.lab.researched.add("auto-resource-seeking");
-      scene().objects.resources = new Map([
-        [0, new Resource({ x: 100, y: 0 })],
-        [1, new Resource({ x: 1000, y: 0 })],
+      scene().objects.resources = new IdMap([
+        new Resource({ x: 100, y: 0 }),
+        new Resource({ x: 1000, y: 0 }),
       ]);
       update();
       wrapper()
@@ -91,9 +92,9 @@ describe("auto-resource-seeking", () => {
     });
 
     it("seeks the closest resource", () => {
-      scene().objects.resources = new Map([
-        [1, new Resource({ x: 0, y: 200 })],
-        [0, new Resource({ x: 100, y: 0 })],
+      scene().objects.resources = new IdMap([
+        new Resource({ x: 0, y: 200 }),
+        new Resource({ x: 100, y: 0 }),
       ]);
       step(5);
       expect(scene().focusedMinion().position).toEqual({ x: 100, y: 0 });
@@ -113,7 +114,7 @@ describe("auto-resource-seeking", () => {
         .find("#mineButton-0")
         .simulate("click");
       step(10);
-      expect(scene().objects.resources.size).toEqual(1);
+      expect(scene().objects.resources.size()).toEqual(1);
     });
 
     it("keeps auto-seeking resources after the first one", () => {
@@ -132,7 +133,7 @@ describe("auto-resource-seeking", () => {
         .find("#mineButton-0")
         .simulate("click");
       step(10);
-      expect(scene().objects.resources).toEqual(new Map());
+      expect(scene().objects.resources.toArray()).toEqual([]);
     });
   });
 });

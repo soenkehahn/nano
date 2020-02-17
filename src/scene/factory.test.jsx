@@ -1,6 +1,7 @@
 // @flow
 
 import { Factory, FactoryRender } from "./factory";
+import { IdMap } from "../data/IdMap";
 import { MinionRender } from "./minion";
 import { Resource } from "./resource";
 import { fromInt, rational } from "../data/rational";
@@ -22,7 +23,7 @@ describe("Factory", () => {
   });
 
   it("allows to construct a factory with 3 resources", () => {
-    scene().objects.resources = new Map([[0, new Resource({ x: -100, y: 0 })]]);
+    scene().objects.resources = new IdMap([new Resource({ x: -100, y: 0 })]);
     scene().inventory = fromInt(3);
     step(2);
     expect(
@@ -42,7 +43,7 @@ describe("Factory", () => {
   });
 
   it("builds the factory at the location of the minion", () => {
-    scene().objects.resources = new Map([[0, new Resource({ x: -100, y: 0 })]]);
+    scene().objects.resources = new IdMap([new Resource({ x: -100, y: 0 })]);
     scene().inventory = fromInt(3);
     scene().focusedMinion().position = { x: 10, y: 12 };
     update();
@@ -75,7 +76,7 @@ describe("Factory", () => {
   });
 
   test("building uses up resources", () => {
-    scene().objects.resources = new Map([[0, new Resource({ x: -100, y: 0 })]]);
+    scene().objects.resources = new IdMap([new Resource({ x: -100, y: 0 })]);
     scene().inventory = fromInt(4);
     step(2);
     wrapper()
@@ -86,7 +87,7 @@ describe("Factory", () => {
   });
 
   it("produces one minion when being built", () => {
-    scene().objects.resources = new Map([[0, new Resource({ x: -100, y: 0 })]]);
+    scene().objects.resources = new IdMap([new Resource({ x: -100, y: 0 })]);
     scene().inventory = fromInt(4);
     scene().focusedMinion().position = { x: 42, y: 23 };
     step(2);

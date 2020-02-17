@@ -4,6 +4,7 @@ import * as React from "react";
 import { type Config, Scene } from ".";
 import { Factory } from "./factory";
 import { Resource } from "./resource";
+import { Spore } from "./spore";
 import { SvgPane } from "../web/svgPane";
 import {
   type Vector,
@@ -25,21 +26,30 @@ type Status =
   | {| tag: "idle" |}
   | {| tag: "waitForMoveTarget" |}
   | {| tag: "moving", target: Vector |}
-  | {| tag: "mining", resourceId: number, autoMiningSuccessor?: Status |};
+  | {| tag: "mining", resource: Resource, autoMiningSuccessor?: Status |}
+  | {| tag: "breeding", spore: Spore |};
+
+type Collisions = {
+  resources: Array<Resource>,
+  spores: Array<Spore>,
+};
 
 export class Minion {
+  static radius: number = 10;
   config: Config;
   scene: Scene;
   static idCounter: number = 0;
   id: number;
   position: Vector;
   focused: boolean = false;
-  radius: number = 10;
   status: Status = { tag: "idle" };
   autoSeekingChecked: boolean = false;
   autoSeedingChecked: boolean = false;
 
-  collidingResources: Array<number> = [];
+  collisions: () => Collisions = () => ({
+    resources: [],
+    spores: [],
+  });
 
   constructor(config: Config, scene: Scene, position: Vector) {
     this.config = config;
@@ -49,7 +59,7 @@ export class Minion {
     this.position = position;
   }
 
-  getRadius = () => this.radius;
+  getRadius = () => Minion.radius;
 
   onClick: Vector => void = target => {
     if (this.status.tag === "waitForMoveTarget") {
@@ -64,22 +74,55 @@ export class Minion {
     else if (this.status.tag === "waitForMoveTarget")
       return "click on the map to set the target";
     else if (this.status.tag === "idle") return "status: idle";
+    else if (this.status.tag === "breeding") return "status: breeding";
     else {
       (this.status.tag: empty);
     }
   };
 
   step: ({ paused: boolean }) => void = ({ paused }) => {
-    if (!paused && this.status.tag === "moving") {
-      this.move(this.status.target);
+    this.updateCollisions();
+    if (!paused) {
+      if (this.status.tag === "moving") {
+        this.move(this.status.target);
+      } else if (this.status.tag === "mining") {
+        this.mine(this.status.resource);
+      } else if (this.status.tag === "breeding") {
+        this.breed(this.status.spore);
+      } else if (this.status.tag === "idle") {
+        null;
+      } else if (this.status.tag === "waitForMoveTarget") {
+        null;
+      } else {
+        (this.status.tag: empty);
+      }
     }
-    this.updateCollidingResources();
-    this.autoSeed();
-    this.autoSeek();
     this.autoMine();
-    if (!paused && this.status.tag === "mining") {
-      this.mine(this.status.resourceId);
-    }
+    this.autoSeek();
+    this.autoSeed();
+  };
+
+  updateCollisions: () => void = () => {
+    let collisions: null | Collisions = null;
+    this.collisions = () => {
+      if (collisions === null) {
+        collisions = {
+          resources: [],
+          spores: [],
+        };
+        for (const resource of this.scene.objects.resources) {
+          if (collides(this, resource)) {
+            collisions.resources.push(resource);
+          }
+        }
+        for (const spore of this.scene.objects.spores) {
+          if (collides(this, spore)) {
+            collisions.spores.push(spore);
+          }
+        }
+      }
+      return collisions;
+    };
   };
 
   move: Vector => void = target => {
@@ -98,17 +141,7 @@ export class Minion {
     }
   };
 
-  updateCollidingResources: () => void = () => {
-    this.collidingResources = [];
-    for (const [resourceId, resource] of this.scene.objects.resources) {
-      if (collides(this, resource)) {
-        this.collidingResources.push(resourceId);
-      }
-    }
-  };
-
-  mine: number => void = resourceId => {
-    const resource = this.scene.objects.resources.get(resourceId);
+  mine: Resource => void = resource => {
     if (resource && collides(this, resource)) {
       this.scene.inventory = this.scene.inventory.plus(
         resource.mine(
@@ -116,7 +149,8 @@ export class Minion {
         ),
       );
       if (resource.status.unitsLeft.equals(fromInt(0))) {
-        this.scene.objects.resources.delete(resourceId);
+        this.scene.objects.resources.delete(resource.id);
+        Spore.addSpore(this.scene, resource);
         this.status = this.status.autoMiningSuccessor || { tag: "idle" };
       }
     } else {
@@ -128,11 +162,11 @@ export class Minion {
     if (
       (this.status.tag === "moving" || this.status.tag === "idle") &&
       this.scene.objects.lab.researched.has("auto-mining") &&
-      this.collidingResources.length > 0
+      this.collisions().resources.length > 0
     ) {
       this.status = {
         tag: "mining",
-        resourceId: this.collidingResources[0],
+        resource: this.collisions().resources[0],
         autoMiningSuccessor: this.status,
       };
     }
@@ -141,7 +175,7 @@ export class Minion {
   seek: () => void = () => {
     let minDistance = Number.MAX_VALUE;
     let closestResource = null;
-    for (const resource of this.scene.objects.resources.values()) {
+    for (const resource of this.scene.objects.resources) {
       const dist = distance(this.position, resource.position);
       if (dist < minDistance) {
         minDistance = dist;
@@ -159,7 +193,7 @@ export class Minion {
     if (
       this.status.tag == "idle" &&
       this.autoSeekingChecked &&
-      this.collidingResources.length == 0
+      this.collisions().resources.length == 0
     ) {
       this.seek();
     }
@@ -167,16 +201,20 @@ export class Minion {
 
   seed: () => void = () => {
     if (this.scene.inventory.ge(this.config.costs.seeding)) {
-      for (let i = 0; i < this.config.seeding.resources; i++) {
-        const position = add(
-          this.position,
-          findRandom(1000, v => vectorLength(v) < 300),
-        );
-        addResource(this.scene.objects, new Resource(position));
-      }
+      this.addResources(this.position);
       this.scene.inventory = this.scene.inventory.minus(
         this.config.costs.seeding,
       );
+    }
+  };
+
+  addResources: Vector => void = center => {
+    for (let i = 0; i < this.config.seeding.resources; i++) {
+      const position = add(
+        center,
+        findRandom(Spore.radius * 1.5, v => vectorLength(v) < Spore.radius),
+      );
+      addResource(this.scene.objects, new Resource(position));
     }
   };
 
@@ -186,13 +224,28 @@ export class Minion {
     }
   };
 
+  startBreeding: Spore => void = spore => {
+    this.status = { tag: "breeding", spore };
+  };
+
+  breed: Spore => void = spore => {
+    spore.completion = spore.completion.plus(
+      this.config.stepTimeDelta.times(this.config.breedingVelocity),
+    );
+    if (spore.completion.ge(fromInt(1))) {
+      this.scene.objects.spores.delete(spore.id);
+      this.addResources(spore.position);
+      this.status = { tag: "idle" };
+    }
+  };
+
   draw: () => React.Node = () => {
     return (
       <MinionRender
         key={`minion-${this.id}`}
         position={this.position}
         focused={this.focused}
-        radius={this.radius}
+        radius={Minion.radius}
       />
     );
   };
@@ -224,15 +277,15 @@ export class Minion {
             >
               move
             </button>
-            {when(this.collidingResources.length > 0, () => {
-              const resourceId = this.collidingResources[0];
+            {when(this.collisions().resources.length > 0, () => {
+              const resource = this.collisions().resources[0];
               return (
                 <>
                   <br />
                   <button
                     id={`mineButton-${this.id}`}
                     onClick={() => {
-                      this.status = { tag: "mining", resourceId };
+                      this.status = { tag: "mining", resource };
                     }}
                   >
                     mine
@@ -310,6 +363,23 @@ export class Minion {
                 seed
               </button>
             </>
+            {when(this.collisions().spores.length > 0, () => (
+              <>
+                <br />
+                <button
+                  id={`breedButton-${this.id}`}
+                  onClick={() => {
+                    if (this.collisions().spores.length === 0) {
+                      throw "no spores colliding";
+                    }
+                    const spore = this.collisions().spores[0];
+                    this.startBreeding(spore);
+                  }}
+                >
+                  breed
+                </button>
+              </>
+            ))}
           </>
         ))}
       </div>

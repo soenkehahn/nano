@@ -27,6 +27,7 @@ export type Config = {|
   |},
   researchVelocity: Rational,
   miningVelocity: Rational,
+  breedingVelocity: Rational,
   seeding: {|
     resources: number,
   |},
@@ -75,7 +76,7 @@ export class Scene {
     position: Vector,
     getRadius: () => number,
   }) => boolean = other => {
-    for (const object of this.objects.resources.values()) {
+    for (const object of this.objects.resources) {
       if (collides(object, other)) {
         return true;
       }
@@ -154,7 +155,7 @@ export class Scene {
   };
 
   interface: () => React.Node = () => {
-    if (this.objects.resources.size === 0) {
+    if (this.objects.resources.size() === 0) {
       return (
         <div id="gameEndSuccess">
           Congratulations, you&apos;ve survived for{" "}
@@ -194,8 +195,11 @@ export class Scene {
       getRadius: () => number,
       draw: () => React.Node,
     }> = [];
+    for (const spore of this.objects.spores) {
+      objects.push(spore);
+    }
     objects = objects.concat(this.objects.factories);
-    for (const resource of this.objects.resources.values()) {
+    for (const resource of this.objects.resources) {
       objects.push(resource);
     }
     objects.push(this.objects.lab);

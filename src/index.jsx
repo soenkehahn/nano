@@ -9,10 +9,9 @@ import { withSize } from "./utils/withSize";
 import React from "react";
 import dom from "react-dom";
 
-function setupDevScene(config: Config) {
-  config.velocity = config.velocity.times(fromInt(5));
-  config.researchVelocity = config.researchVelocity.times(fromInt(10));
-  config.miningVelocity = config.miningVelocity.times(fromInt(10));
+function setupDevScene(config: Config, scene: Scene) {
+  scene.objects.lab.researched.add("auto-mining");
+  scene.objects.lab.researched.add("auto-resource-seeking");
 }
 
 if (!module.parent) {
@@ -37,14 +36,15 @@ if (!module.parent) {
     },
     researchVelocity: rational(5, 100000),
     miningVelocity: rational(5, 100000),
+    breedingVelocity: rational(1, 1000000),
     seeding: {
-      resources: 12,
+      resources: 25,
     },
   };
   const scene = new Scene(config, mkObjects);
   const queryParams = new URLSearchParams(window.location.search);
   if (queryParams.get("dev")) {
-    setupDevScene(config);
+    setupDevScene(config, scene);
   }
   const App = withSize(animate(new SceneStepper(config, scene)));
   dom.render(

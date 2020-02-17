@@ -3,16 +3,10 @@
 import * as React from "react";
 import { type Config, Scene } from ".";
 import { type Item, button, renderList } from "../web/lists";
+import { Pie } from "../web/svg";
 import { type Rational, fromInt } from "../data/rational";
 import { type RenderProps } from "./minion";
-import {
-  TAU,
-  type Vector,
-  add,
-  collides,
-  fromAngle,
-  scale,
-} from "../data/vector";
+import { type Vector, collides } from "../data/vector";
 
 type Goal = "auto-mining" | "auto-resource-seeking";
 
@@ -168,33 +162,6 @@ export const LabRender = (props: {|
       r={props.radius * 0.4}
       style={{ fill: "yellow" }}
     />
-    {drawCompletion(props)}
+    <Pie color="yellow" {...props} />
   </g>
 );
-
-function drawCompletion({
-  position: { x, y },
-  radius,
-  completion,
-}: {|
-  ...RenderProps,
-  ...{| completion: ?number |},
-|}): React.Element<"path"> {
-  completion = completion || 0;
-  const endpoint = add({ x, y }, scale(fromAngle(-TAU * completion), radius));
-  return (
-    <path
-      d={`
-        M ${x} ${y}
-        l 0 ${-radius}
-        A ${radius} ${radius} 0
-          ${completion <= 0.5 ? 0 : 1}
-          1
-          ${endpoint.x} ${endpoint.y}
-        L ${x} ${y}
-      `}
-      stroke={null}
-      fill="yellow"
-    />
-  );
-}

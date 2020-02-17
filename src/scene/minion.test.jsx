@@ -1,5 +1,6 @@
 // @flow
 
+import { IdMap } from "../data/IdMap";
 import { Minion, MinionRender } from "./minion";
 import { Resource } from "./resource";
 import { fromInt, rational } from "../data/rational";
@@ -195,9 +196,9 @@ describe("Minions", () => {
     scene().objects.minions.add(
       new Minion(config(), scene(), { x: 100, y: 0 }),
     );
-    scene().objects.resources = new Map([
-      [0, new Resource({ x: 0, y: 0 })],
-      [1, new Resource({ x: 100, y: 0 })],
+    scene().objects.resources = new IdMap([
+      new Resource({ x: 0, y: 0 }),
+      new Resource({ x: 100, y: 0 }),
     ]);
     step();
     wrapper()

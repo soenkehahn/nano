@@ -6,8 +6,7 @@ import { type RenderProps } from "./minion";
 import { type Vector } from "../data/vector";
 
 export class Resource {
-  static keyCounter: number = 0;
-  key: number;
+  id: number;
   position: Vector;
   static initialRadius: number = 10;
   static initialUnits: Rational = fromInt(1);
@@ -16,8 +15,6 @@ export class Resource {
   };
 
   constructor(position: Vector) {
-    this.key = Resource.keyCounter;
-    Resource.keyCounter++;
     this.position = position;
   }
 
@@ -39,7 +36,7 @@ export class Resource {
   draw: () => React.Node = () => {
     return (
       <ResourceRender
-        key={this.key}
+        key={`resource-${this.id}`}
         position={this.position}
         radius={this.getRadius()}
       />

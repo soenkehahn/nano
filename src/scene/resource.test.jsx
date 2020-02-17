@@ -1,5 +1,6 @@
 // @flow
 
+import { IdMap } from "../data/IdMap";
 import { Minion, MinionRender, type RenderProps } from "./minion";
 import { Resource, ResourceRender } from "./resource";
 import { cloneDeep } from "lodash";
@@ -17,9 +18,9 @@ describe("Resource in scene", () => {
 
   beforeEach(() => {
     config().velocity = fromInt(1000);
-    scene().objects.resources = new Map([
-      [0, new Resource({ x: 100, y: 0 })],
-      [1, new Resource({ x: 200, y: 0 })],
+    scene().objects.resources = new IdMap([
+      new Resource({ x: 100, y: 0 }),
+      new Resource({ x: 200, y: 0 }),
     ]);
     update();
     minionProps = wrapper()
@@ -55,9 +56,9 @@ describe("Resource in scene", () => {
   });
 
   it("shows multiple mine buttons for multiple minions", () => {
-    scene().objects.resources = new Map([
-      [0, new Resource({ x: 200, y: 0 })],
-      [1, new Resource({ x: 200, y: 100 })],
+    scene().objects.resources = new IdMap([
+      new Resource({ x: 200, y: 0 }),
+      new Resource({ x: 200, y: 100 }),
     ]);
     scene().objects.minions.add(
       new Minion(config(), scene(), { x: 100, y: 0 }),
@@ -75,15 +76,15 @@ describe("Resource in scene", () => {
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 200, y: 100 }));
-    step();
+    step(2);
     wrapper()
       .find("#mineButton-0")
       .simulate("click");
     wrapper()
       .find("#mineButton-1")
       .simulate("click");
-    step(1);
-    expect(scene().objects.resources.size).toEqual(0);
+    step();
+    expect(scene().objects.resources.size()).toEqual(0);
   });
 
   it("depletes a resource when colliding slightly with a minion", () => {
@@ -236,7 +237,7 @@ describe("Resource in scene", () => {
       .find("#moveButton-0")
       .simulate("click");
     const target = cloneDeep(resourceProps.position);
-    target.x += Resource.initialRadius + scene().focusedMinion().radius - 1;
+    target.x += Resource.initialRadius + Minion.radius - 1;
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent(target));

@@ -3,20 +3,22 @@
 import * as vector from "../data/vector";
 import { type Config, Scene } from "./index";
 import { Factory } from "./factory";
+import { IdMap } from "../data/IdMap";
 import { Lab } from "./lab";
 import { Minion, Minions } from "./minion";
 import { Resource } from "./resource";
+import { Spore } from "./spore";
 import { type Vector, collides, scale, vectorLength } from "../data/vector";
 import { type ViewBox } from "../web/svgPane";
 import { every } from "lodash";
 
-export type Objects = {
+export type Objects = {|
   minions: Minions,
   lab: Lab,
-  resources: Map<number, Resource>,
-  resourceCounter: number,
+  resources: IdMap<Resource>,
+  spores: IdMap<Spore>,
   factories: Array<Factory>,
-};
+|};
 
 export function mkObjects(
   config: Config,
@@ -38,11 +40,11 @@ export function mkObjects(
     ),
   );
 
-  const objects = {
+  const objects: Objects = {
     minions,
     lab,
-    resources: new Map(),
-    resourceCounter: 0,
+    resources: new IdMap(),
+    spores: new IdMap(),
     factories: [],
   };
 
@@ -64,7 +66,7 @@ export function mkObjects(
 }
 
 export function addResource(objects: Objects, resource: Resource): void {
-  objects.resources.set(objects.resourceCounter++, resource);
+  objects.resources.add(resource);
 }
 
 export function findRandom(

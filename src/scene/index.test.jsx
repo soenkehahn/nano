@@ -1,6 +1,7 @@
 // @flow
 
 import { Factory } from "./factory";
+import { IdMap } from "../data/IdMap";
 import { Lab } from "./lab";
 import { MinionRender } from "./minion";
 import { Resource } from "./resource";
@@ -125,7 +126,7 @@ describe("Scene interface", () => {
 
   describe("when no resources are left", () => {
     it("shows a game end message including the reached time", () => {
-      scene().objects.resources = new Map();
+      scene().objects.resources = new IdMap();
       config().uiTimeFactor = rational(1, 100);
       scene().time = rational(42, 100).over(config().uiTimeFactor);
       update();
@@ -186,14 +187,14 @@ describe("collides", () => {
   });
 
   it("detects collisions with resources", () => {
-    scene.objects.resources = new Map([[0, new Resource({ x: 42, y: 23 })]]);
+    scene.objects.resources = new IdMap([new Resource({ x: 42, y: 23 })]);
     expect(
       scene.collides({ position: { x: 42, y: 23 }, getRadius: () => 10 }),
     ).toEqual(true);
   });
 
   it("detects missing collisions", () => {
-    scene.objects.resources = new Map([[0, new Resource({ x: 10, y: 10 })]]);
+    scene.objects.resources = new IdMap([new Resource({ x: 10, y: 10 })]);
     expect(
       scene.collides({ position: { x: 42, y: 23 }, getRadius: () => 10 }),
     ).toEqual(false);
@@ -214,7 +215,7 @@ describe("collides", () => {
   });
 
   it("detects slight collisions", () => {
-    scene.objects.resources = new Map([[0, new Resource({ x: 42, y: 23 })]]);
+    scene.objects.resources = new IdMap([new Resource({ x: 42, y: 23 })]);
     expect(
       scene.collides({
         position: { x: 42 + Resource.initialRadius + 10 - 0.1, y: 23 },

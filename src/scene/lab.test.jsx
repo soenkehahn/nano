@@ -4,12 +4,7 @@ import { LabRender } from "./lab";
 import { type Vector, toClickEvent } from "../data/vector";
 import { cloneDeep } from "lodash";
 import { fromInt, rational } from "../data/rational";
-import {
-  sendMinion,
-  setupSceneWrapper,
-  setupTestConfig,
-  unsafeGet,
-} from "../test/utils";
+import { sendMinion, setupSceneWrapper, setupTestConfig } from "../test/utils";
 import {
   setupEventListenerTracker,
   simulateWheelEvent,
@@ -238,7 +233,7 @@ describe("Lab", () => {
     describe("when auto-mining is researched", () => {
       it("switches to mining when colliding with a resource", () => {
         scene().objects.lab.researched.add("auto-mining");
-        setMinionPosition(unsafeGet(scene().objects.resources, 0).position);
+        setMinionPosition(scene().objects.resources.unsafeGet(0).position);
         step();
         expect(scene().focusedMinion().status.tag).toEqual("mining");
       });
@@ -247,7 +242,7 @@ describe("Lab", () => {
         config().velocity = fromInt(0);
         config().stepTimeDelta = rational(1, 10);
         scene().objects.lab.researched.add("auto-mining");
-        setMinionPosition(unsafeGet(scene().objects.resources, 0).position);
+        setMinionPosition(scene().objects.resources.unsafeGet(0).position);
         scene().focusedMinion().status = {
           tag: "moving",
           target: { x: 100000, y: 0 },

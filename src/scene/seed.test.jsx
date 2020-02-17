@@ -41,7 +41,7 @@ describe("seeding", () => {
       wrapper()
         .find("#seedButton-0")
         .simulate("click");
-      expect(scene().objects.resources.size).toEqual(9);
+      expect(scene().objects.resources.size()).toEqual(9);
     });
 
     it("removes the cost for seeding from the inventory", () => {
@@ -57,9 +57,9 @@ describe("seeding", () => {
         .simulate("click");
       expect(
         new Set(
-          Array.from(scene().objects.resources.values()).map(x =>
-            formatVector(x.position),
-          ),
+          scene()
+            .objects.resources.toArray()
+            .map(x => formatVector(x.position)),
         ).size,
       ).toEqual(9);
     });
@@ -69,7 +69,7 @@ describe("seeding", () => {
       wrapper()
         .find("#seedButton-0")
         .simulate("click");
-      for (let i = 2; i < scene().objects.resources.size; i++) {
+      for (let i = 2; i < scene().objects.resources.size(); i++) {
         const resource: any = scene().objects.resources.get(i);
         expect(
           distance(scene().focusedMinion().position, resource.position),
@@ -90,7 +90,7 @@ describe("seeding", () => {
           .find("#autoSeedingCheckbox-0")
           .simulate("change", { target: { checked: true } });
         step();
-        expect(scene().objects.resources.size).toEqual(9);
+        expect(scene().objects.resources.size()).toEqual(9);
       });
     });
 
@@ -104,7 +104,7 @@ describe("seeding", () => {
           .find("#autoSeedingCheckbox-0")
           .simulate("change", { target: { checked: true } });
         step();
-        expect(scene().objects.resources.size).toEqual(2);
+        expect(scene().objects.resources.size()).toEqual(2);
       });
 
       it("triggers seeding once there's enough resources", () => {
@@ -114,7 +114,7 @@ describe("seeding", () => {
         step();
         scene().inventory = fromInt(10);
         step();
-        expect(scene().objects.resources.size).toEqual(9);
+        expect(scene().objects.resources.size()).toEqual(9);
       });
 
       it("triggers seeding multiple times", () => {
@@ -126,7 +126,7 @@ describe("seeding", () => {
         step();
         scene().inventory = fromInt(10);
         step();
-        expect(scene().objects.resources.size).toEqual(16);
+        expect(scene().objects.resources.size()).toEqual(16);
       });
     });
   });

@@ -1,6 +1,7 @@
 // @flow
 
 import { type Config, Scene } from "./index";
+import { IdMap } from "../data/IdMap";
 import { Resource } from "./resource";
 import { type ViewBox } from "../web/svgPane";
 import {
@@ -33,13 +34,14 @@ describe("mkObjects", () => {
       },
       researchVelocity: fromInt(1),
       miningVelocity: fromInt(1000),
+      breedingVelocity: fromInt(10),
       seeding: {
         resources: 4,
       },
     };
-    expect(new Scene(config, mkObjects).objects.resources.size).toBeGreaterThan(
-      5,
-    );
+    expect(
+      new Scene(config, mkObjects).objects.resources.size(),
+    ).toBeGreaterThan(5);
   });
 });
 
@@ -50,14 +52,13 @@ describe("addResource", () => {
 
   beforeEach(() => {
     objects = scene().objects;
-    objects.resources = new Map();
-    objects.resourceCounter = 0;
+    objects.resources = new IdMap();
     addResource(objects, new Resource({ x: 0, y: 1 }));
     addResource(objects, new Resource({ x: 0, y: 2 }));
   });
 
   it("adds resources starting with key 0", () => {
-    expect(objects.resources.size).toEqual(2);
+    expect(objects.resources.size()).toEqual(2);
     expect((objects.resources.get(0): any).position).toEqual({ x: 0, y: 1 });
     expect((objects.resources.get(1): any).position).toEqual({ x: 0, y: 2 });
   });
@@ -65,7 +66,7 @@ describe("addResource", () => {
   it("doesn't reuse keys", () => {
     objects.resources.delete(0);
     addResource(objects, new Resource({ x: 0, y: 3 }));
-    expect(objects.resources.size).toEqual(2);
+    expect(objects.resources.size()).toEqual(2);
     expect(objects.resources.get(0)).toEqual(undefined);
     expect((objects.resources.get(1): any).position).toEqual({ x: 0, y: 2 });
     expect((objects.resources.get(2): any).position).toEqual({ x: 0, y: 3 });

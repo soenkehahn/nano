@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from "react";
+import { IdMap } from "../data/IdMap";
 import { ReactWrapper, mount } from "enzyme";
 import { Resource, ResourceRender } from "../scene/resource";
 import { type Size, SvgPane } from "./svgPane";
@@ -301,7 +302,7 @@ describe("viewbox optimization", () => {
   const { wrapper, scene, step } = setupSceneWrapper(testConfig);
 
   it("includes objects that are in the viewBox", () => {
-    scene().objects.resources = new Map([[0, new Resource({ x: 0, y: 0 })]]);
+    scene().objects.resources = new IdMap([new Resource({ x: 0, y: 0 })]);
     step(2);
     expect(
       wrapper()
@@ -311,7 +312,7 @@ describe("viewbox optimization", () => {
   });
 
   it("excludes objects that are not in the viewBox", () => {
-    scene().objects.resources = new Map([[0, new Resource({ x: 150, y: 0 })]]);
+    scene().objects.resources = new IdMap([new Resource({ x: 150, y: 0 })]);
     step(2);
     expect(
       wrapper()
@@ -321,7 +322,7 @@ describe("viewbox optimization", () => {
   });
 
   it("includes objects that are not in the viewBox, but reach into it", () => {
-    scene().objects.resources = new Map([[0, new Resource({ x: 109, y: 0 })]]);
+    scene().objects.resources = new IdMap([new Resource({ x: 109, y: 0 })]);
     step(2);
     expect(
       wrapper()
