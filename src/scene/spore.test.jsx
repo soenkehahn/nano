@@ -38,30 +38,32 @@ describe("Spore", () => {
     });
   });
 
-  describe("when not colliding with a spore", () => {
-    it("doesn't allow to breed", () => {
-      expect(
-        wrapper()
-          .find("#breedButton-0")
-          .exists(),
-      ).toEqual(false);
-    });
-  });
-
-  describe("when colliding with a spore", () => {
+  describe("when spore there's one spore", () => {
     beforeEach(() => {
       config().stepTimeDelta = fromInt(1);
+      config().velocity = fromInt(1000);
       config().breedingVelocity = rational(1, 2);
       config().seeding.resources = 7;
       scene().objects.resources = new IdMap([new Resource({ x: 0, y: 1000 })]);
-      scene().objects.spores = new IdMap([new Spore({ x: 0, y: 0 })]);
       step();
     });
 
     it("allows to breed", () => {
+      scene().objects.spores = new IdMap([new Spore({ x: 0, y: 0 })]);
       wrapper()
         .find("#breedButton-0")
         .simulate("click");
+      step(2);
+      expect(scene().objects.resources.size()).toEqual(8);
+    });
+
+    it("moves to the spore, then breeds", () => {
+      scene().objects.spores = new IdMap([new Spore({ x: 1000, y: 0 })]);
+      wrapper()
+        .find("#breedButton-0")
+        .simulate("click");
+      step(1);
+      expect(scene().focusedMinion().position).toEqual({ x: 1000, y: 0 });
       step(2);
       expect(scene().objects.resources.size()).toEqual(8);
     });
@@ -84,6 +86,7 @@ describe("Spore", () => {
     });
 
     test("breeding happens only once", () => {
+      scene().objects.spores = new IdMap([new Spore({ x: 0, y: 0 })]);
       wrapper()
         .find("#breedButton-0")
         .simulate("click");
@@ -94,6 +97,7 @@ describe("Spore", () => {
     });
 
     it("breeding takes time", () => {
+      scene().objects.spores = new IdMap([new Spore({ x: 0, y: 0 })]);
       wrapper()
         .find("#breedButton-0")
         .simulate("click");
@@ -105,6 +109,21 @@ describe("Spore", () => {
       step(1);
       expect(scene().objects.spores.size()).toEqual(0);
       expect(scene().objects.resources.size()).toEqual(8);
+    });
+  });
+
+  describe("when there's multiple spores", () => {
+    it("moves to the closest spore", () => {
+      scene().objects.spores = new IdMap([
+        new Spore({ x: 0, y: 1100 }),
+        new Spore({ x: 1000, y: 0 }),
+        new Spore({ x: -1100, y: 0 }),
+      ]);
+      wrapper()
+        .find("#breedButton-0")
+        .simulate("click");
+      step(1);
+      scene().focusedMinion().position = { x: 1000, y: 0 };
     });
   });
 });

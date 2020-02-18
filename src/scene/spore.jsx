@@ -67,7 +67,7 @@ export const SporeRender = (props: {|
         width={props.radius * 2}
         height={props.radius * 2}
         fill={sporeColor}
-        opacity={0.3}
+        opacity={0.1}
         mask={`url(#${maskId})`}
       />
     </>

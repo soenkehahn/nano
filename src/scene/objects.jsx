@@ -8,7 +8,13 @@ import { Lab } from "./lab";
 import { Minion, Minions } from "./minion";
 import { Resource } from "./resource";
 import { Spore } from "./spore";
-import { type Vector, collides, scale, vectorLength } from "../data/vector";
+import {
+  type Vector,
+  collides,
+  distance,
+  scale,
+  vectorLength,
+} from "../data/vector";
 import { type ViewBox } from "../web/svgPane";
 import { every } from "lodash";
 
@@ -108,3 +114,19 @@ export const inBiggerVicinity = (
   size: Vector,
   v: Vector,
 ): boolean => inside(vector.scale(size, scale), v);
+
+export function findClosest<Obj: { position: Vector }>(
+  object: { position: Vector },
+  candidates: IdMap<Obj>,
+): ?Obj {
+  let minDistance = Number.MAX_VALUE;
+  let closest = null;
+  for (const candidate of candidates) {
+    const dist = distance(object.position, candidate.position);
+    if (dist < minDistance) {
+      minDistance = dist;
+      closest = candidate;
+    }
+  }
+  return closest;
+}

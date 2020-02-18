@@ -16,7 +16,7 @@ import {
   scale,
   unit,
 } from "../data/vector";
-import { addResource, findRandom } from "./objects";
+import { addResource, findClosest, findRandom } from "./objects";
 import { button } from "../web/lists";
 import { fromInt } from "../data/rational";
 import { sepBy, when } from "../utils";
@@ -25,7 +25,7 @@ import { vectorLength } from "../data/vector";
 type Status =
   | {| tag: "idle" |}
   | {| tag: "waitForMoveTarget" |}
-  | {| tag: "moving", target: Vector |}
+  | {| tag: "moving", target: Vector, nextState?: Status |}
   | {| tag: "mining", resource: Resource, autoMiningSuccessor?: Status |}
   | {| tag: "breeding", spore: Spore |};
 
@@ -84,7 +84,7 @@ export class Minion {
     this.updateCollisions();
     if (!paused) {
       if (this.status.tag === "moving") {
-        this.move(this.status.target);
+        this.move(this.status.target, this.status.nextState);
       } else if (this.status.tag === "mining") {
         this.mine(this.status.resource);
       } else if (this.status.tag === "breeding") {
@@ -125,7 +125,7 @@ export class Minion {
     };
   };
 
-  move: Vector => void = target => {
+  move: (Vector, ?Status) => void = (target, nextStatus) => {
     const distanceLeft = distance(target, this.position);
     const stepDistance = this.config.velocity
       .times(this.config.stepTimeDelta)
@@ -137,7 +137,7 @@ export class Minion {
       );
     } else {
       this.position = target;
-      this.status = { tag: "idle" };
+      this.status = nextStatus || { tag: "idle" };
     }
   };
 
@@ -173,15 +173,7 @@ export class Minion {
   };
 
   seek: () => void = () => {
-    let minDistance = Number.MAX_VALUE;
-    let closestResource = null;
-    for (const resource of this.scene.objects.resources) {
-      const dist = distance(this.position, resource.position);
-      if (dist < minDistance) {
-        minDistance = dist;
-        closestResource = resource;
-      }
-    }
+    const closestResource = findClosest(this, this.scene.objects.resources);
     if (closestResource) {
       if (!equals(this.position, closestResource.position)) {
         this.status = { tag: "moving", target: closestResource.position };
@@ -224,8 +216,20 @@ export class Minion {
     }
   };
 
-  startBreeding: Spore => void = spore => {
-    this.status = { tag: "breeding", spore };
+  startBreeding: () => void = () => {
+    const closestSpore = findClosest(this, this.scene.objects.spores);
+    if (closestSpore) {
+      const breedingState = { tag: "breeding", spore: closestSpore };
+      if (!equals(this.position, closestSpore.position)) {
+        this.status = {
+          tag: "moving",
+          target: closestSpore.position,
+          nextState: breedingState,
+        };
+      } else {
+        this.status = breedingState;
+      }
+    }
   };
 
   breed: Spore => void = spore => {
@@ -363,23 +367,19 @@ export class Minion {
                 seed
               </button>
             </>
-            {when(this.collisions().spores.length > 0, () => (
+            {
               <>
                 <br />
                 <button
                   id={`breedButton-${this.id}`}
                   onClick={() => {
-                    if (this.collisions().spores.length === 0) {
-                      throw "no spores colliding";
-                    }
-                    const spore = this.collisions().spores[0];
-                    this.startBreeding(spore);
+                    this.startBreeding();
                   }}
                 >
                   breed
                 </button>
               </>
-            ))}
+            }
           </>
         ))}
       </div>
