@@ -367,7 +367,7 @@ export class Minion {
                 seed
               </button>
             </>
-            {
+            {when(this.scene.objects.spores.size() > 0, () => (
               <>
                 <br />
                 <button
@@ -379,7 +379,7 @@ export class Minion {
                   breed
                 </button>
               </>
-            }
+            ))}
           </>
         ))}
       </div>

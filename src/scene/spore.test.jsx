@@ -8,7 +8,7 @@ import { fromInt, rational } from "../data/rational";
 import { setupSceneWrapper, setupTestConfig } from "../test/utils";
 
 const config = setupTestConfig();
-const { wrapper, scene, step } = setupSceneWrapper(config);
+const { update, wrapper, scene, step } = setupSceneWrapper(config);
 
 describe("Spore", () => {
   describe("when mining", () => {
@@ -38,7 +38,19 @@ describe("Spore", () => {
     });
   });
 
-  describe("when spore there's one spore", () => {
+  describe("when there's no spore", () => {
+    it("doesn't show the breed button", () => {
+      scene().objects.spores = new IdMap([]);
+      update();
+      expect(
+        wrapper()
+          .find("#breedButton-0")
+          .exists(),
+      ).toEqual(false);
+    });
+  });
+
+  describe("when there's one spore", () => {
     beforeEach(() => {
       config().stepTimeDelta = fromInt(1);
       config().velocity = fromInt(1000);
@@ -50,6 +62,7 @@ describe("Spore", () => {
 
     it("allows to breed", () => {
       scene().objects.spores = new IdMap([new Spore({ x: 0, y: 0 })]);
+      update();
       wrapper()
         .find("#breedButton-0")
         .simulate("click");
@@ -59,6 +72,7 @@ describe("Spore", () => {
 
     it("moves to the spore, then breeds", () => {
       scene().objects.spores = new IdMap([new Spore({ x: 1000, y: 0 })]);
+      update();
       wrapper()
         .find("#breedButton-0")
         .simulate("click");
@@ -87,6 +101,7 @@ describe("Spore", () => {
 
     test("breeding happens only once", () => {
       scene().objects.spores = new IdMap([new Spore({ x: 0, y: 0 })]);
+      update();
       wrapper()
         .find("#breedButton-0")
         .simulate("click");
@@ -98,6 +113,7 @@ describe("Spore", () => {
 
     it("breeding takes time", () => {
       scene().objects.spores = new IdMap([new Spore({ x: 0, y: 0 })]);
+      update();
       wrapper()
         .find("#breedButton-0")
         .simulate("click");
@@ -119,6 +135,7 @@ describe("Spore", () => {
         new Spore({ x: 1000, y: 0 }),
         new Spore({ x: -1100, y: 0 }),
       ]);
+      update();
       wrapper()
         .find("#breedButton-0")
         .simulate("click");
