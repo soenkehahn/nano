@@ -45,6 +45,7 @@ export class Minion {
   status: Status = { tag: "idle" };
   autoSeekingChecked: boolean = false;
   autoSeedingChecked: boolean = false;
+  autoBreedingChecked: boolean = false;
 
   collisions: () => Collisions = () => ({
     resources: [],
@@ -100,6 +101,7 @@ export class Minion {
     this.autoMine();
     this.autoSeek();
     this.autoSeed();
+    this.autoBreed();
   };
 
   updateCollisions: () => void = () => {
@@ -243,6 +245,16 @@ export class Minion {
     }
   };
 
+  autoBreed: () => void = () => {
+    if (
+      this.autoBreedingChecked &&
+      this.status.tag === "idle" &&
+      this.scene.objects.spores.size() > 0
+    ) {
+      this.startBreeding();
+    }
+  };
+
   draw: () => React.Node = () => {
     return (
       <MinionRender
@@ -353,7 +365,6 @@ export class Minion {
                 id={`autoSeedingCheckbox-${this.id}`}
                 type="checkbox"
                 checked={this.autoSeedingChecked}
-                disabled={false}
                 onChange={event => {
                   event.stopPropagation();
                   this.autoSeedingChecked = event.target.checked;
@@ -367,19 +378,26 @@ export class Minion {
                 seed
               </button>
             </>
-            {when(this.scene.objects.spores.size() > 0, () => (
-              <>
-                <br />
-                <button
-                  id={`breedButton-${this.id}`}
-                  onClick={() => {
-                    this.startBreeding();
+            <>
+              <br />
+              <button
+                id={`breedButton-${this.id}`}
+                onClick={() => {
+                  this.startBreeding();
+                }}
+              >
+                <input
+                  id={`autoBreedingCheckbox-${this.id}`}
+                  type="checkbox"
+                  checked={this.autoBreedingChecked}
+                  onChange={event => {
+                    event.stopPropagation();
+                    this.autoBreedingChecked = event.target.checked;
                   }}
-                >
-                  breed
-                </button>
-              </>
-            ))}
+                />
+                breed
+              </button>
+            </>
           </>
         ))}
       </div>

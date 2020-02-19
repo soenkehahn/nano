@@ -39,14 +39,14 @@ describe("Spore", () => {
   });
 
   describe("when there's no spore", () => {
-    it("doesn't show the breed button", () => {
+    it("does show the breed button", () => {
       scene().objects.spores = new IdMap([]);
       update();
       expect(
         wrapper()
           .find("#breedButton-0")
           .exists(),
-      ).toEqual(false);
+      ).toEqual(true);
     });
   });
 
@@ -141,6 +141,26 @@ describe("Spore", () => {
         .simulate("click");
       step(1);
       scene().focusedMinion().position = { x: 1000, y: 0 };
+    });
+  });
+
+  describe("auto-breeding", () => {
+    it("breeds multiple spores", () => {
+      config().stepTimeDelta = fromInt(1);
+      config().velocity = fromInt(1000);
+      config().breedingVelocity = fromInt(1);
+      scene().objects.spores = new IdMap([
+        new Spore({ x: 1000, y: 0 }),
+        new Spore({ x: 2000, y: 0 }),
+      ]);
+      update();
+      wrapper()
+        .find("#autoBreedingCheckbox-0")
+        .simulate("change", { target: { checked: true } });
+      step(5);
+      expect(scene().focusedMinion().position).toEqual({ x: 2000, y: 0 });
+      expect(scene().focusedMinion().status.tag).toEqual("idle");
+      expect(scene().objects.spores.size()).toEqual(0);
     });
   });
 });
