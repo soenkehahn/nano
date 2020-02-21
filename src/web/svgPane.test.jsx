@@ -47,6 +47,8 @@ describe("SvgPane", () => {
   let wrapper: ReactWrapper<any>;
 
   beforeEach(() => {
+    window.devicePixelRatio = 1;
+    SvgPane.isFirefox = false;
     svgPane = new SvgPane({
       width: 800,
       height: 600,
@@ -228,6 +230,35 @@ describe("SvgPane", () => {
         880,
         660,
       ]);
+    });
+
+    describe("devicePixelRatio", () => {
+      it("takes the devicePixelRatio into account", () => {
+        window.devicePixelRatio = 1.5;
+        wrapper.simulate("mousedown");
+        wrapper.simulate("mousemove", { movementX: 10, movementY: -5 });
+        update(wrapper);
+        (expect(wrapper.find("svg").props().viewBox): any).toBeCloseToViewBox([
+          -400 - 10 / 1.5,
+          -300 + 5 / 1.5,
+          800,
+          600,
+        ]);
+      });
+
+      it("ignores the devicePixelRatio on firefox", () => {
+        SvgPane.isFirefox = true;
+        window.devicePixelRatio = 1.5;
+        wrapper.simulate("mousedown");
+        wrapper.simulate("mousemove", { movementX: 10, movementY: -5 });
+        update(wrapper);
+        (expect(wrapper.find("svg").props().viewBox): any).toBeCloseToViewBox([
+          -400 - 10,
+          -300 + 5,
+          800,
+          600,
+        ]);
+      });
     });
 
     describe("setCenter", () => {

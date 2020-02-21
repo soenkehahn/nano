@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from "react";
+import * as detectBrowser from "detect-browser";
 import * as jsdomExtensions from "./svg";
 import { type Vector, scale } from "../data/vector";
 
@@ -16,7 +17,17 @@ type WheelEvent = SyntheticMouseEvent<HTMLElement> & {
   deltaY: number,
 };
 
+function isFirefox() {
+  const browser = detectBrowser.detect();
+  if (!browser) {
+    return false;
+  } else {
+    return browser.name === "firefox";
+  }
+}
+
 export class SvgPane {
+  static isFirefox: boolean = isFirefox();
   width: number;
   height: number;
   zoomVelocity: number;
@@ -115,11 +126,12 @@ export class SvgPane {
       movementY: number,
     },
   ) => {
+    const devicePixelRatio = SvgPane.isFirefox ? 1 : window.devicePixelRatio;
     if (this.dragging) {
       const old = this.offset;
       this.offset = {
-        x: old.x - event.movementX * this.zoomFactor,
-        y: old.y - event.movementY * this.zoomFactor,
+        x: old.x - (event.movementX / devicePixelRatio) * this.zoomFactor,
+        y: old.y - (event.movementY / devicePixelRatio) * this.zoomFactor,
       };
     }
   };
