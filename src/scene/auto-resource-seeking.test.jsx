@@ -76,18 +76,15 @@ describe("auto-resource-seeking", () => {
       expect(scene().focusedMinion().position).toEqual({ x: 100, y: 0 });
     });
 
-    it("becomes idle when reaching a resource", () => {
-      step(5);
-      expect(scene().focusedMinion().status.tag).toEqual("idle");
+    it("mines the resource when reaching", () => {
+      step(4);
+      expect(scene().focusedMinion().status.tag).toEqual("mining");
+      step(1);
+      expect(scene().objects.resources.size()).toEqual(1);
     });
 
     it("after mining the resource stays idle", () => {
-      step(5);
-      update();
-      wrapper()
-        .find("#mineButton-0")
-        .simulate("click");
-      step(1);
+      step(6);
       expect(scene().focusedMinion().status.tag).toEqual("idle");
     });
 
@@ -109,11 +106,7 @@ describe("auto-resource-seeking", () => {
       wrapper()
         .find("#autoResourceSeekingCheckbox-0")
         .simulate("change", { target: { checked: true } });
-      step(10);
-      wrapper()
-        .find("#mineButton-0")
-        .simulate("click");
-      step(10);
+      step(4);
       expect(scene().objects.resources.size()).toEqual(1);
     });
 
@@ -124,15 +117,7 @@ describe("auto-resource-seeking", () => {
       wrapper()
         .find("#autoResourceSeekingCheckbox-0")
         .simulate("change", { target: { checked: true } });
-      step(10);
-      wrapper()
-        .find("#mineButton-0")
-        .simulate("click");
-      step(10);
-      wrapper()
-        .find("#mineButton-0")
-        .simulate("click");
-      step(10);
+      step(6);
       expect(scene().objects.resources.toArray()).toEqual([]);
     });
   });
