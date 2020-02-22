@@ -121,7 +121,10 @@ describe("Minions", () => {
       wrapper()
         .find(MinionRender)
         .map(x => x.props().position),
-    ).toEqual([{ x: 0, y: 0 }, { x: 10, y: 10 }]);
+    ).toEqual([
+      { x: 0, y: 0 },
+      { x: 10, y: 10 },
+    ]);
   });
 
   it("allows to switch the focused minion", () => {
@@ -167,7 +170,10 @@ describe("Minions", () => {
       wrapper()
         .find(MinionRender)
         .map(x => x.props().position),
-    ).toEqual([{ x: 0, y: 100 }, { x: 100, y: 100 }]);
+    ).toEqual([
+      { x: 0, y: 100 },
+      { x: 100, y: 100 },
+    ]);
   });
 
   it("keeps moving unfocused minions", () => {
@@ -321,7 +327,10 @@ describe("Minions", () => {
           wrapper()
             .find(MinionRender)
             .map(x => x.props().position),
-        ).toEqual([{ x: 100, y: 100 }, { x: -100, y: 100 }]);
+        ).toEqual([
+          { x: 100, y: 100 },
+          { x: -100, y: 100 },
+        ]);
       });
     });
   });

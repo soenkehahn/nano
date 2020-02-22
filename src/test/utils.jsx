@@ -62,12 +62,12 @@ export const setupTestConfig: () => () => Config = () => {
 
 export const setupSceneWrapper = (
   testConfig: () => Config,
-): {
+): ({
   wrapper: () => ReactWrapper<() => React.Node>,
   scene: () => Scene,
   update: () => void,
   step: (steps?: number) => void,
-} => {
+}) => {
   let scene: Scene;
   let wrapper: ReactWrapper<() => React.Node>;
 

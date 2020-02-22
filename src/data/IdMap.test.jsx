@@ -8,7 +8,10 @@ describe("constructor", () => {
   });
 
   it("puts all given elements into the map in order", () => {
-    const map = new IdMap([{ id: null, name: "a" }, { id: null, name: "b" }]);
+    const map = new IdMap([
+      { id: null, name: "a" },
+      { id: null, name: "b" },
+    ]);
     expect(map.unsafeGet(0).name).toEqual("a");
     expect(map.unsafeGet(1).name).toEqual("b");
   });
@@ -76,7 +79,10 @@ describe("toArray", () => {
     const map = new IdMap();
     map.add({ id: null, name: "a" });
     map.add({ id: null, name: "b" });
-    expect(map.toArray()).toEqual([{ id: 0, name: "a" }, { id: 1, name: "b" }]);
+    expect(map.toArray()).toEqual([
+      { id: 0, name: "a" },
+      { id: 1, name: "b" },
+    ]);
   });
 });
 

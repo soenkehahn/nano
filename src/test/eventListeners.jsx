@@ -6,9 +6,9 @@ type TrackedEventListener = {|
   options: {},
 |};
 
-export const setupEventListenerTracker = (): {
+export const setupEventListenerTracker = (): ({
   getEventListeners: () => Array<TrackedEventListener>,
-} => {
+}) => {
   let eventListeners: Array<TrackedEventListener>;
 
   beforeEach(() => {
