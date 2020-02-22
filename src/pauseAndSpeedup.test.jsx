@@ -47,7 +47,7 @@ describe("pausing", () => {
     scene().focusedMinion().status = { tag: "idle" };
     scene().objects.lab.status = {
       tag: "researching",
-      goal: "auto-resource-seeking",
+      goal: "auto-mining",
       completion: fromInt(0),
     };
     step(2);

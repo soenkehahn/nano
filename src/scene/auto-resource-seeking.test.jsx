@@ -3,36 +3,14 @@
 import { IdMap } from "../data/IdMap";
 import { Minion } from "./minion";
 import { Resource } from "./resource";
-import { cloneDeep } from "lodash";
 import { fromInt } from "../data/rational";
-import { sendMinion, setupSceneWrapper, setupTestConfig } from "../test/utils";
+import { setupSceneWrapper, setupTestConfig } from "../test/utils";
 
 const config = setupTestConfig();
 const { wrapper, scene, update, step } = setupSceneWrapper(config);
 
 describe("auto-resource-seeking", () => {
-  it("allows to research auto-resource-seeking", () => {
-    scene().inventory = fromInt(100);
-    scene().focusedMinion().position = cloneDeep(scene().objects.lab.position);
-    update();
-    wrapper()
-      .find("#researchAutoResourceSeekingButton")
-      .simulate("click");
-    sendMinion(scene, { x: 0, y: 10000 });
-    step(2);
-    expect(scene().objects.lab.researched.has("auto-resource-seeking")).toEqual(
-      true,
-    );
-  });
-
   it("renders a button that triggers auto-resource-seeking", () => {
-    expect(
-      wrapper()
-        .find("#autoResourceSeekingButton-0")
-        .exists(),
-    ).toEqual(false);
-    scene().objects.lab.researched.add("auto-resource-seeking");
-    update();
     wrapper()
       .find("#autoResourceSeekingButton-0")
       .simulate("click");
@@ -40,7 +18,6 @@ describe("auto-resource-seeking", () => {
   });
 
   it("renders one button per minion", () => {
-    scene().objects.lab.researched.add("auto-resource-seeking");
     scene().objects.minions.add(
       new Minion(config(), scene(), { x: 10, y: 10 }),
     );
@@ -55,7 +32,6 @@ describe("auto-resource-seeking", () => {
   describe("when triggering auto-resource-seeking for a minion", () => {
     beforeEach(() => {
       config().velocity = fromInt(50);
-      scene().objects.lab.researched.add("auto-resource-seeking");
       scene().objects.resources = new IdMap([
         new Resource({ x: 100, y: 0 }),
         new Resource({ x: 1000, y: 0 }),
@@ -101,8 +77,6 @@ describe("auto-resource-seeking", () => {
   describe("when switching on auto-resource-seeking for a minion permanently", () => {
     it("does auto-seek a resource", () => {
       config().velocity = fromInt(500);
-      scene().objects.lab.researched.add("auto-resource-seeking");
-      update();
       wrapper()
         .find("#autoResourceSeekingCheckbox-0")
         .simulate("change", { target: { checked: true } });
@@ -112,8 +86,6 @@ describe("auto-resource-seeking", () => {
 
     it("keeps auto-seeking resources after the first one", () => {
       config().velocity = fromInt(500);
-      scene().objects.lab.researched.add("auto-resource-seeking");
-      update();
       wrapper()
         .find("#autoResourceSeekingCheckbox-0")
         .simulate("change", { target: { checked: true } });

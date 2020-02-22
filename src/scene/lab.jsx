@@ -8,7 +8,7 @@ import { type Rational, fromInt } from "../data/rational";
 import { type RenderProps } from "./minion";
 import { type Vector, collides } from "../data/vector";
 
-type Goal = "auto-mining" | "auto-resource-seeking";
+type Goal = "auto-mining";
 
 export class Lab {
   config: Config;
@@ -82,22 +82,6 @@ export class Lab {
             ),
             onClick: () => {
               this.startResearch("auto-mining");
-            },
-          }),
-        );
-      }
-      if (!this.researched.has("auto-resource-seeking")) {
-        result.push(
-          button({
-            id: "researchAutoResourceSeekingButton",
-            text: `research auto-resource-seeking (cost: ${this.config.costs.research[
-              "auto-resource-seeking"
-            ].toNumber()})`,
-            disabled: this.scene.inventory.lt(
-              this.config.costs.research["auto-resource-seeking"],
-            ),
-            onClick: () => {
-              this.startResearch("auto-resource-seeking");
             },
           }),
         );

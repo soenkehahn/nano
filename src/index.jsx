@@ -11,7 +11,6 @@ import dom from "react-dom";
 
 function setupDevScene(config: Config, scene: Scene) {
   scene.objects.lab.researched.add("auto-mining");
-  scene.objects.lab.researched.add("auto-resource-seeking");
 }
 
 if (!module.parent) {

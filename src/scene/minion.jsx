@@ -341,29 +341,22 @@ export class Minion {
                 );
               },
             )}
-            {when(
-              this.scene.objects.lab.researched.has("auto-resource-seeking"),
-              () => (
-                <>
-                  <br />
-                  <button
-                    id={`autoResourceSeekingButton-${this.id}`}
-                    onClick={this.seek}
-                  >
-                    <input
-                      id={`autoResourceSeekingCheckbox-${this.id}`}
-                      type="checkbox"
-                      checked={this.autoSeekingChecked}
-                      onChange={event => {
-                        event.stopPropagation();
-                        this.autoSeekingChecked = event.target.checked;
-                      }}
-                    />
-                    auto-seek
-                  </button>
-                </>
-              ),
-            )}
+            <br />
+            <button
+              id={`autoResourceSeekingButton-${this.id}`}
+              onClick={this.seek}
+            >
+              <input
+                id={`autoResourceSeekingCheckbox-${this.id}`}
+                type="checkbox"
+                checked={this.autoSeekingChecked}
+                onChange={event => {
+                  event.stopPropagation();
+                  this.autoSeekingChecked = event.target.checked;
+                }}
+              />
+              auto-seek
+            </button>
             <br />
             <>
               <input
