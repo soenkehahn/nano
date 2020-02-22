@@ -93,6 +93,7 @@ export class Scene {
   focusedMinion: () => Minion = () => this.objects.minions.focused();
 
   step: () => Promise<void> = async () => {
+    this.computeStepFrequency();
     const idle = this.objects.minions.anyIsIdle();
     if (idle) {
       const args = { paused: true };
@@ -121,6 +122,18 @@ export class Scene {
 
   onClick: Vector => void = target => {
     this.objects.minions.onClick(target);
+  };
+
+  stepFrequency: { value: string, lastStep: number } = {
+    value: "",
+    lastStep: Date.now(),
+  };
+
+  computeStepFrequency: () => void = () => {
+    const now = Date.now();
+    const delta = now - this.stepFrequency.lastStep;
+    this.stepFrequency.lastStep = now;
+    this.stepFrequency.value = (1000 / delta).toFixed(1);
   };
 
   draw: Size => React.Node = size => {
@@ -183,6 +196,15 @@ export class Scene {
               resources: {this.inventory.format()}
             </div>,
             this.objects.minions.drawUI(this.svgPane),
+            <>
+              Debugging:
+              <br />
+              step frequency: {this.stepFrequency.value}
+              <br />
+              resources: {this.objects.resources.size()}
+              <br />
+              spores: {this.objects.spores.size()}
+            </>,
           ])}
         </div>
       </div>
