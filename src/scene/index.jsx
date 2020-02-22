@@ -203,7 +203,9 @@ export class Scene {
       objects.push(resource);
     }
     objects.push(this.objects.lab);
-    objects = objects.concat(this.objects.minions.toList());
+    for (const minion of this.objects.minions.minions) {
+      objects.push(minion);
+    }
     objects = filter(objects, object => insideViewBox(viewBox, object));
     return <g>{objects.map(x => x.draw())}</g>;
   };

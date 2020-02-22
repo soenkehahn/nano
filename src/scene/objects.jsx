@@ -63,7 +63,7 @@ export function mkObjects(
       scale,
       v =>
         vectorLength(v) < config.initialSize.x * 2.6 &&
-        every(minions.toList(), minion => !collides(minion, new Resource(v))),
+        every(minions.toArray(), minion => !collides(minion, new Resource(v))),
     );
     addResource(objects, new Resource(position));
   }

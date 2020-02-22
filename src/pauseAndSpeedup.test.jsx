@@ -16,7 +16,7 @@ describe("pausing", () => {
     scene().objects.minions.add(
       new Minion(config(), scene(), { x: 100, y: 0 }),
     );
-    [minionA, minionB] = scene().objects.minions.minions;
+    [minionA, minionB] = scene().objects.minions.toArray();
   });
 
   it("pauses the game when one minion is idle", () => {

@@ -174,7 +174,7 @@ describe("Minions", () => {
     scene().objects.minions.add(
       new Minion(config(), scene(), { x: 100, y: 0 }),
     );
-    const [minionA, minionB] = scene().objects.minions.minions;
+    const [minionA, minionB] = scene().objects.minions.toArray();
     minionA.status = { tag: "moving", target: { x: 0, y: 100 } };
     minionB.status = { tag: "moving", target: { x: 100, y: 100 } };
     update();
@@ -214,7 +214,9 @@ describe("Minions", () => {
       .simulate("click");
     step();
     expect(
-      scene().objects.minions.minions.map(minion => minion.status.tag),
+      scene()
+        .objects.minions.toArray()
+        .map(minion => minion.status.tag),
     ).toEqual(["mining", "mining"]);
     step(10);
     expect(scene().inventory.toNumber()).toEqual(2);

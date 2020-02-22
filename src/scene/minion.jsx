@@ -3,6 +3,7 @@
 import * as React from "react";
 import { type Config, Scene } from ".";
 import { Factory } from "./factory";
+import { IdMap } from "../data/IdMap";
 import { Resource } from "./resource";
 import { Spore } from "./spore";
 import { SvgPane } from "../web/svgPane";
@@ -38,7 +39,6 @@ export class Minion {
   static radius: number = 10;
   config: Config;
   scene: Scene;
-  static idCounter: number = 0;
   id: number;
   position: Vector;
   focused: boolean = false;
@@ -55,8 +55,6 @@ export class Minion {
   constructor(config: Config, scene: Scene, position: Vector) {
     this.config = config;
     this.scene = scene;
-    this.id = Minion.idCounter;
-    Minion.idCounter++;
     this.position = position;
   }
 
@@ -430,29 +428,29 @@ const lightBlue = "#8888ff";
 
 export class Minions {
   focus: number;
-  minions: Array<Minion>;
+  minions: IdMap<Minion>;
 
   constructor(minion: Minion) {
     this.focus = 0;
-    this.minions = [minion];
+    this.minions = new IdMap([minion]);
     minion.focused = true;
   }
 
-  focused: () => Minion = () => this.minions[this.focus];
+  focused: () => Minion = () => this.minions.unsafeGet(this.focus);
 
   add: Minion => void = minion => {
-    this.minions.push(minion);
+    this.minions.add(minion);
     minion.focused = false;
   };
 
-  toList: () => Array<Minion> = () => {
-    return this.minions;
+  toArray: () => Array<Minion> = () => {
+    return this.minions.toArray();
   };
 
   setFocus: number => void = index => {
-    this.minions[this.focus].focused = false;
+    this.minions.unsafeGet(this.focus).focused = false;
     this.focus = index;
-    this.minions[this.focus].focused = true;
+    this.minions.unsafeGet(this.focus).focused = true;
   };
 
   anyIsIdle: () => boolean = () => {
@@ -489,9 +487,11 @@ export class Minions {
     if (waitingForMoveTarget) {
       waitingForMoveTarget.onClick(clickedPoint);
     } else {
-      const clicked = this.minions.findIndex(minion =>
-        collides(minion, { position: clickedPoint, getRadius: () => 0 }),
-      );
+      const clicked = this.minions
+        .toArray()
+        .findIndex(minion =>
+          collides(minion, { position: clickedPoint, getRadius: () => 0 }),
+        );
       if (clicked >= 0) {
         this.setFocus(clicked);
       }
@@ -501,6 +501,8 @@ export class Minions {
   drawUI: SvgPane => React.Node = svgPane =>
     sepBy(
       <hr />,
-      this.minions.map((minion, i) => minion.drawUI(svgPane, this, i)),
+      this.minions
+        .toArray()
+        .map((minion, i) => minion.drawUI(svgPane, this, i)),
     );
 }
