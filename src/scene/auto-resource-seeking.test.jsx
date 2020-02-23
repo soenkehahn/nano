@@ -74,6 +74,19 @@ describe("auto-resource-seeking", () => {
     });
   });
 
+  describe("when the minion's position is equal to the resource's position", () => {
+    it("mines the resource", () => {
+      scene().objects.resources = new IdMap([new Resource({ x: 0, y: 0 })]);
+      scene().focusedMinion().position = { x: 0, y: 0 };
+      update();
+      wrapper()
+        .find("#autoResourceSeekingButton-0")
+        .simulate("click");
+      step(2);
+      expect(scene().objects.resources.toArray()).toEqual([]);
+    });
+  });
+
   describe("when switching on auto-resource-seeking for a minion permanently", () => {
     it("does auto-seek a resource", () => {
       config().velocity = fromInt(500);

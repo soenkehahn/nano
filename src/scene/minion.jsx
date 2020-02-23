@@ -175,16 +175,14 @@ export class Minion {
   seek: () => void = () => {
     const closestResource = findClosest(this, this.scene.objects.resources);
     if (closestResource) {
-      if (!equals(this.position, closestResource.position)) {
-        this.status = {
-          tag: "moving",
-          target: closestResource.position,
-          nextState: {
-            tag: "mining",
-            resource: closestResource,
-          },
-        };
-      }
+      this.status = {
+        tag: "moving",
+        target: closestResource.position,
+        nextState: {
+          tag: "mining",
+          resource: closestResource,
+        },
+      };
     }
   };
 
