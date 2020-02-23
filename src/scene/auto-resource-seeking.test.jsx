@@ -89,7 +89,7 @@ describe("auto-resource-seeking", () => {
       wrapper()
         .find("#autoResourceSeekingCheckbox-0")
         .simulate("change", { target: { checked: true } });
-      step(6);
+      step(7);
       expect(scene().objects.resources.toArray()).toEqual([]);
     });
   });

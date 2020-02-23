@@ -3,8 +3,12 @@
 import * as React from "react";
 import * as jsdomExtensions from "../web/svg";
 import { type Config, Scene } from "../scene";
-import { type Objects, mkObjects } from "../scene/objects";
+import { IdMap } from "../data/IdMap";
+import { Lab } from "../scene/lab";
+import { Minion, Minions } from "../scene/minion";
+import { type Objects } from "../scene/objects";
 import { ReactWrapper, mount } from "enzyme";
+import { Resource } from "../scene/resource";
 import { type Vector } from "../data/vector";
 import { createElement } from "react";
 import { fromInt, rational } from "../data/rational";
@@ -99,7 +103,16 @@ export const setupSceneWrapper = (
 };
 
 export function testObjects(config: Config, scene: Scene): Objects {
-  return mkObjects(config, scene, 1);
+  return {
+    minions: new Minions(new Minion(config, scene, { x: 0, y: 0 })),
+    lab: new Lab(config, scene, { x: -100, y: -100 }),
+    resources: new IdMap([
+      new Resource({ x: 100, y: 0 }),
+      new Resource({ x: 200, y: 0 }),
+    ]),
+    spores: new IdMap(),
+    factories: [],
+  };
 }
 
 export function sendMinion(scene: () => Scene, target: Vector) {
