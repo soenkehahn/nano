@@ -47,7 +47,6 @@ export const setupTestConfig: () => () => Config = () => {
       velocity: fromInt(1),
       costs: {
         factory: fromInt(3),
-        seeding: fromInt(3),
         research: {
           "auto-mining": fromInt(10),
           "auto-resource-seeking": fromInt(10),
@@ -55,8 +54,8 @@ export const setupTestConfig: () => () => Config = () => {
       },
       researchVelocity: fromInt(1),
       miningVelocity: fromInt(1000),
-      breedingVelocity: fromInt(10),
-      seeding: {
+      breeding: {
+        velocity: fromInt(10),
         resources: 4,
       },
     };

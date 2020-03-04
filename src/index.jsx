@@ -27,7 +27,6 @@ if (!module.parent) {
     velocity: rational(4, 100),
     costs: {
       factory: fromInt(3),
-      seeding: fromInt(13),
       research: {
         "auto-mining": fromInt(5),
         "auto-resource-seeking": fromInt(5),
@@ -35,8 +34,8 @@ if (!module.parent) {
     },
     researchVelocity: rational(5, 100000),
     miningVelocity: rational(5, 100000),
-    breedingVelocity: rational(1, 1000000),
-    seeding: {
+    breeding: {
+      velocity: rational(1, 1000000),
       resources: 25,
     },
   };

@@ -19,7 +19,6 @@ export type Config = {|
   velocity: Rational,
   costs: {|
     factory: Rational,
-    seeding: Rational,
     research: {|
       "auto-mining": Rational,
       "auto-resource-seeking": Rational,
@@ -27,8 +26,8 @@ export type Config = {|
   |},
   researchVelocity: Rational,
   miningVelocity: Rational,
-  breedingVelocity: Rational,
-  seeding: {|
+  breeding: {|
+    velocity: Rational,
     resources: number,
   |},
 |};

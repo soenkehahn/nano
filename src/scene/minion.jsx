@@ -44,7 +44,6 @@ export class Minion {
   focused: boolean = false;
   status: Status = { tag: "idle" };
   autoSeekingChecked: boolean = false;
-  autoSeedingChecked: boolean = false;
   autoBreedingChecked: boolean = false;
 
   collisions: () => Collisions = () => ({
@@ -98,7 +97,6 @@ export class Minion {
     }
     this.autoMine();
     this.autoSeek();
-    this.autoSeed();
     this.autoBreed();
   };
 
@@ -196,31 +194,6 @@ export class Minion {
     }
   };
 
-  seed: () => void = () => {
-    if (this.scene.inventory.ge(this.config.costs.seeding)) {
-      this.addResources(this.position);
-      this.scene.inventory = this.scene.inventory.minus(
-        this.config.costs.seeding,
-      );
-    }
-  };
-
-  addResources: Vector => void = center => {
-    for (let i = 0; i < this.config.seeding.resources; i++) {
-      const position = add(
-        center,
-        findRandom(Spore.radius * 1.5, v => vectorLength(v) < Spore.radius),
-      );
-      addResource(this.scene.objects, new Resource(position));
-    }
-  };
-
-  autoSeed: () => void = () => {
-    if (this.autoSeedingChecked) {
-      this.seed();
-    }
-  };
-
   startBreeding: () => void = () => {
     const closestSpore = findClosest(this, this.scene.objects.spores);
     if (closestSpore) {
@@ -239,11 +212,17 @@ export class Minion {
 
   breed: Spore => void = spore => {
     spore.completion = spore.completion.plus(
-      this.config.stepTimeDelta.times(this.config.breedingVelocity),
+      this.config.stepTimeDelta.times(this.config.breeding.velocity),
     );
     if (spore.completion.ge(fromInt(1))) {
       this.scene.objects.spores.delete(spore.id);
-      this.addResources(spore.position);
+      for (let i = 0; i < this.config.breeding.resources; i++) {
+        const position = add(
+          spore.position,
+          findRandom(Spore.radius * 1.5, v => vectorLength(v) < Spore.radius),
+        );
+        addResource(this.scene.objects, new Resource(position));
+      }
       this.status = { tag: "idle" };
     }
   };
@@ -356,44 +335,23 @@ export class Minion {
               auto-seek
             </button>
             <br />
-            <>
+            <button
+              id={`breedButton-${this.id}`}
+              onClick={() => {
+                this.startBreeding();
+              }}
+            >
               <input
-                id={`autoSeedingCheckbox-${this.id}`}
+                id={`autoBreedingCheckbox-${this.id}`}
                 type="checkbox"
-                checked={this.autoSeedingChecked}
+                checked={this.autoBreedingChecked}
                 onChange={event => {
                   event.stopPropagation();
-                  this.autoSeedingChecked = event.target.checked;
+                  this.autoBreedingChecked = event.target.checked;
                 }}
               />
-              <button
-                id={`seedButton-${this.id}`}
-                disabled={!this.scene.inventory.ge(this.config.costs.seeding)}
-                onClick={this.seed}
-              >
-                seed
-              </button>
-            </>
-            <>
-              <br />
-              <button
-                id={`breedButton-${this.id}`}
-                onClick={() => {
-                  this.startBreeding();
-                }}
-              >
-                <input
-                  id={`autoBreedingCheckbox-${this.id}`}
-                  type="checkbox"
-                  checked={this.autoBreedingChecked}
-                  onChange={event => {
-                    event.stopPropagation();
-                    this.autoBreedingChecked = event.target.checked;
-                  }}
-                />
-                breed
-              </button>
-            </>
+              breed
+            </button>
           </>
         ))}
       </div>

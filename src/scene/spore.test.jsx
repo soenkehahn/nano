@@ -54,8 +54,8 @@ describe("Spore", () => {
     beforeEach(() => {
       config().stepTimeDelta = fromInt(1);
       config().velocity = fromInt(1000);
-      config().breedingVelocity = rational(1, 2);
-      config().seeding.resources = 7;
+      config().breeding.velocity = rational(1, 2);
+      config().breeding.resources = 7;
       scene().objects.resources = new IdMap([new Resource({ x: 0, y: 1000 })]);
       step();
     });
@@ -148,7 +148,7 @@ describe("Spore", () => {
     it("breeds multiple spores", () => {
       config().stepTimeDelta = fromInt(1);
       config().velocity = fromInt(1000);
-      config().breedingVelocity = fromInt(1);
+      config().breeding.velocity = fromInt(1);
       scene().objects.spores = new IdMap([
         new Spore({ x: 1000, y: 0 }),
         new Spore({ x: 2000, y: 0 }),
