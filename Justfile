@@ -21,7 +21,7 @@ serve:
   parcel src/index.html --no-hmr
 
 deploy-to-docs: ci
-  rm docs -rf
+  rm -rf docs
   parcel build \
     --public-url https://soenkehahn.github.io/nano/ \
     --no-source-maps \
