@@ -97,5 +97,18 @@ describe("auto-resource-seeking", () => {
       step(7);
       expect(scene().objects.resources.toArray()).toEqual([]);
     });
+
+    it("keeps auto-seeking resources even if they overlap", () => {
+      config().velocity = fromInt(500);
+      scene().objects.resources = new IdMap([
+        new Resource({ x: 100, y: 0 }),
+        new Resource({ x: 105, y: 0 }),
+      ]);
+      wrapper()
+        .find("#autoResourceSeekingCheckbox-0")
+        .simulate("change", { target: { checked: true } });
+      step(7);
+      expect(scene().objects.resources.toArray()).toEqual([]);
+    });
   });
 });

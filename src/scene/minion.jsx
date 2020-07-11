@@ -96,7 +96,7 @@ export class Minion {
       }
     }
     this.autoMine();
-    this.autoSeek();
+    this.permanentAutoSeek();
     this.autoBreed();
   };
 
@@ -184,12 +184,8 @@ export class Minion {
     }
   };
 
-  autoSeek: () => void = () => {
-    if (
-      this.status.tag == "idle" &&
-      this.autoSeekingChecked &&
-      this.collisions().resources.length == 0
-    ) {
+  permanentAutoSeek: () => void = () => {
+    if (this.status.tag == "idle" && this.autoSeekingChecked) {
       this.seek();
     }
   };
