@@ -80,7 +80,7 @@ describe("findRandom", () => {
   });
 
   it("returns a position that fulfills the given predicate", () => {
-    const predicate = v => Math.round(v.x) % 2 === 0;
+    const predicate = (v) => Math.round(v.x) % 2 === 0;
     for (let i = 0; i < 100; i++) {
       const v = findRandom(1000, predicate);
       expect(predicate(v)).toEqual(true);

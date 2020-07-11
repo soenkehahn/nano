@@ -91,7 +91,7 @@ describe("SvgPane", () => {
       });
       update(wrapper);
       expect(wrapper.find("svg").props().viewBox).toEqual(
-        [-400, -300, 800, 600].map(x => x * 1.1).join(" "),
+        [-400, -300, 800, 600].map((x) => x * 1.1).join(" "),
       );
     });
 
@@ -104,7 +104,7 @@ describe("SvgPane", () => {
       });
       update(wrapper);
       expect(wrapper.find("svg").props().viewBox).toEqual(
-        [-400, -300, 800, 600].map(x => x / 1.1).join(" "),
+        [-400, -300, 800, 600].map((x) => x / 1.1).join(" "),
       );
     });
 
@@ -153,7 +153,7 @@ describe("SvgPane", () => {
       });
       update(wrapper);
       expect(wrapper.find("svg").props().viewBox).toEqual(
-        [-400, -300, 800, 600].map(x => x * 1.1).join(" "),
+        [-400, -300, 800, 600].map((x) => x * 1.1).join(" "),
       );
     });
 
@@ -288,42 +288,36 @@ describe("drag & minion interaction", () => {
   const { wrapper, update, step } = setupSceneWrapper(testConfig);
 
   it("disables dragging when selecting a minion target", () => {
-    wrapper()
-      .find("#moveButton-0")
-      .simulate("click");
-    wrapper()
-      .find("svg")
-      .simulate("mousedown");
+    wrapper().find("#moveButton-0").simulate("click");
+    wrapper().find("svg").simulate("mousedown");
     wrapper()
       .find("svg")
       .simulate("mousemove", { movementX: 10, movementY: -5 });
-    (expect(
-      wrapper()
-        .find("svg")
-        .props().viewBox,
-    ): any).toBeCloseToViewBox([-100, -100, 200, 200]);
+    (expect(wrapper().find("svg").props().viewBox): any).toBeCloseToViewBox([
+      -100,
+      -100,
+      200,
+      200,
+    ]);
   });
 
   it("enables dragging afterwards", () => {
-    wrapper()
-      .find("#moveButton-0")
-      .simulate("click");
+    wrapper().find("#moveButton-0").simulate("click");
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 10, y: 10 }));
     step(2);
-    wrapper()
-      .find("svg")
-      .simulate("mousedown");
+    wrapper().find("svg").simulate("mousedown");
     wrapper()
       .find("svg")
       .simulate("mousemove", { movementX: 10, movementY: -5 });
     update();
-    (expect(
-      wrapper()
-        .find("svg")
-        .props().viewBox,
-    ): any).toBeCloseToViewBox([-110, -95, 200, 200]);
+    (expect(wrapper().find("svg").props().viewBox): any).toBeCloseToViewBox([
+      -110,
+      -95,
+      200,
+      200,
+    ]);
   });
 });
 
@@ -335,30 +329,21 @@ describe("viewbox optimization", () => {
   it("includes objects that are in the viewBox", () => {
     scene().objects.resources = new IdMap([new Resource({ x: 0, y: 0 })]);
     step(2);
-    expect(
-      wrapper()
-        .find(ResourceRender)
-        .props().position,
-    ).toEqual({ x: 0, y: 0 });
+    expect(wrapper().find(ResourceRender).props().position).toEqual({
+      x: 0,
+      y: 0,
+    });
   });
 
   it("excludes objects that are not in the viewBox", () => {
     scene().objects.resources = new IdMap([new Resource({ x: 150, y: 0 })]);
     step(2);
-    expect(
-      wrapper()
-        .find(ResourceRender)
-        .exists(),
-    ).toEqual(false);
+    expect(wrapper().find(ResourceRender).exists()).toEqual(false);
   });
 
   it("includes objects that are not in the viewBox, but reach into it", () => {
     scene().objects.resources = new IdMap([new Resource({ x: 109, y: 0 })]);
     step(2);
-    expect(
-      wrapper()
-        .find(ResourceRender)
-        .exists(),
-    ).toEqual(true);
+    expect(wrapper().find(ResourceRender).exists()).toEqual(true);
   });
 });

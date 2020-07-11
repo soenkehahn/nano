@@ -3,7 +3,7 @@
 import * as React from "react";
 
 export function animate<Props: {}>(animated: {
-  draw: Props => React.Node,
+  draw: (Props) => React.Node,
 }): React.AbstractComponent<Props> {
   class Wrapper extends React.Component<Props> {
     mounted: boolean = false;

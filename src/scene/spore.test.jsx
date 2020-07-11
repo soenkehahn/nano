@@ -16,9 +16,7 @@ describe("Spore", () => {
       scene().focusedMinion().position = { x: 100, y: 0 };
       scene().objects.resources = new IdMap([new Resource({ x: 101, y: 0 })]);
       step();
-      wrapper()
-        .find("#mineButton-0")
-        .simulate("click");
+      wrapper().find("#mineButton-0").simulate("click");
       step(10);
     });
 
@@ -27,11 +25,7 @@ describe("Spore", () => {
     });
 
     test("spores appear where the resources was", () => {
-      expect(
-        wrapper()
-          .find(SporeRender)
-          .props().position,
-      ).toEqual({
+      expect(wrapper().find(SporeRender).props().position).toEqual({
         x: 101,
         y: 0,
       });
@@ -42,11 +36,7 @@ describe("Spore", () => {
     it("does show the breed button", () => {
       scene().objects.spores = new IdMap([]);
       update();
-      expect(
-        wrapper()
-          .find("#breedButton-0")
-          .exists(),
-      ).toEqual(true);
+      expect(wrapper().find("#breedButton-0").exists()).toEqual(true);
     });
   });
 
@@ -63,9 +53,7 @@ describe("Spore", () => {
     it("allows to breed", () => {
       scene().objects.spores = new IdMap([new Spore({ x: 0, y: 0 })]);
       update();
-      wrapper()
-        .find("#breedButton-0")
-        .simulate("click");
+      wrapper().find("#breedButton-0").simulate("click");
       step(2);
       expect(scene().objects.resources.size()).toEqual(8);
     });
@@ -73,9 +61,7 @@ describe("Spore", () => {
     it("moves to the spore, then breeds", () => {
       scene().objects.spores = new IdMap([new Spore({ x: 1000, y: 0 })]);
       update();
-      wrapper()
-        .find("#breedButton-0")
-        .simulate("click");
+      wrapper().find("#breedButton-0").simulate("click");
       step(1);
       expect(scene().focusedMinion().position).toEqual({ x: 1000, y: 0 });
       step(2);
@@ -86,9 +72,7 @@ describe("Spore", () => {
       scene().objects.spores = new IdMap([new Spore({ x: 1000, y: 0 })]);
       scene().focusedMinion().position = { x: 1000, y: 0 };
       step();
-      wrapper()
-        .find("#breedButton-0")
-        .simulate("click");
+      wrapper().find("#breedButton-0").simulate("click");
       scene().focusedMinion().position = { x: 0, y: 0 };
       step(2);
       for (let i = 1; i < scene().objects.resources.size(); i++) {
@@ -102,9 +86,7 @@ describe("Spore", () => {
     test("breeding happens only once", () => {
       scene().objects.spores = new IdMap([new Spore({ x: 0, y: 0 })]);
       update();
-      wrapper()
-        .find("#breedButton-0")
-        .simulate("click");
+      wrapper().find("#breedButton-0").simulate("click");
       step(2);
       expect(scene().focusedMinion().status.tag).toEqual("idle");
       step(2);
@@ -114,9 +96,7 @@ describe("Spore", () => {
     it("breeding takes time", () => {
       scene().objects.spores = new IdMap([new Spore({ x: 0, y: 0 })]);
       update();
-      wrapper()
-        .find("#breedButton-0")
-        .simulate("click");
+      wrapper().find("#breedButton-0").simulate("click");
       step(1);
       expect(
         (scene().objects.spores.get(0): any).completion.toNumber(),
@@ -136,9 +116,7 @@ describe("Spore", () => {
         new Spore({ x: -1100, y: 0 }),
       ]);
       update();
-      wrapper()
-        .find("#breedButton-0")
-        .simulate("click");
+      wrapper().find("#breedButton-0").simulate("click");
       step(1);
       scene().focusedMinion().position = { x: 1000, y: 0 };
     });

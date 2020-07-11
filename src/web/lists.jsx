@@ -11,7 +11,7 @@ export function renderList(listItems: Array<Item>): ?React.Node {
   if (listItems.length === 0) return null;
   return (
     <ul>
-      {listItems.map(item => {
+      {listItems.map((item) => {
         return <li key={item.id}>{item.node}</li>;
       })}
     </ul>

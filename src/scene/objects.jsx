@@ -40,7 +40,7 @@ export function mkObjects(
     scene,
     findRandom(
       scale,
-      v =>
+      (v) =>
         inBiggerVicinity(1.6, config.initialSize, v) &&
         !inside(vector.scale(config.initialSize, 1.3), v),
     ),
@@ -55,15 +55,18 @@ export function mkObjects(
   };
 
   const closeResource = new Resource(
-    findRandom(scale, v => inside(config.initialSize, v)),
+    findRandom(scale, (v) => inside(config.initialSize, v)),
   );
   addResource(objects, closeResource);
   for (let i = 0; i < numberOfResources; i++) {
     const position = findRandom(
       scale,
-      v =>
+      (v) =>
         vectorLength(v) < config.initialSize.x * 2.6 &&
-        every(minions.toArray(), minion => !collides(minion, new Resource(v))),
+        every(
+          minions.toArray(),
+          (minion) => !collides(minion, new Resource(v)),
+        ),
     );
     addResource(objects, new Resource(position));
   }
@@ -77,7 +80,7 @@ export function addResource(objects: Objects, resource: Resource): void {
 
 export function findRandom(
   scale: number,
-  predicate: Vector => boolean,
+  predicate: (Vector) => boolean,
 ): Vector {
   let result;
   do {

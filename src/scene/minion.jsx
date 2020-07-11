@@ -59,7 +59,7 @@ export class Minion {
 
   getRadius = () => Minion.radius;
 
-  onClick: Vector => void = target => {
+  onClick: (Vector) => void = (target) => {
     if (this.status.tag === "waitForMoveTarget") {
       this.status = { tag: "moving", target };
       SvgPane.draggingEnabled = true;
@@ -139,7 +139,7 @@ export class Minion {
     }
   };
 
-  mine: Resource => void = resource => {
+  mine: (Resource) => void = (resource) => {
     if (resource && collides(this, resource)) {
       this.scene.inventory = this.scene.inventory.plus(
         resource.mine(
@@ -210,7 +210,7 @@ export class Minion {
     }
   };
 
-  breed: Spore => void = spore => {
+  breed: (Spore) => void = (spore) => {
     spore.completion = spore.completion.plus(
       this.config.stepTimeDelta.times(this.config.breeding.velocity),
     );
@@ -219,7 +219,7 @@ export class Minion {
       for (let i = 0; i < this.config.breeding.resources; i++) {
         const position = add(
           spore.position,
-          findRandom(Spore.radius * 1.5, v => vectorLength(v) < Spore.radius),
+          findRandom(Spore.radius * 1.5, (v) => vectorLength(v) < Spore.radius),
         );
         addResource(this.scene.objects, new Resource(position));
       }
@@ -327,7 +327,7 @@ export class Minion {
                 id={`autoResourceSeekingCheckbox-${this.id}`}
                 type="checkbox"
                 checked={this.autoSeekingChecked}
-                onChange={event => {
+                onChange={(event) => {
                   event.stopPropagation();
                   this.autoSeekingChecked = event.target.checked;
                 }}
@@ -345,7 +345,7 @@ export class Minion {
                 id={`autoBreedingCheckbox-${this.id}`}
                 type="checkbox"
                 checked={this.autoBreedingChecked}
-                onChange={event => {
+                onChange={(event) => {
                   event.stopPropagation();
                   this.autoBreedingChecked = event.target.checked;
                 }}
@@ -394,7 +394,7 @@ export class Minions {
 
   focused: () => Minion = () => this.minions.unsafeGet(this.focus);
 
-  add: Minion => void = minion => {
+  add: (Minion) => void = (minion) => {
     this.minions.add(minion);
     minion.focused = false;
   };
@@ -403,7 +403,7 @@ export class Minions {
     return this.minions.toArray();
   };
 
-  setFocus: number => void = index => {
+  setFocus: (number) => void = (index) => {
     this.minions.unsafeGet(this.focus).focused = false;
     this.focus = index;
     this.minions.unsafeGet(this.focus).focused = true;
@@ -428,7 +428,7 @@ export class Minions {
     }
   };
 
-  getWaitingForMoveTarget: void => null | Minion = () => {
+  getWaitingForMoveTarget: (void) => null | Minion = () => {
     let result = null;
     for (const minion of this.minions) {
       if (minion.status.tag == "waitForMoveTarget") {
@@ -438,14 +438,14 @@ export class Minions {
     return result;
   };
 
-  onClick: Vector => void = clickedPoint => {
+  onClick: (Vector) => void = (clickedPoint) => {
     const waitingForMoveTarget = this.getWaitingForMoveTarget();
     if (waitingForMoveTarget) {
       waitingForMoveTarget.onClick(clickedPoint);
     } else {
       const clicked = this.minions
         .toArray()
-        .findIndex(minion =>
+        .findIndex((minion) =>
           collides(minion, { position: clickedPoint, getRadius: () => 0 }),
         );
       if (clicked >= 0) {
@@ -454,7 +454,7 @@ export class Minions {
     }
   };
 
-  drawUI: SvgPane => React.Node = svgPane =>
+  drawUI: (SvgPane) => React.Node = (svgPane) =>
     sepBy(
       <hr />,
       this.minions

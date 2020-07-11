@@ -44,7 +44,7 @@ export class SceneStepper {
     stepDriver.start(this.scene, config.stepTimeDelta.times(rational(1, 1000)));
   }
 
-  draw: Size => React.Node = size => {
+  draw: (Size) => React.Node = (size) => {
     return this.scene.draw(size);
   };
 }
@@ -74,13 +74,13 @@ export class Scene {
   collides: ({
     position: Vector,
     getRadius: () => number,
-  }) => boolean = other => {
+  }) => boolean = (other) => {
     for (const object of this.objects.resources) {
       if (collides(object, other)) {
         return true;
       }
     }
-    if (some(this.objects.factories, object => collides(object, other))) {
+    if (some(this.objects.factories, (object) => collides(object, other))) {
       return true;
     }
     if (collides(this.objects.lab, other)) {
@@ -114,12 +114,12 @@ export class Scene {
     }
   };
 
-  innerStep: ({ paused: boolean }) => void = args => {
+  innerStep: ({ paused: boolean }) => void = (args) => {
     this.objects.lab.step(args);
     this.objects.minions.step(this, args);
   };
 
-  onClick: Vector => void = target => {
+  onClick: (Vector) => void = (target) => {
     this.objects.minions.onClick(target);
   };
 
@@ -135,7 +135,7 @@ export class Scene {
     this.stepFrequency.value = (1000 / delta).toFixed(1);
   };
 
-  draw: Size => React.Node = size => {
+  draw: (Size) => React.Node = (size) => {
     return (
       <>
         <div
@@ -210,7 +210,7 @@ export class Scene {
     );
   };
 
-  drawSvgElements: ViewBox => React.Element<"g"> = viewBox => {
+  drawSvgElements: (ViewBox) => React.Element<"g"> = (viewBox) => {
     let objects: Array<{
       position: Vector,
       getRadius: () => number,
@@ -227,7 +227,7 @@ export class Scene {
     for (const minion of this.objects.minions.minions) {
       objects.push(minion);
     }
-    objects = filter(objects, object => insideViewBox(viewBox, object));
-    return <g>{objects.map(x => x.draw())}</g>;
+    objects = filter(objects, (object) => insideViewBox(viewBox, object));
+    return <g>{objects.map((x) => x.draw())}</g>;
   };
 }

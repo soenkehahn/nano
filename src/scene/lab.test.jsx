@@ -28,116 +28,68 @@ describe("Lab", () => {
   });
 
   it("renders a lab (out of the initial view)", () => {
-    expect(
-      wrapper()
-        .find(LabRender)
-        .exists(),
-    ).toEqual(true);
+    expect(wrapper().find(LabRender).exists()).toEqual(true);
   });
 
   describe("mining", () => {
     it("allows to research auto-mining", () => {
       scene().inventory = fromInt(20);
-      wrapper()
-        .find("#moveButton-0")
-        .simulate("click");
+      wrapper().find("#moveButton-0").simulate("click");
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent(scene().objects.lab.position));
       step(2);
-      expect(
-        wrapper()
-          .find("#researchAutoMiningButton")
-          .exists(),
-      ).toEqual(true);
-      expect(
-        wrapper()
-          .find("#researched-auto-mining")
-          .exists(),
-      ).toEqual(false);
-      wrapper()
-        .find("#researchAutoMiningButton")
-        .simulate("click");
+      expect(wrapper().find("#researchAutoMiningButton").exists()).toEqual(
+        true,
+      );
+      expect(wrapper().find("#researched-auto-mining").exists()).toEqual(false);
+      wrapper().find("#researchAutoMiningButton").simulate("click");
       sendMinion(scene, { x: 0, y: 10000 });
       step(20);
-      expect(
-        wrapper()
-          .find("#researched-auto-mining")
-          .text(),
-      ).toEqual("auto-mining");
+      expect(wrapper().find("#researched-auto-mining").text()).toEqual(
+        "auto-mining",
+      );
     });
 
     it("disallows researching when already researched", () => {
       scene().inventory = fromInt(20);
-      wrapper()
-        .find("#moveButton-0")
-        .simulate("click");
+      wrapper().find("#moveButton-0").simulate("click");
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent(scene().objects.lab.position));
       step(2);
-      wrapper()
-        .find("#researchAutoMiningButton")
-        .simulate("click");
+      wrapper().find("#researchAutoMiningButton").simulate("click");
       step(20);
-      expect(
-        wrapper()
-          .find("#researchAutoMiningButton")
-          .exists(),
-      ).toEqual(false);
+      expect(wrapper().find("#researchAutoMiningButton").exists()).toEqual(
+        false,
+      );
     });
 
     test("researching takes time", () => {
       config().researchVelocity = rational(1, 5);
       scene().inventory = fromInt(20);
-      wrapper()
-        .find("#moveButton-0")
-        .simulate("click");
+      wrapper().find("#moveButton-0").simulate("click");
       wrapper()
         .find("svg")
         .simulate("click", toClickEvent(scene().objects.lab.position));
       step(2);
-      expect(
-        wrapper()
-          .find("#researchAutoMiningButton")
-          .exists(),
-      ).toEqual(true);
-      expect(
-        wrapper()
-          .find(LabRender)
-          .props().completion,
-      ).toEqual(null);
-      wrapper()
-        .find("#researchAutoMiningButton")
-        .simulate("click");
+      expect(wrapper().find("#researchAutoMiningButton").exists()).toEqual(
+        true,
+      );
+      expect(wrapper().find(LabRender).props().completion).toEqual(null);
+      wrapper().find("#researchAutoMiningButton").simulate("click");
       sendMinion(scene, { x: 0, y: 10000 });
       step(6);
+      expect(wrapper().find("#researched-auto-mining").exists()).toEqual(false);
       expect(
-        wrapper()
-          .find("#researched-auto-mining")
-          .exists(),
+        wrapper().find("#researchAutoResourceSeekingButton").exists(),
       ).toEqual(false);
-      expect(
-        wrapper()
-          .find("#researchAutoResourceSeekingButton")
-          .exists(),
-      ).toEqual(false);
-      expect(
-        wrapper()
-          .find(LabRender)
-          .props().completion,
-      ).toEqual(3 / 5);
+      expect(wrapper().find(LabRender).props().completion).toEqual(3 / 5);
       step(6);
-      expect(
-        wrapper()
-          .find("#researched-auto-mining")
-          .text(),
-      ).toEqual("auto-mining");
-      expect(
-        wrapper()
-          .find(LabRender)
-          .props().completion,
-      ).toEqual(null);
+      expect(wrapper().find("#researched-auto-mining").text()).toEqual(
+        "auto-mining",
+      );
+      expect(wrapper().find(LabRender).props().completion).toEqual(null);
     });
 
     it("doesn't allow to research, when minion is not 'idle'", () => {
@@ -161,16 +113,12 @@ describe("Lab", () => {
     it("allows to research auto-mining", () => {
       scene().inventory = config().costs.research["auto-mining"];
       setMinionPosition(scene().objects.lab.position);
-      wrapper()
-        .find("#researchAutoMiningButton")
-        .simulate("click");
+      wrapper().find("#researchAutoMiningButton").simulate("click");
       sendMinion(scene, { x: 0, y: 10000 });
       step(20);
-      expect(
-        wrapper()
-          .find("#researched-auto-mining")
-          .text(),
-      ).toEqual("auto-mining");
+      expect(wrapper().find("#researched-auto-mining").text()).toEqual(
+        "auto-mining",
+      );
     });
 
     it("researching auto-mining costs resources", () => {
@@ -178,20 +126,14 @@ describe("Lab", () => {
       config().researchVelocity = rational(1, 5);
       setMinionPosition(scene().objects.lab.position);
       expect(
-        wrapper()
-          .find("#researchAutoMiningButton")
-          .props().disabled,
+        wrapper().find("#researchAutoMiningButton").props().disabled,
       ).toEqual(true);
       scene().inventory = fromInt(5);
       update();
       expect(
-        wrapper()
-          .find("#researchAutoMiningButton")
-          .props().disabled,
+        wrapper().find("#researchAutoMiningButton").props().disabled,
       ).toEqual(false);
-      wrapper()
-        .find("#researchAutoMiningButton")
-        .simulate("click");
+      wrapper().find("#researchAutoMiningButton").simulate("click");
       sendMinion(scene, { x: 0, y: 10000 });
       step(2);
       expect(scene().inventory.toNumber()).toEqual(4);
@@ -205,9 +147,7 @@ describe("Lab", () => {
       scene().inventory = fromInt(1);
       setMinionPosition(scene().objects.lab.position);
       update();
-      wrapper()
-        .find("#researchAutoMiningButton")
-        .simulate("click");
+      wrapper().find("#researchAutoMiningButton").simulate("click");
       sendMinion(scene, { x: 0, y: 10000 });
       step(20);
       expect(scene().inventory.toNumber()).toEqual(0.9);
@@ -216,11 +156,9 @@ describe("Lab", () => {
     it("displays the research cost on the button", () => {
       config().costs.research["auto-mining"] = fromInt(42);
       setMinionPosition(scene().objects.lab.position);
-      expect(
-        wrapper()
-          .find("#researchAutoMiningButton")
-          .text(),
-      ).toContain(`(cost: ${42})`);
+      expect(wrapper().find("#researchAutoMiningButton").text()).toContain(
+        `(cost: ${42})`,
+      );
     });
 
     describe("when auto-mining is not researched", () => {

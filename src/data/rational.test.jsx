@@ -188,11 +188,7 @@ describe("toNumber", () => {
   });
 
   it("returns integers when denominator is 1", () => {
-    expect(
-      fromInt(42)
-        .toNumber()
-        .toString(),
-    ).toEqual("42");
+    expect(fromInt(42).toNumber().toString()).toEqual("42");
   });
 });
 

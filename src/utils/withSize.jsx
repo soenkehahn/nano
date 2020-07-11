@@ -46,7 +46,7 @@ export function withSize(
       return (
         <div
           style={{ height: "100%", width: "100%" }}
-          ref={node => (this.div = node)}
+          ref={(node) => (this.div = node)}
         >
           {child}
         </div>

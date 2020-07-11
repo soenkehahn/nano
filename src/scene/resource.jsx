@@ -22,7 +22,7 @@ export class Resource {
     (this.status.unitsLeft.toNumber() / Resource.initialUnits.toNumber()) *
     Resource.initialRadius;
 
-  mine: Rational => Rational = fraction => {
+  mine: (Rational) => Rational = (fraction) => {
     const oldUnitsLeft = this.status.unitsLeft;
     this.status.unitsLeft = this.status.unitsLeft.minus(
       fraction.times(Resource.initialUnits),

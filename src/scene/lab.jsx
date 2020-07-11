@@ -30,7 +30,7 @@ export class Lab {
 
   getRadius = () => this.radius;
 
-  startResearch: Goal => void = goal => {
+  startResearch: (Goal) => void = (goal) => {
     this.status = { tag: "researching", goal, completion: fromInt(0) };
   };
 
@@ -102,7 +102,7 @@ export class Lab {
       return (
         <div style={{ height: "10em" }}>
           researched:
-          {array.map(goal => {
+          {array.map((goal) => {
             const id = `researched-${goal}`;
             return (
               <div key={id} id={id}>

@@ -8,7 +8,7 @@ import { type Vector, scale } from "../data/vector";
 export type ViewBox = {| offset: Vector, size: Vector |};
 
 type Child = {
-  onClick: Vector => void,
+  onClick: (Vector) => void,
   drawSvgElements: (viewBox: ViewBox) => React.Element<"g">,
 };
 
@@ -64,7 +64,7 @@ export class SvgPane {
     return point.matrixTransform(svgRef.getScreenCTM().inverse());
   };
 
-  setCenter: Vector => void = center => {
+  setCenter: (Vector) => void = (center) => {
     this.offset = {
       x: center.x - (this.zoomFactor * this.width) / 2,
       y: center.y - (this.zoomFactor * this.height) / 2,
@@ -149,8 +149,8 @@ export class SvgPane {
     const viewBox = [this.offset.x, this.offset.y, width, height].join(" ");
     return (
       <svg
-        ref={svgRef => (this.svgRef = (svgRef: any))}
-        onClick={event => this.handleClick(child, event)}
+        ref={(svgRef) => (this.svgRef = (svgRef: any))}
+        onClick={(event) => this.handleClick(child, event)}
         width="100%"
         height="100%"
         viewBox={viewBox}

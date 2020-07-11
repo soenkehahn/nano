@@ -11,9 +11,7 @@ const { wrapper, scene, update, step } = setupSceneWrapper(config);
 
 describe("auto-resource-seeking", () => {
   it("renders a button that triggers auto-resource-seeking", () => {
-    wrapper()
-      .find("#autoResourceSeekingButton-0")
-      .simulate("click");
+    wrapper().find("#autoResourceSeekingButton-0").simulate("click");
     expect(scene().focusedMinion().status.tag).toEqual("moving");
   });
 
@@ -22,11 +20,9 @@ describe("auto-resource-seeking", () => {
       new Minion(config(), scene(), { x: 10, y: 10 }),
     );
     update();
-    expect(
-      wrapper()
-        .find("#autoResourceSeekingButton-1")
-        .exists(),
-    ).toEqual(true);
+    expect(wrapper().find("#autoResourceSeekingButton-1").exists()).toEqual(
+      true,
+    );
   });
 
   describe("when triggering auto-resource-seeking for a minion", () => {
@@ -37,9 +33,7 @@ describe("auto-resource-seeking", () => {
         new Resource({ x: 1000, y: 0 }),
       ]);
       update();
-      wrapper()
-        .find("#autoResourceSeekingButton-0")
-        .simulate("click");
+      wrapper().find("#autoResourceSeekingButton-0").simulate("click");
     });
 
     it("switches from idle to moving", () => {
@@ -79,9 +73,7 @@ describe("auto-resource-seeking", () => {
       scene().objects.resources = new IdMap([new Resource({ x: 0, y: 0 })]);
       scene().focusedMinion().position = { x: 0, y: 0 };
       update();
-      wrapper()
-        .find("#autoResourceSeekingButton-0")
-        .simulate("click");
+      wrapper().find("#autoResourceSeekingButton-0").simulate("click");
       step(2);
       expect(scene().objects.resources.toArray()).toEqual([]);
     });

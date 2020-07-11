@@ -27,7 +27,7 @@ const getGcd: (number, number) => number = (a, b) => {
   return a;
 };
 
-export const fromInt: number => Rational = n => rational(n, 1);
+export const fromInt: (number) => Rational = (n) => rational(n, 1);
 
 export type Rational = _Rational;
 
@@ -54,59 +54,59 @@ class _Rational {
     return `(${this.numerator}) % (${this.denominator})`;
   };
 
-  equals: Rational => boolean = other => {
+  equals: (Rational) => boolean = (other) => {
     return (
       this.numerator === other.numerator &&
       this.denominator === other.denominator
     );
   };
 
-  ge: Rational => boolean = other => {
+  ge: (Rational) => boolean = (other) => {
     return (
       this.numerator * other.denominator >= other.numerator * this.denominator
     );
   };
 
-  gt: Rational => boolean = other => {
+  gt: (Rational) => boolean = (other) => {
     return (
       this.numerator * other.denominator > other.numerator * this.denominator
     );
   };
 
-  le: Rational => boolean = other => {
+  le: (Rational) => boolean = (other) => {
     return (
       this.numerator * other.denominator <= other.numerator * this.denominator
     );
   };
 
-  lt: Rational => boolean = other => {
+  lt: (Rational) => boolean = (other) => {
     return (
       this.numerator * other.denominator < other.numerator * this.denominator
     );
   };
 
-  plus: Rational => Rational = other => {
+  plus: (Rational) => Rational = (other) => {
     return rational(
       this.numerator * other.denominator + other.numerator * this.denominator,
       this.denominator * other.denominator,
     );
   };
 
-  minus: Rational => Rational = other => {
+  minus: (Rational) => Rational = (other) => {
     return rational(
       this.numerator * other.denominator - other.numerator * this.denominator,
       this.denominator * other.denominator,
     );
   };
 
-  times: Rational => Rational = other => {
+  times: (Rational) => Rational = (other) => {
     return rational(
       this.numerator * other.numerator,
       this.denominator * other.denominator,
     );
   };
 
-  over: Rational => Rational = other => {
+  over: (Rational) => Rational = (other) => {
     return rational(
       this.numerator * other.denominator,
       this.denominator * other.numerator,

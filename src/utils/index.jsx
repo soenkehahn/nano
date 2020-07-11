@@ -6,7 +6,7 @@ import { type Rational } from "../data/rational";
 export function wait(seconds: number | Rational): Promise<void> {
   const milliSeconds =
     (typeof seconds === "number" ? seconds : seconds.toNumber()) * 1000;
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, milliSeconds);
   });
 }
@@ -14,10 +14,13 @@ export function wait(seconds: number | Rational): Promise<void> {
 type Printable = number | string | { toString: () => string };
 
 export function print(...x: Array<Printable>) {
-  console.log(x.map(f => f.toString()).join(", "));
+  console.log(x.map((f) => f.toString()).join(", "));
 }
 
-export function filter<A>(array: Array<A>, predicate: A => boolean): Array<A> {
+export function filter<A>(
+  array: Array<A>,
+  predicate: (A) => boolean,
+): Array<A> {
   let result: Array<A> = [];
   for (let element of array) {
     if (predicate(element)) {

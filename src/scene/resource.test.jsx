@@ -23,36 +23,20 @@ describe("Resource in scene", () => {
       new Resource({ x: 200, y: 0 }),
     ]);
     update();
-    minionProps = wrapper()
-      .find(MinionRender)
-      .props();
-    resourceProps = wrapper()
-      .find(ResourceRender)
-      .props();
+    minionProps = wrapper().find(MinionRender).props();
+    resourceProps = wrapper().find(ResourceRender).props();
   });
 
   it("allows to mine a resource when colliding (same position) with a minion", () => {
-    wrapper()
-      .find("#moveButton-0")
-      .simulate("click");
+    wrapper().find("#moveButton-0").simulate("click");
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent(resourceProps.position));
     step(2);
-    expect(
-      wrapper()
-        .find(ResourceRender)
-        .exists(),
-    ).toEqual(true);
-    wrapper()
-      .find("#mineButton-0")
-      .simulate("click");
+    expect(wrapper().find(ResourceRender).exists()).toEqual(true);
+    wrapper().find("#mineButton-0").simulate("click");
     step(2);
-    expect(
-      wrapper()
-        .find(ResourceRender)
-        .exists(),
-    ).toEqual(false);
+    expect(wrapper().find(ResourceRender).exists()).toEqual(false);
   });
 
   it("shows multiple mine buttons for multiple minions", () => {
@@ -64,33 +48,23 @@ describe("Resource in scene", () => {
       new Minion(config(), scene(), { x: 100, y: 0 }),
     );
     update();
-    wrapper()
-      .find("#moveButton-0")
-      .simulate("click");
+    wrapper().find("#moveButton-0").simulate("click");
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 200, y: 0 }));
-    wrapper()
-      .find("#moveButton-1")
-      .simulate("click");
+    wrapper().find("#moveButton-1").simulate("click");
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent({ x: 200, y: 100 }));
     step(2);
-    wrapper()
-      .find("#mineButton-0")
-      .simulate("click");
-    wrapper()
-      .find("#mineButton-1")
-      .simulate("click");
+    wrapper().find("#mineButton-0").simulate("click");
+    wrapper().find("#mineButton-1").simulate("click");
     step();
     expect(scene().objects.resources.size()).toEqual(0);
   });
 
   it("depletes a resource when colliding slightly with a minion", () => {
-    wrapper()
-      .find("#moveButton-0")
-      .simulate("click");
+    wrapper().find("#moveButton-0").simulate("click");
     wrapper()
       .find("svg")
       .simulate(
@@ -104,21 +78,13 @@ describe("Resource in scene", () => {
         }),
       );
     step(2);
-    wrapper()
-      .find("#mineButton-0")
-      .simulate("click");
+    wrapper().find("#mineButton-0").simulate("click");
     step(2);
-    expect(
-      wrapper()
-        .find(ResourceRender)
-        .exists(),
-    ).toEqual(false);
+    expect(wrapper().find(ResourceRender).exists()).toEqual(false);
   });
 
   it("doesn't allow to mine when near a minion", () => {
-    wrapper()
-      .find("#moveButton-0")
-      .simulate("click");
+    wrapper().find("#moveButton-0").simulate("click");
     wrapper()
       .find("svg")
       .simulate(
@@ -132,83 +98,47 @@ describe("Resource in scene", () => {
         }),
       );
     step(2);
-    expect(
-      wrapper()
-        .find("#mineButton-0")
-        .exists(),
-    ).toEqual(false);
-    expect(
-      wrapper()
-        .find(ResourceRender)
-        .exists(),
-    ).toEqual(true);
+    expect(wrapper().find("#mineButton-0").exists()).toEqual(false);
+    expect(wrapper().find(ResourceRender).exists()).toEqual(true);
   });
 
   it("initializes an empty inventory", () => {
-    expect(
-      wrapper()
-        .find("#inventory")
-        .text(),
-    ).toEqual("resources: 0.00");
+    expect(wrapper().find("#inventory").text()).toEqual("resources: 0.00");
   });
 
   it("increases the inventory resource counter", () => {
-    wrapper()
-      .find("#moveButton-0")
-      .simulate("click");
+    wrapper().find("#moveButton-0").simulate("click");
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent(resourceProps.position));
     step(2);
-    wrapper()
-      .find("#mineButton-0")
-      .simulate("click");
+    wrapper().find("#mineButton-0").simulate("click");
     step(2);
-    expect(
-      wrapper()
-        .find("#inventory")
-        .text(),
-    ).toEqual("resources: 1.00");
+    expect(wrapper().find("#inventory").text()).toEqual("resources: 1.00");
   });
 
   test("mining takes time", () => {
     config().miningVelocity = rational(1, 2);
-    wrapper()
-      .find("#moveButton-0")
-      .simulate("click");
+    wrapper().find("#moveButton-0").simulate("click");
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent(resourceProps.position));
     step(2);
-    wrapper()
-      .find("#mineButton-0")
-      .simulate("click");
+    wrapper().find("#mineButton-0").simulate("click");
     step();
-    expect(
-      wrapper()
-        .find(ResourceRender)
-        .props().radius,
-    ).toEqual(7.5);
-    expect(
-      wrapper()
-        .find("#minion-ui-0")
-        .text(),
-    ).toEqual("status: mining...");
+    expect(wrapper().find(ResourceRender).props().radius).toEqual(7.5);
+    expect(wrapper().find("#minion-ui-0").text()).toEqual("status: mining...");
   });
 
   test("mining will increase the inventory by fractions", () => {
     config().miningVelocity = rational(1, 2);
     config().stepTimeDelta = rational(1, 10);
-    wrapper()
-      .find("#moveButton-0")
-      .simulate("click");
+    wrapper().find("#moveButton-0").simulate("click");
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent(resourceProps.position));
     step(10);
-    wrapper()
-      .find("#mineButton-0")
-      .simulate("click");
+    wrapper().find("#mineButton-0").simulate("click");
     step(10);
     expect(scene().inventory.toNumber()).toEqual(0.5);
   });
@@ -216,16 +146,12 @@ describe("Resource in scene", () => {
   test("a low stepTimeDelta doesn't screw up the inventory", () => {
     config().miningVelocity = rational(1, 2);
     config().stepTimeDelta = rational(1, 100);
-    wrapper()
-      .find("#moveButton-0")
-      .simulate("click");
+    wrapper().find("#moveButton-0").simulate("click");
     wrapper()
       .find("svg")
       .simulate("click", toClickEvent(resourceProps.position));
     step(100);
-    wrapper()
-      .find("#mineButton-0")
-      .simulate("click");
+    wrapper().find("#mineButton-0").simulate("click");
     step(200);
     expect(scene().inventory.toNumber()).toEqual(1);
   });
@@ -233,29 +159,15 @@ describe("Resource in scene", () => {
   it("stops mining when the minion doesn't collide with the resource anymore", () => {
     config().miningVelocity = rational(1, 2);
     config().stepTimeDelta = rational(1, 10);
-    wrapper()
-      .find("#moveButton-0")
-      .simulate("click");
+    wrapper().find("#moveButton-0").simulate("click");
     const target = cloneDeep(resourceProps.position);
     target.x += Resource.initialRadius + Minion.radius - 1;
-    wrapper()
-      .find("svg")
-      .simulate("click", toClickEvent(target));
+    wrapper().find("svg").simulate("click", toClickEvent(target));
     step(10);
-    wrapper()
-      .find("#mineButton-0")
-      .simulate("click");
+    wrapper().find("#mineButton-0").simulate("click");
     step(30);
-    expect(
-      wrapper()
-        .find(ResourceRender)
-        .props().radius,
-    ).toEqual(9);
-    expect(
-      wrapper()
-        .find("#moveButton-0")
-        .exists(),
-    ).toEqual(true);
+    expect(wrapper().find(ResourceRender).props().radius).toEqual(9);
+    expect(wrapper().find("#moveButton-0").exists()).toEqual(true);
   });
 });
 

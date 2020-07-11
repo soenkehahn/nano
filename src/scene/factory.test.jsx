@@ -15,31 +15,17 @@ describe("Factory", () => {
   it("doesn't allow to construct a factory with less than 3 resources", () => {
     scene().inventory = rational(299, 100);
     step(2);
-    expect(
-      wrapper()
-        .find("#buildMinionButton-0")
-        .exists(),
-    ).toEqual(false);
+    expect(wrapper().find("#buildMinionButton-0").exists()).toEqual(false);
   });
 
   it("allows to construct a factory with 3 resources", () => {
     scene().objects.resources = new IdMap([new Resource({ x: -100, y: 0 })]);
     scene().inventory = fromInt(3);
     step(2);
-    expect(
-      wrapper()
-        .find("#buildMinionButton-0")
-        .exists(),
-    ).toEqual(true);
-    wrapper()
-      .find("#buildMinionButton-0")
-      .simulate("click");
+    expect(wrapper().find("#buildMinionButton-0").exists()).toEqual(true);
+    wrapper().find("#buildMinionButton-0").simulate("click");
     step(200);
-    expect(
-      wrapper()
-        .find(FactoryRender)
-        .exists(),
-    ).toEqual(true);
+    expect(wrapper().find(FactoryRender).exists()).toEqual(true);
   });
 
   it("builds the factory at the location of the minion", () => {
@@ -47,15 +33,9 @@ describe("Factory", () => {
     scene().inventory = fromInt(3);
     scene().focusedMinion().position = { x: 10, y: 12 };
     update();
-    wrapper()
-      .find("#buildMinionButton-0")
-      .simulate("click");
+    wrapper().find("#buildMinionButton-0").simulate("click");
     update();
-    expect(
-      wrapper()
-        .find(FactoryRender)
-        .props().position,
-    ).toEqual({
+    expect(wrapper().find(FactoryRender).props().position).toEqual({
       x: 10,
       y: 12,
     });
@@ -67,11 +47,7 @@ describe("Factory", () => {
       scene().focusedMinion().position = { x: 10, y: 12 };
       scene().objects.factories.push(new Factory({ x: 10, y: 12 }));
       update();
-      expect(
-        wrapper()
-          .find("#buildMinionButton-0")
-          .exists(),
-      ).toEqual(false);
+      expect(wrapper().find("#buildMinionButton-0").exists()).toEqual(false);
     });
   });
 
@@ -79,9 +55,7 @@ describe("Factory", () => {
     scene().objects.resources = new IdMap([new Resource({ x: -100, y: 0 })]);
     scene().inventory = fromInt(4);
     step(2);
-    wrapper()
-      .find("#buildMinionButton-0")
-      .simulate("click");
+    wrapper().find("#buildMinionButton-0").simulate("click");
     step(2);
     expect(scene().inventory.toNumber()).toEqual(1);
   });
@@ -91,16 +65,12 @@ describe("Factory", () => {
     scene().inventory = fromInt(4);
     scene().focusedMinion().position = { x: 42, y: 23 };
     step(2);
-    wrapper()
-      .find("#buildMinionButton-0")
-      .simulate("click");
+    wrapper().find("#buildMinionButton-0").simulate("click");
     step(2);
     expect(wrapper().find(MinionRender).length).toEqual(2);
-    expect(
-      wrapper()
-        .find(MinionRender)
-        .at(1)
-        .props().position,
-    ).toEqual({ x: 42, y: 23 });
+    expect(wrapper().find(MinionRender).at(1).props().position).toEqual({
+      x: 42,
+      y: 23,
+    });
   });
 });
